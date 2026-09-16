@@ -1,0 +1,375 @@
+
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f0e8;--surface:#fdfaf4;--surface2:#f0ebe0;--surface3:#e8e0d0;
+  --border:#d4c49a;--border-gold:#b8920b;
+  --text:#2a1f0a;--text-dim:#5a4010;--muted:#8a7040;
+  --gold:#8a6000;--gold-light:#c8940a;--gold-dark:#5a3e00;
+  --red-deep:#7a1a1a;--green-deep:#1a4a1a;
+  --font-serif:Georgia,"Times New Roman",serif;
+  --font-sans:-apple-system,"Segoe UI",system-ui,sans-serif;
+}
+body{font-family:var(--font-sans);background-color:var(--bg);background-image:radial-gradient(ellipse at 10% 20%,rgba(184,146,11,.06) 0%,transparent 50%),radial-gradient(ellipse at 90% 80%,rgba(184,146,11,.04) 0%,transparent 40%);color:var(--text);font-size:14px;line-height:1.65;}
+.wrap{max-width:880px;margin:0 auto;padding:2rem 1.5rem;}
+.section-label{font-size:.68rem;color:var(--gold-dark);text-transform:uppercase;letter-spacing:.18em;padding:.4rem 0;border-bottom:1px solid var(--border);margin:1.5rem 0 1rem;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+@media(max-width:560px){.grid{grid-template-columns:1fr;}}
+.box{background:var(--surface);border:1px solid var(--border-gold);border-radius:8px;overflow:hidden;position:relative;box-shadow:0 1px 6px rgba(90,62,0,.08);}
+.box::before,.box::after{content:"";position:absolute;width:12px;height:12px;border-color:var(--border-gold);border-style:solid;pointer-events:none;}
+.box::before{top:5px;left:5px;border-width:1px 0 0 1px;}
+.box::after{bottom:5px;right:5px;border-width:0 1px 1px 0;}
+.box-label{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;padding:.4rem .9rem;border-bottom:1px solid var(--border);background:var(--surface2);}
+.box-body{padding:.9rem;}
+
+/* LOGIN */
+.lm{max-width:260px;margin:0 auto;text-align:center;}
+.lm-title{font-family:var(--font-serif);font-size:1.05rem;color:var(--gold);letter-spacing:.08em;margin-bottom:.1rem;}
+.lm-sub{font-size:.62rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.9rem;}
+.ltabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:.9rem;}
+.ltab{flex:1;padding:.35rem;font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid transparent;text-align:center;cursor:pointer;}
+.ltab.on{color:var(--gold);border-bottom-color:var(--gold-light);}
+.fi{width:100%;background:#fff;border:1px solid var(--border);border-radius:3px;padding:.38rem .55rem;color:var(--text);font-size:.72rem;margin-bottom:.45rem;}
+.fb{width:100%;background:var(--gold);color:#fff;border:1px solid var(--gold-dark);border-radius:3px;padding:.42rem;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;}
+.fb:hover{background:var(--gold-light);}
+
+/* SIDEBAR */
+.sb{background:var(--surface);border-right:1px solid var(--border);width:148px;height:320px;display:flex;flex-direction:column;flex-shrink:0;position:relative;}
+.sb::before{content:"";display:block;height:2px;background:linear-gradient(90deg,transparent,var(--gold-light),transparent);}
+.sb-logo{padding:.65rem .75rem;border-bottom:1px solid var(--border);text-align:center;}
+.sb-logo svg{width:30px;height:30px;}
+.sb-logo h3{font-family:var(--font-serif);font-size:.68rem;color:var(--gold);letter-spacing:.08em;margin-top:.22rem;}
+.sb-logo p{font-size:.52rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+.sb-sec{font-size:.52rem;color:var(--gold-dark);text-transform:uppercase;letter-spacing:.18em;padding:.55rem .75rem .2rem;}
+.sb-item{display:flex;align-items:center;gap:.35rem;padding:.38rem .75rem;color:var(--muted);font-size:.68rem;border-left:2px solid transparent;}
+.sb-item.on{color:var(--gold);border-left-color:var(--gold-light);background:rgba(184,146,11,.1);font-weight:600;}
+.sb-item:hover{background:rgba(184,146,11,.06);}
+.sb-item svg{width:11px;height:11px;flex-shrink:0;opacity:.6;}
+.sb-item.on svg{opacity:1;}
+
+/* MAIN */
+.main{flex:1;padding:.75rem;overflow:hidden;}
+.mhead{font-family:var(--font-serif);font-size:.9rem;color:var(--gold);padding-bottom:.5rem;border-bottom:1px solid var(--border);margin-bottom:.65rem;position:relative;}
+.mhead::after{content:"";position:absolute;bottom:-1px;left:0;width:36px;height:1.5px;background:linear-gradient(90deg,var(--gold-light),transparent);}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.35rem;margin-bottom:.65rem;}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:.45rem;text-align:center;box-shadow:0 1px 2px rgba(90,62,0,.05);}
+.stat .n{font-family:var(--font-serif);font-size:1.05rem;color:var(--gold);}
+.stat .l{font-size:.52rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;}
+
+/* CARD */
+.cm{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:.55rem .65rem;margin-bottom:.4rem;position:relative;box-shadow:0 1px 2px rgba(90,62,0,.04);}
+.cm::before{content:"";position:absolute;top:0;left:.6rem;right:.6rem;height:1px;background:linear-gradient(90deg,transparent,var(--border-gold),transparent);}
+.cm-t{font-family:var(--font-serif);font-size:.7rem;color:var(--gold);margin-bottom:.18rem;}
+.cm-m{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+.cm-b{font-size:.62rem;color:var(--text-dim);margin-top:.25rem;line-height:1.5;}
+
+/* MODAL */
+.mm{background:var(--surface);border:1px solid var(--border-gold);border-radius:7px;padding:.9rem;position:relative;box-shadow:0 4px 16px rgba(90,62,0,.12);}
+.mm::before,.mm::after{content:"";position:absolute;width:11px;height:11px;border-color:var(--border-gold);border-style:solid;}
+.mm::before{top:5px;left:5px;border-width:1px 0 0 1px;}
+.mm::after{bottom:5px;right:5px;border-width:0 1px 1px 0;}
+.mm-t{font-family:var(--font-serif);font-size:.82rem;color:var(--gold);margin-bottom:.6rem;font-weight:normal;}
+.mm-lbl{font-size:.58rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:.18rem;font-weight:600;}
+.mm-in{width:100%;background:#fff;border:1px solid var(--border);border-radius:2px;padding:.3rem .45rem;color:var(--text);font-size:.68rem;margin-bottom:.4rem;}
+.btn-s{background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);border-radius:2px;padding:.22rem .5rem;font-size:.62rem;letter-spacing:.04em;text-transform:uppercase;}
+.btn-p{background:var(--gold);color:#fff;border:1px solid var(--gold-dark);border-radius:2px;padding:.22rem .5rem;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+.btn-p:hover{background:var(--gold-light);}
+.btn-d{background:#fff0f0;color:var(--red-deep);border:1px solid #f0c0c0;border-radius:2px;padding:.22rem .5rem;font-size:.62rem;letter-spacing:.04em;text-transform:uppercase;}
+.btn-g{background:#f0fff0;color:var(--green-deep);border:1px solid #b0d8b0;border-radius:2px;padding:.22rem .5rem;font-size:.62rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+.mm-footer{display:flex;gap:.35rem;justify-content:flex-end;margin-top:.65rem;}
+
+/* TAG */
+.tag-g{display:inline-block;font-size:.58rem;padding:.1rem .38rem;border-radius:20px;background:#f0fff0;color:#1a5a1a;border:1px solid #b0d8b0;margin-right:.22rem;margin-top:.22rem;}
+.tag-b{display:inline-block;font-size:.58rem;padding:.1rem .38rem;border-radius:20px;background:#f0f4ff;color:#1a2a6a;border:1px solid #b0c0e0;margin-right:.22rem;margin-top:.22rem;}
+.reza-it{font-family:var(--font-serif);font-size:.68rem;color:var(--text-dim);font-style:italic;line-height:1.75;margin-top:.3rem;}
+
+/* EVENTO */
+.ev{display:flex;align-items:center;gap:.55rem;padding:.35rem 0;border-bottom:1px solid var(--border);}
+.ev:last-child{border:none;}
+.ev-d{background:var(--surface2);border:1px solid var(--border-gold);color:var(--gold);border-radius:3px;padding:.15rem .4rem;font-size:.62rem;font-weight:700;min-width:44px;text-align:center;white-space:nowrap;font-family:var(--font-serif);}
+.ev-i strong{display:block;font-size:.7rem;color:var(--text);}
+.ev-i span{font-size:.6rem;color:var(--muted);}
+
+/* LAYOUT */
+.layout{display:flex;height:320px;overflow:hidden;border-radius:6px;}
+
+/* ORNAMENTO */
+.orn{display:flex;align-items:center;gap:.6rem;color:var(--gold-dark);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;margin:1.5rem 0 1rem;}
+.orn::before,.orn::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border-gold),transparent);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div style="text-align:center;margin-bottom:1.75rem;padding:1.25rem 0;border-bottom:1px solid var(--border)">
+    <svg fill="none" style="width:48px;height:48px;margin:0 auto .65rem">
+      <circle cx="30" cy="30" r="28" stroke="#b8920b" stroke-width="1"></circle>
+      <circle cx="30" cy="30" r="20" stroke="#b8920b" stroke-width=".5"></circle>
+      <path d="M30 6L34 20L48 20L37 29L41 43L30 34L19 43L23 29L12 20L26 20Z" stroke="#8a6000" stroke-width="1" fill="none"></path>
+      <circle cx="30" cy="30" r="3" fill="#c8940a" opacity=".8"></circle>
+    </svg>
+    <h2 style="font-family:Georgia,serif;font-size:1.2rem;color:var(--gold);font-weight:normal;letter-spacing:.08em">Templo Pai Tuiamissu</h2>
+    <p style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-top:.2rem">Grimório Vivo — Tema Claro</p>
+  </div>
+
+  <div class="section-label">Tela de Login</div>
+  <div class="grid">
+    <div class="box">
+      <div class="box-label">Entrar</div>
+      <div class="box-body">
+        <div class="lm">
+          <svg fill="none" style="width:40px;height:40px;margin:0 auto .5rem;display:block">
+            <circle cx="28" cy="28" r="26" stroke="#b8920b" stroke-width="1"></circle>
+            <path d="M28 6L32 20L46 20L35 29L39 43L28 34L17 43L21 29L10 20L24 20Z" stroke="#8a6000" stroke-width="1" fill="none"></path>
+            <circle cx="28" cy="28" r="2.5" fill="#c8940a" opacity=".8"></circle>
+          </svg>
+          <div class="lm-title">Templo Pai Tuiamissu</div>
+          <div class="lm-sub">Acesso Restrito</div>
+          <div class="ltabs">
+            <div class="ltab on">Entrar</div>
+            <div class="ltab">Solicitar Acesso</div>
+          </div>
+          <input class="fi" />
+          <input class="fi" type="password" />
+          <button class="fb">Entrar no Grimório</button>
+        </div>
+      </div>
+    </div>
+    <div class="box">
+      <div class="box-label">Solicitar Acesso</div>
+      <div class="box-body">
+        <div class="lm">
+          <svg fill="none" style="width:40px;height:40px;margin:0 auto .5rem;display:block">
+            <circle cx="28" cy="28" r="26" stroke="#b8920b" stroke-width="1"></circle>
+            <path d="M28 6L32 20L46 20L35 29L39 43L28 34L17 43L21 29L10 20L24 20Z" stroke="#8a6000" stroke-width="1" fill="none"></path>
+            <circle cx="28" cy="28" r="2.5" fill="#c8940a" opacity=".8"></circle>
+          </svg>
+          <div class="lm-title">Templo Pai Tuiamissu</div>
+          <div class="lm-sub">Acesso Restrito</div>
+          <div class="ltabs">
+            <div class="ltab">Entrar</div>
+            <div class="ltab on">Solicitar Acesso</div>
+          </div>
+          <input class="fi" />
+          <input class="fi" />
+          <textarea class="fi" style="resize:none;min-height:0"></textarea>
+          <button class="fb">Enviar Solicitação</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="orn">Painel Principal</div>
+  <div class="grid" style="grid-template-columns:1fr">
+    <div class="box">
+      <div class="box-label">Dashboard</div>
+      <div class="box-body" style="padding:.5rem">
+        <div class="layout">
+          <div class="sb">
+            <div class="sb-logo">
+              <svg fill="none">
+                <circle cx="24" cy="24" r="22" stroke="#b8920b" stroke-width="1"></circle>
+                <path d="M24 4L27 16L39 16L30 24L33 36L24 29L15 36L18 24L9 16L21 16Z" stroke="#8a6000" stroke-width=".8" fill="none"></path>
+                <circle cx="24" cy="24" r="2.5" fill="#c8940a" opacity=".7"></circle>
+              </svg>
+              <h3>Pai Tuiamissu</h3>
+              <p>Umbanda Sagrada</p>
+            </div>
+            <div class="sb-sec">Principal</div>
+            <div class="sb-item on">
+              <svg fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 9L9 3l6 6M5 9v6h3v-4h2v4h3V9" stroke-linecap="round"></path></svg>
+              Início
+            </div>
+            <div class="sb-item">
+              <svg fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 11c1-2 2-3 3-3s2 2 3 2 2-3 3-3 2 1 3 1" stroke-linecap="round"></path></svg>
+              Orixás
+            </div>
+            <div class="sb-item">
+              <svg fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="4" width="14" height="12" rx="1.5"></rect><path d="M2 8h14M6 2v4M12 2v4" stroke-linecap="round"></path></svg>
+              Datas Sagradas
+            </div>
+            <div class="sb-sec">Conhecimento</div>
+            <div class="sb-item">
+              <svg fill="none" stroke="currentColor" stroke-width="1.2"><path d="M14 4C10 4 5 7 4 14c3-1 6-2 8-5M4 14l4-4" stroke-linecap="round"></path></svg>
+              Ervas &amp; Banhos
+            </div>
+            <div class="sb-item">
+              <svg fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 2v14M6 5s0 4 3 6c3-2 3-6 3-6" stroke-linecap="round"></path></svg>
+              Rezas &amp; Orações
+            </div>
+          </div>
+          <div class="main">
+            <div class="mhead">Início</div>
+            <div class="stats">
+              <div class="stat"><div class="n">13</div><div class="l">Orixás</div></div>
+              <div class="stat"><div class="n">16</div><div class="l">Datas</div></div>
+              <div class="stat"><div class="n">9</div><div class="l">Banhos</div></div>
+            </div>
+            <div class="cm">
+              <div class="cm-t">Próximos Eventos</div>
+              <div class="ev">
+                <div class="ev-d">27/09</div>
+                <div class="ev-i"><strong>Dia de Cosme e Damião</strong><span>Data Católica</span></div>
+              </div>
+              <div class="ev">
+                <div class="ev-d">02/11</div>
+                <div class="ev-i"><strong>Finados — Dia dos Eguns</strong><span>Data da Umbanda</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="orn">Cards e Modais</div>
+  <div class="grid">
+    <div class="box">
+      <div class="box-label">Cards — Orixás</div>
+      <div class="box-body">
+        <div class="cm" style="cursor:pointer">
+          <div class="cm-t">Iemanjá</div>
+          <div class="cm-m">Odô Yá! · Sábado</div>
+          <div class="cm-b">Mar, oceanos, águas salgadas</div>
+          <div>
+            <span class="tag-b">Azul claro</span>
+            <span class="tag-b">Branco</span>
+          </div>
+        </div>
+        <div class="cm" style="cursor:pointer">
+          <div class="cm-t">Ogum</div>
+          <div class="cm-m">Ogum Yê! · Terça-feira</div>
+          <div class="cm-b">Ferro, estradas, batalhas</div>
+          <div>
+            <span class="tag-b">Azul escuro</span>
+            <span style="display:inline-block;font-size:.58rem;padding:.1rem .38rem;border-radius:20px;background:#fff0f0;color:#7a1a1a;border:1px solid #f0c0c0;margin-right:.22rem;margin-top:.22rem">Vermelho</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="box">
+      <div class="box-label">Modal — Detalhe Orixá</div>
+      <div class="box-body">
+        <div class="mm">
+          <div style="height:4px;background:linear-gradient(90deg,var(--gold-dark),var(--gold-light),var(--gold-dark));border-radius:4px 4px 0 0;margin:-.9rem -.9rem .65rem"></div>
+          <div class="mm-t">Oxum</div>
+          <p style="color:var(--gold-light);font-size:.68rem;font-style:italic;margin-bottom:.55rem">Ora Yeyê Ô! Oxum!</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.3rem;margin-bottom:.45rem">
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:.3rem .4rem">
+              <span class="mm-lbl">Dia</span>
+              <span style="font-size:.68rem">Sábado</span>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:.3rem .4rem">
+              <span class="mm-lbl">Elemento</span>
+              <span style="font-size:.68rem">Rios, cachoeiras</span>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:.3rem .4rem">
+              <span class="mm-lbl">Coroa</span>
+              <span style="font-size:.68rem">Amarelo e dourado</span>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:.3rem .4rem">
+              <span class="mm-lbl">Santo</span>
+              <span style="font-size:.68rem">N. Sra. Aparecida</span>
+            </div>
+          </div>
+          <div class="mm-footer">
+            <span class="btn-s">Fechar</span>
+            <span class="btn-s">Editar</span>
+            <span class="btn-d">Excluir</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="orn">Ervas &amp; Rezas</div>
+  <div class="grid">
+    <div class="box">
+      <div class="box-label">Ervas &amp; Banhos</div>
+      <div class="box-body">
+        <div class="cm" style="cursor:pointer;margin-bottom:.5rem">
+          <div class="cm-t">Banho de Abertura de Caminhos</div>
+          <div class="cm-m">Abertura de Caminhos · Ogum</div>
+          <div class="cm-b">Manjericão, Louro, Alecrim, Canela em pau, Mel...</div>
+          <div><span class="tag-g">Abertura de Caminhos</span></div>
+        </div>
+        <div class="cm" style="cursor:pointer">
+          <div class="cm-t">Defumação para Limpeza do Ambiente</div>
+          <div class="cm-m">Limpeza e Defumação · Todos</div>
+          <div class="cm-b">Mirra, olíbano, alecrim seco, arruda, alfazema...</div>
+          <div><span class="tag-g">Limpeza e Defumação</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="box">
+      <div class="box-label">Rezas &amp; Orações</div>
+      <div class="box-body">
+        <div class="cm" style="cursor:pointer;margin-bottom:.5rem">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.4rem;margin-bottom:.25rem">
+            <div>
+              <div class="cm-t">Oração de Abertura da Gira</div>
+              <div class="cm-m">Abertura de Gira · Geral</div>
+            </div>
+            <span class="tag-b" style="white-space:nowrap">Abertura</span>
+          </div>
+          <div class="reza-it">Em nome de Deus Pai Todo-Poderoso,
+Em nome de Nosso Senhor Jesus Cristo...</div>
+        </div>
+        <div class="cm" style="cursor:pointer">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.4rem;margin-bottom:.25rem">
+            <div>
+              <div class="cm-t">Oração a Ogum — Abre Caminhos</div>
+              <div class="cm-m">Orixá específico · Ogum</div>
+            </div>
+            <span class="tag-b" style="white-space:nowrap">Orixá</span>
+          </div>
+          <div class="reza-it">Ogum, guerreiro divino, senhor das estradas,
+Com seu facão você corta os obstáculos...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="orn">Admin — Aprovação</div>
+  <div class="grid" style="grid-template-columns:1fr">
+    <div class="box">
+      <div class="box-label">Solicitações de Acesso</div>
+      <div class="box-body">
+        <p style="font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.55rem">Aguardando aprovação (2)</p>
+        <div style="display:flex;align-items:center;gap:.7rem;padding:.55rem .7rem;background:var(--surface2);border:1px solid var(--border);border-radius:5px;margin-bottom:.38rem;flex-wrap:wrap;box-shadow:0 1px 2px rgba(90,62,0,.05)">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.78rem;color:var(--text);font-weight:600">Filho de Maria</div>
+            <div style="font-size:.65rem;color:var(--muted)">filhomaria@email.com</div>
+            <div style="font-size:.62rem;color:var(--muted);font-style:italic;margin-top:.12rem">"Sou filho do terreiro há 3 anos."</div>
+          </div>
+          <div style="display:flex;gap:.3rem;flex-shrink:0">
+            <span class="btn-g">Aprovar</span>
+            <span class="btn-d">Negar</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.7rem;padding:.55rem .7rem;background:var(--surface2);border:1px solid var(--border);border-radius:5px;flex-wrap:wrap;box-shadow:0 1px 2px rgba(90,62,0,.05)">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.78rem;color:var(--text);font-weight:600">Ogã Ricardo</div>
+            <div style="font-size:.65rem;color:var(--muted)">ogaRicardo@email.com</div>
+          </div>
+          <div style="display:flex;gap:.3rem;flex-shrink:0">
+            <span class="btn-g">Aprovar</span>
+            <span class="btn-d">Negar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:1.75rem;padding-top:1rem;border-top:1px solid var(--border);font-size:.65rem;color:var(--muted);letter-spacing:.08em">
+    Made with IBM Bob
+  </div>
+</div>
+</body>
+</html>

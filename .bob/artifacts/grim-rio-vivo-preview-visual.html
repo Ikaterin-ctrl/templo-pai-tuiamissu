@@ -1,0 +1,379 @@
+
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#1a1108;--surface:#221609;--surface2:#2d1e0c;--surface3:#3a2710;
+  --border:#5a3e1a;--border-gold:#b8860b;
+  --text:#f0e0b8;--text-dim:#c8a96a;--muted:#8a6a3a;
+  --gold:#d4a017;--gold-light:#f0c040;--gold-dark:#8a6010;
+  --red-deep:#6b1a1a;--green-deep:#1a3a1a;
+  --font-serif:Georgia,"Times New Roman",serif;
+  --font-sans:-apple-system,"Segoe UI",system-ui,sans-serif;
+}
+body{font-family:var(--font-sans);background-color:var(--bg);background-image:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(90,62,26,.04) 2px,rgba(90,62,26,.04) 4px),repeating-linear-gradient(90deg,transparent,transparent 3px,rgba(90,62,26,.03) 3px,rgba(90,62,26,.03) 6px);color:var(--text);font-size:14px;line-height:1.6;}
+h2{font-family:var(--font-serif);color:var(--gold);font-weight:normal;letter-spacing:.06em}
+.section-label{font-size:.72rem;color:var(--gold-dark);text-transform:uppercase;letter-spacing:.18em;padding:.4rem 0;border-bottom:1px solid rgba(90,62,26,.4);margin-bottom:.75rem;}
+.preview-wrap{max-width:900px;margin:0 auto;padding:2rem 1.5rem;}
+.screens{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2.5rem;}
+@media(max-width:600px){.screens{grid-template-columns:1fr;}}
+.screen-box{background:var(--surface);border:1px solid var(--border-gold);border-radius:8px;overflow:hidden;position:relative;}
+.screen-box::before,.screen-box::after{content:"";position:absolute;width:14px;height:14px;border-color:var(--gold-dark);border-style:solid;pointer-events:none;}
+.screen-box::before{top:6px;left:6px;border-width:1px 0 0 1px;}
+.screen-box::after{bottom:6px;right:6px;border-width:0 1px 1px 0;}
+.screen-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;padding:.5rem 1rem;border-bottom:1px solid var(--border);background:var(--surface2);}
+.screen-content{padding:1rem;}
+
+/* LOGIN PREVIEW */
+.login-mock{max-width:280px;margin:0 auto;text-align:center;}
+.sigil-wrap{margin-bottom:.75rem;}
+.sigil-wrap svg{width:44px;height:44px;opacity:.85;}
+.login-title{font-family:var(--font-serif);font-size:1.1rem;color:var(--gold);letter-spacing:.08em;margin-bottom:.1rem;}
+.login-sub{font-size:.65rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1rem;}
+.login-tabs-mock{display:flex;border-bottom:1px solid var(--border);margin-bottom:1rem;}
+.ltab{flex:1;padding:.4rem;font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid transparent;text-align:center;}
+.ltab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.finput{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:.45rem .6rem;color:var(--text);font-size:.75rem;margin-bottom:.55rem;}
+.fbtn{width:100%;background:linear-gradient(135deg,var(--gold-dark),var(--gold),var(--border-gold));color:var(--bg);border:1px solid var(--gold);border-radius:3px;padding:.5rem;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;}
+
+/* SIDEBAR PREVIEW */
+.sidebar-mock{background:var(--surface);border-right:1px solid var(--border);width:140px;height:340px;display:flex;flex-direction:column;position:relative;}
+.sidebar-mock::before{content:"";display:block;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.sb-logo{padding:.75rem .8rem;border-bottom:1px solid var(--border);text-align:center;}
+.sb-logo svg{width:32px;height:32px;opacity:.8;}
+.sb-logo h3{font-family:var(--font-serif);font-size:.7rem;color:var(--gold);letter-spacing:.08em;margin-top:.25rem;}
+.sb-logo p{font-size:.55rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;}
+.sb-section{font-size:.55rem;color:var(--gold-dark);text-transform:uppercase;letter-spacing:.18em;padding:.5rem .8rem .2rem;}
+.sb-item{display:flex;align-items:center;gap:.4rem;padding:.4rem .8rem;color:var(--muted);font-size:.72rem;border-left:2px solid transparent;}
+.sb-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(212,160,23,.08);}
+.sb-item svg{width:12px;height:12px;flex-shrink:0;}
+
+/* DASHBOARD PREVIEW */
+.dash-mock{flex:1;padding:.8rem;}
+.dash-head{font-family:var(--font-serif);font-size:.95rem;color:var(--gold);padding-bottom:.5rem;border-bottom:1px solid var(--border);margin-bottom:.75rem;position:relative;}
+.dash-head::after{content:"";position:absolute;bottom:-1px;left:0;width:36px;height:1.5px;background:linear-gradient(90deg,var(--gold),transparent);}
+.stats-mock{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:.75rem;}
+.stat-mock{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:.5rem;text-align:center;}
+.stat-mock .n{font-family:var(--font-serif);font-size:1.1rem;color:var(--gold);}
+.stat-mock .l{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.card-mock{background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:.6rem;margin-bottom:.4rem;position:relative;}
+.card-mock::before{content:"";position:absolute;top:0;left:.6rem;right:.6rem;height:1px;background:linear-gradient(90deg,transparent,var(--border-gold),transparent);}
+.cm-title{font-family:var(--font-serif);font-size:.72rem;color:var(--gold);margin-bottom:.2rem;}
+.cm-meta{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.cm-body{font-size:.65rem;color:var(--text-dim);margin-top:.3rem;line-height:1.5;}
+
+/* MODAL PREVIEW */
+.modal-mock{background:var(--surface);border:1px solid var(--border-gold);border-radius:6px;padding:1rem;position:relative;}
+.modal-mock::before,.modal-mock::after{content:"";position:absolute;width:12px;height:12px;border-color:var(--gold-dark);border-style:solid;}
+.modal-mock::before{top:5px;left:5px;border-width:1px 0 0 1px;}
+.modal-mock::after{bottom:5px;right:5px;border-width:0 1px 1px 0;}
+.mm-title{font-family:var(--font-serif);font-size:.85rem;color:var(--gold);margin-bottom:.7rem;font-weight:normal;}
+.mm-field{margin-bottom:.5rem;}
+.mm-label{font-size:.6rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:.2rem;}
+.mm-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:2px;padding:.35rem .5rem;color:var(--text);font-size:.7rem;}
+.mm-footer{display:flex;gap:.4rem;justify-content:flex-end;margin-top:.7rem;}
+.btn-mock-s{background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:2px;padding:.25rem .55rem;font-size:.65rem;letter-spacing:.04em;text-transform:uppercase;}
+.btn-mock-p{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:var(--bg);border:1px solid var(--gold);border-radius:2px;padding:.25rem .55rem;font-size:.65rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+
+/* ERVAS PREVIEW */
+.erva-tag-mock{display:inline-block;font-size:.6rem;padding:.1rem .4rem;border-radius:20px;background:rgba(26,58,26,.35);color:#90c870;border:1px solid rgba(42,90,42,.6);margin-right:.25rem;margin-top:.25rem;}
+
+/* REZA PREVIEW */
+.reza-mock{font-family:var(--font-serif);font-size:.72rem;color:var(--muted);font-style:italic;line-height:1.75;}
+
+/* LAYOUT MOCK */
+.layout-mock{display:flex;height:340px;overflow:hidden;}
+
+/* ORNAMENT */
+.ornament{display:flex;align-items:center;gap:.6rem;color:var(--gold-dark);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;margin:1.25rem 0;}
+.ornament::before,.ornament::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border-gold),transparent);}
+</style>
+</head>
+<body>
+<div class="preview-wrap">
+
+  <div style="text-align:center;margin-bottom:2rem;padding:1.5rem 0;border-bottom:1px solid var(--border)">
+    <svg fill="none" style="width:52px;height:52px;margin:0 auto .75rem" aria-hidden="true">
+      <circle cx="30" cy="30" r="28" stroke="#b8860b" stroke-width="1"></circle>
+      <circle cx="30" cy="30" r="20" stroke="#b8860b" stroke-width=".5"></circle>
+      <path d="M30 6L34 20L48 20L37 29L41 43L30 34L19 43L23 29L12 20L26 20Z" stroke="#d4a017" stroke-width="1" fill="none"></path>
+      <circle cx="30" cy="30" r="3" fill="#d4a017" opacity=".7"></circle>
+    </svg>
+    <h2 style="font-size:1.3rem;letter-spacing:.1em">Templo Pai Tuiamissu</h2>
+    <p style="font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-top:.25rem">Grimório Vivo — Preview Visual</p>
+  </div>
+
+  <div class="section-label">Tela de Login</div>
+  <div class="screens">
+    <div class="screen-box">
+      <div class="screen-label">Login — Entrar</div>
+      <div class="screen-content">
+        <div class="login-mock">
+          <div class="sigil-wrap">
+            <svg fill="none">
+              <circle cx="28" cy="28" r="26" stroke="#b8860b" stroke-width="1"></circle>
+              <circle cx="28" cy="28" r="20" stroke="#b8860b" stroke-width=".5"></circle>
+              <path d="M28 6L32 20L46 20L35 29L39 43L28 34L17 43L21 29L10 20L24 20Z" stroke="#d4a017" stroke-width="1" fill="none"></path>
+              <circle cx="28" cy="28" r="3" fill="#d4a017" opacity=".7"></circle>
+            </svg>
+          </div>
+          <div class="login-title">Templo Pai Tuiamissu</div>
+          <div class="login-sub">Umbanda Sagrada — Acesso Restrito</div>
+          <div class="login-tabs-mock">
+            <div class="ltab active">Entrar</div>
+            <div class="ltab">Solicitar Acesso</div>
+          </div>
+          <input class="finput" />
+          <input class="finput" />
+          <button class="fbtn">Entrar no Grimório</button>
+        </div>
+      </div>
+    </div>
+    <div class="screen-box">
+      <div class="screen-label">Solicitar Acesso (aba 2)</div>
+      <div class="screen-content">
+        <div class="login-mock">
+          <div class="sigil-wrap">
+            <svg fill="none">
+              <circle cx="28" cy="28" r="26" stroke="#b8860b" stroke-width="1"></circle>
+              <path d="M28 6L32 20L46 20L35 29L39 43L28 34L17 43L21 29L10 20L24 20Z" stroke="#d4a017" stroke-width="1" fill="none"></path>
+              <circle cx="28" cy="28" r="3" fill="#d4a017" opacity=".7"></circle>
+            </svg>
+          </div>
+          <div class="login-title">Templo Pai Tuiamissu</div>
+          <div class="login-sub">Umbanda Sagrada — Acesso Restrito</div>
+          <div class="login-tabs-mock">
+            <div class="ltab">Entrar</div>
+            <div class="ltab active">Solicitar Acesso</div>
+          </div>
+          <input class="finput" />
+          <input class="finput" />
+          <textarea class="finput" style="resize:none"></textarea>
+          <button class="fbtn">Enviar Solicitação</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ornament">Painel Principal</div>
+
+  <div class="screens" style="grid-template-columns:1fr">
+    <div class="screen-box">
+      <div class="screen-label">Dashboard — Grimório Vivo</div>
+      <div class="screen-content" style="padding:.5rem">
+        <div class="layout-mock">
+          
+          <div class="sidebar-mock">
+            <div class="sb-logo">
+              <svg fill="none">
+                <circle cx="24" cy="24" r="22" stroke="#b8860b" stroke-width="1"></circle>
+                <path d="M24 4L27 16L39 16L30 24L33 36L24 29L15 36L18 24L9 16L21 16Z" stroke="#d4a017" stroke-width=".8" fill="none"></path>
+                <circle cx="24" cy="24" r="2.5" fill="#d4a017" opacity=".6"></circle>
+              </svg>
+              <h3>Pai Tuiamissu</h3>
+              <p>Umbanda Sagrada</p>
+            </div>
+            <div class="sb-section">Principal</div>
+            <div class="sb-item active">
+              <svg fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 9L9 3l6 6M5 9v6h3v-4h2v4h3V9" stroke-linecap="round"></path></svg>
+              Início
+            </div>
+            <div class="sb-item">
+              <svg fill="none" stroke="currentColor" stroke-width="1.2"><path d="M1 11c1-2 2-3 3-3s2 2 3 2 2-3 3-3 2 1 3 1" stroke-linecap="round"></path></svg>
+              Orixás
+            </div>
+            <div class="sb-item">
+              <svg fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="4" width="14" height="12" rx="1.5"></rect><path d="M2 8h14M6 2v4M12 2v4" stroke-linecap="round"></path></svg>
+              Datas Sagradas
+            </div>
+            <div class="sb-section">Conhecimento</div>
+            <div class="sb-item">
+              <svg fill="none" stroke="currentColor" stroke-width="1.2"><path d="M14 4C10 4 5 7 4 14c3-1 6-2 8-5M4 14l4-4" stroke-linecap="round"></path></svg>
+              Ervas &amp; Banhos
+            </div>
+            <div class="sb-item">
+              <svg fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 2v14M6 5s0 4 3 6c3-2 3-6 3-6" stroke-linecap="round"></path></svg>
+              Rezas &amp; Orações
+            </div>
+          </div>
+          
+          <div class="dash-mock">
+            <div class="dash-head">Início</div>
+            <div class="stats-mock">
+              <div class="stat-mock"><div class="n">13</div><div class="l">Orixás</div></div>
+              <div class="stat-mock"><div class="n">—</div><div class="l">Pontos</div></div>
+              <div class="stat-mock"><div class="n">16</div><div class="l">Datas</div></div>
+            </div>
+            <div class="card-mock">
+              <div class="cm-title">Próximos Eventos</div>
+              <div style="display:flex;align-items:center;gap:.5rem;padding:.35rem 0;border-bottom:1px solid rgba(90,62,26,.3)">
+                <span style="background:var(--surface3);border:1px solid var(--border-gold);color:var(--gold);border-radius:3px;padding:.15rem .4rem;font-size:.65rem;font-family:var(--font-serif);white-space:nowrap">27/09</span>
+                <div>
+                  <div class="cm-meta">Dia de Cosme e Damião</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:.5rem;padding:.35rem 0">
+                <span style="background:var(--surface3);border:1px solid var(--border-gold);color:var(--gold);border-radius:3px;padding:.15rem .4rem;font-size:.65rem;font-family:var(--font-serif);white-space:nowrap">02/11</span>
+                <div>
+                  <div class="cm-meta">Finados — Dia dos Eguns</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ornament">Cards e Modais</div>
+
+  <div class="screens">
+    <div class="screen-box">
+      <div class="screen-label">Card de Orixá</div>
+      <div class="screen-content">
+        <div class="card-mock" style="margin-bottom:.6rem">
+          <div class="cm-title">Iemanjá</div>
+          <div class="cm-meta">Odô Yá! · Sábado</div>
+          <div class="cm-body">Mar, oceanos, águas salgadas</div>
+          <div style="margin-top:.4rem">
+            <span class="erva-tag-mock" style="background:rgba(26,40,60,.4);color:#90b8e0;border-color:rgba(40,60,100,.5)">Azul claro</span>
+            <span class="erva-tag-mock" style="background:rgba(26,40,60,.4);color:#90b8e0;border-color:rgba(40,60,100,.5)">Branco</span>
+          </div>
+        </div>
+        <div class="card-mock">
+          <div class="cm-title">Ogum</div>
+          <div class="cm-meta">Ogum Yê! · Terça-feira</div>
+          <div class="cm-body">Ferro, estradas, batalhas</div>
+          <div style="margin-top:.4rem">
+            <span class="erva-tag-mock" style="background:rgba(26,30,60,.4);color:#8090d0;border-color:rgba(40,50,100,.5)">Azul escuro</span>
+            <span class="erva-tag-mock" style="background:rgba(60,26,26,.4);color:#d08080;border-color:rgba(100,40,40,.5)">Vermelho</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-box">
+      <div class="screen-label">Modal — Detalhe de Orixá</div>
+      <div class="screen-content">
+        <div class="modal-mock">
+          <div style="height:4px;background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-dark));border-radius:4px 4px 0 0;margin:-1rem -1rem .75rem"></div>
+          <div class="mm-title">Oxum</div>
+          <p style="color:var(--gold);font-size:.72rem;font-style:italic;margin-bottom:.6rem">Ora Yeyê Ô! Oxum!</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.35rem;margin-bottom:.5rem">
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:.35rem .45rem">
+              <div style="font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Dia</div>
+              <div style="font-size:.7rem">Sábado</div>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:.35rem .45rem">
+              <div style="font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Elemento</div>
+              <div style="font-size:.7rem">Rios, cachoeiras</div>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:.35rem .45rem">
+              <div style="font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Coroa</div>
+              <div style="font-size:.7rem">Amarelo e dourado</div>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:.35rem .45rem">
+              <div style="font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Oferendas</div>
+              <div style="font-size:.7rem">Mel, champanhe</div>
+            </div>
+          </div>
+          <div class="mm-footer">
+            <span class="btn-mock-s">Fechar</span>
+            <span class="btn-mock-s">Editar</span>
+            <span class="btn-mock-p">Excluir</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ornament">Ervas &amp; Rezas</div>
+
+  <div class="screens">
+    <div class="screen-box">
+      <div class="screen-label">Ervas &amp; Banhos</div>
+      <div class="screen-content">
+        <div class="card-mock" style="margin-bottom:.5rem">
+          <div class="cm-title">Banho de Abertura de Caminhos</div>
+          <div class="cm-meta">Abertura de Caminhos · Ogum</div>
+          <div class="cm-body">Manjericão, Louro, Alecrim, Patchouli, Canela em pau, Mel...</div>
+          <div><span class="erva-tag-mock">Abertura de Caminhos</span></div>
+        </div>
+        <div class="card-mock">
+          <div class="cm-title">Defumação para Limpeza do Ambiente</div>
+          <div class="cm-meta">Limpeza e Defumação · Todos</div>
+          <div class="cm-body">Mirra, olíbano, alecrim seco, arruda, alfazema...</div>
+          <div><span class="erva-tag-mock">Limpeza e Defumação</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-box">
+      <div class="screen-label">Rezas &amp; Orações</div>
+      <div class="screen-content">
+        <div class="card-mock" style="margin-bottom:.5rem">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;margin-bottom:.3rem">
+            <div>
+              <div class="cm-title">Oração de Abertura da Gira</div>
+              <div class="cm-meta">Abertura de Gira · Todos / Geral</div>
+            </div>
+            <span style="background:rgba(26,26,60,.4);color:#90caf9;border:1px solid rgba(40,40,100,.5);font-size:.6rem;padding:.1rem .4rem;border-radius:20px;white-space:nowrap">Abertura</span>
+          </div>
+          <div class="reza-mock">Em nome de Deus Pai Todo-Poderoso,
+Em nome de Nosso Senhor Jesus Cristo...</div>
+        </div>
+        <div class="card-mock">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem;margin-bottom:.3rem">
+            <div>
+              <div class="cm-title">Oração a Ogum — Abre Caminhos</div>
+              <div class="cm-meta">Orixá específico · Ogum</div>
+            </div>
+            <span style="background:rgba(26,26,60,.4);color:#90caf9;border:1px solid rgba(40,40,100,.5);font-size:.6rem;padding:.1rem .4rem;border-radius:20px;white-space:nowrap">Orixá</span>
+          </div>
+          <div class="reza-mock">Ogum, guerreiro divino, senhor das estradas,
+Com seu facão você corta os obstáculos...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ornament">Admin — Aprovação de Membros</div>
+
+  <div class="screens" style="grid-template-columns:1fr">
+    <div class="screen-box">
+      <div class="screen-label">Painel Admin — Solicitações de Acesso</div>
+      <div class="screen-content">
+        <p style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.6rem">Aguardando aprovação (2)</p>
+        <div style="display:flex;align-items:center;gap:.75rem;padding:.6rem .8rem;background:var(--surface2);border:1px solid var(--border);border-radius:5px;margin-bottom:.4rem;flex-wrap:wrap">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.82rem;color:var(--text)">Filho de Maria</div>
+            <div style="font-size:.68rem;color:var(--muted)">filhomaria@email.com</div>
+            <div style="font-size:.68rem;color:var(--muted);font-style:italic;margin-top:.15rem">"Sou filho do terreiro há 3 anos, voltei a frequentar."</div>
+          </div>
+          <div style="display:flex;gap:.3rem;flex-shrink:0">
+            <span style="background:var(--green-deep);color:#a0d0a0;border:1px solid #2a5a2a;border-radius:3px;padding:.2rem .5rem;font-size:.65rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase">Aprovar</span>
+            <span style="background:var(--red-deep);color:#f0b0b0;border:1px solid #8b2a2a;border-radius:3px;padding:.2rem .5rem;font-size:.65rem;letter-spacing:.04em;text-transform:uppercase">Negar</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;padding:.6rem .8rem;background:var(--surface2);border:1px solid var(--border);border-radius:5px">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.82rem;color:var(--text)">Ogã Ricardo</div>
+            <div style="font-size:.68rem;color:var(--muted)">ogaRicardo@email.com</div>
+          </div>
+          <div style="display:flex;gap:.3rem;flex-shrink:0">
+            <span style="background:var(--green-deep);color:#a0d0a0;border:1px solid #2a5a2a;border-radius:3px;padding:.2rem .5rem;font-size:.65rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase">Aprovar</span>
+            <span style="background:var(--red-deep);color:#f0b0b0;border:1px solid #8b2a2a;border-radius:3px;padding:.2rem .5rem;font-size:.65rem;letter-spacing:.04em;text-transform:uppercase">Negar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--border);font-size:.68rem;color:var(--muted);letter-spacing:.08em">
+    Made with IBM Bob
+  </div>
+
+</div>
+</body>
+</html>

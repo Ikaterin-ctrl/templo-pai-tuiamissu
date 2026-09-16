@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Templo Pai Tuiamissu — Grimório Digital
 
 Plataforma web privada desenvolvida para os membros da corrente do **Templo Pai Tuiamissu**, terreiro de Umbanda Sagrada.
@@ -92,3 +93,7 @@ firebase login
 cd terreiro
 firebase deploy --only hosting
 ```
+=======
+# templo-pai-tuiamissu
+Site privado para membros do Templo Pai Tuiamissu — pontos cantados, orixás, ervas, rezas, giras e escala de limpeza. PWA offline · Firebase.
+>>>>>>> 321ee0ccccb71e6b42bfa6b0a1be63082d2bb911

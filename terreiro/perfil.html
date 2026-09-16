@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meu Perfil — Templo Pai Tuiamissu</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    (function() {
+      const salvo = localStorage.getItem("terreiro_tema");
+      if (salvo === "dark") document.documentElement.setAttribute("data-theme", "dark");
+    })();
+  </script>
+</head>
+<body>
+<div class="perfil-wrapper">
+
+  <!-- Topbar de navegação -->
+  <header class="perfil-topbar">
+    <button onclick="window.location.href='dashboard.html'" class="btn btn-secondary" aria-label="Voltar ao Início">← Início</button>
+    <h1 class="perfil-topbar-title">Meu Perfil</h1>
+    <span style="width:70px;" aria-hidden="true"></span>
+  </header>
+
+  <!-- Avatar & Identidade -->
+  <section class="perfil-avatar-section" aria-label="Identidade do membro">
+    <div id="avatar-circle" class="perfil-avatar-circle" aria-hidden="true">
+      <span id="avatar-icon">🕊️</span>
+    </div>
+    <h2 id="perfil-display-name" class="perfil-display-name">—</h2>
+    <p id="perfil-email" class="perfil-email-text"></p>
+    <div class="perfil-badges-row" id="perfil-badges-container">
+      <span class="badge badge-green" id="perfil-role-label">Membro do Terreiro</span>
+    </div>
+  </section>
+
+  <!-- Painel Especial da Mainha: Central de Aprovações Rápidas (1 Clique) -->
+  <div class="special-role-panel" id="panel-mainha-aprovacoes" style="display:none; border-color:var(--gold); margin-bottom:1.5rem;">
+    <div class="special-role-badge"><span aria-hidden="true">👑</span> Central da Mainha — Aprovações Rápidas</div>
+    <h3 class="perfil-spec-heading">Pedidos de Alteração dos Filhos</h3>
+    <p class="perfil-spec-lead">
+      Aqui você aprova ou recusa com apenas 1 clique qualquer alteração de dados, funções ou entrada em grupos solicitada pelos filhos de santo.
+    </p>
+    <div id="lista-pedidos-mainha" aria-live="polite">
+      <p class="perfil-hint">Carregando pedidos...</p>
+    </div>
+  </div>
+
+  <!-- Painel Especial de Superpoderes (Mainha / Bê / Biel) -->
+  <div class="special-role-panel" id="panel-special-role" style="display:none;">
+    <div class="special-role-badge" id="special-role-badge"><span aria-hidden="true">⭐</span> Painel Especial</div>
+    <h3 id="special-role-title" class="perfil-spec-title"></h3>
+    <p id="special-role-desc" class="perfil-spec-desc"></p>
+    <div class="special-actions-grid" id="special-role-actions"></div>
+  </div>
+
+  <!-- Status de Solicitação Pendente -->
+  <div id="banner-pedido-pendente" class="perfil-banner-pendente" style="display:none;">
+    <div class="perfil-banner-pendente-header">
+      <span aria-hidden="true">⏳</span> <span>Pedido Enviado para a Mainha!</span>
+    </div>
+    <p id="desc-pedido-pendente" class="perfil-hint" style="margin-bottom:0;">
+      Sua solicitação de alteração está aguardando a bênção e autorização da Mainha. Assim que ela aprovar, seu perfil será atualizado.
+    </p>
+  </div>
+
+  <!-- Dados Pessoais & Espirituais -->
+  <div class="card" style="margin-bottom:1.25rem;">
+    <div class="card-title perfil-card-title"><span aria-hidden="true">🕯️</span> Meus Dados no Terreiro</div>
+    <p class="perfil-hint">
+      Preencha seus dados. Para manter a ordem da casa, alterações são enviadas diretamente para a aprovação da <strong>Mainha</strong>.
+    </p>
+
+    <div class="form-group">
+      <label for="p-nome">Seu Nome / Como é conhecido(a) na corrente</label>
+      <input type="text" id="p-nome" placeholder="Ex: Catarina Andrade" autocomplete="name" />
+    </div>
+
+    <div class="form-group">
+      <label for="p-funcao">Sua Função no Terreiro</label>
+      <select id="p-funcao">
+        <option value="">— Selecionar Função —</option>
+        <option value="Filho(a) de Santo">Filho(a) de Santo (Corrente)</option>
+        <option value="Médium em Desenvolvimento">Médium em Desenvolvimento</option>
+        <option value="Ogã / Curimba">Ogã / Curimba (Atabaque)</option>
+        <option value="Ekedi">Ekedi</option>
+        <option value="Zeladoria / Limpeza">Zeladoria / Limpeza da Casa</option>
+        <option value="Simpatizante / Assistência">Simpatizante / Assistência</option>
+        <option value="Outro">Outro</option>
+      </select>
+    </div>
+
+    <!-- Interesses e Afinidades no Terreiro -->
+    <div class="form-group" style="margin-top:1.2rem;">
+      <label>Interesses &amp; Áreas de Estudo</label>
+      <p class="perfil-hint" style="margin-bottom:0.4rem; font-size:0.75rem;">Selecione o que você gostaria de aprender ou ajudar na casa:</p>
+      <div class="interests-grid" id="interests-grid">
+        <label class="interest-chip"><input type="checkbox" value="curimba" /> <span aria-hidden="true">🥁</span> Curimba &amp; Atabaques</label>
+        <label class="interest-chip"><input type="checkbox" value="ervas" /> <span aria-hidden="true">🌿</span> Ervas &amp; Banhos</label>
+        <label class="interest-chip"><input type="checkbox" value="mediunidade" /> <span aria-hidden="true">🔮</span> Desenvolvimento Mediúnico</label>
+        <label class="interest-chip"><input type="checkbox" value="limpeza" /> <span aria-hidden="true">🧹</span> Zeladoria &amp; Limpeza</label>
+        <label class="interest-chip"><input type="checkbox" value="pontos-riscados" /> <span aria-hidden="true">✍️</span> Pontos Riscados &amp; Pemba</label>
+        <label class="interest-chip"><input type="checkbox" value="doutrina" /> <span aria-hidden="true">📜</span> Doutrina &amp; Fundamentos</label>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="btn-salvar-perfil" style="margin-top:0.75rem;">
+      <span aria-hidden="true">📨</span> Enviar Pedido de Atualização para a Mainha
+    </button>
+    <p class="success-msg" id="perfil-ok" aria-live="polite"></p>
+  </div>
+
+  <!-- Grupos do Terreiro -->
+  <div class="card" style="margin-bottom:1.25rem;">
+    <div class="card-title perfil-card-title"><span aria-hidden="true">👥</span> Grupos da Casa</div>
+    <p class="perfil-hint">
+      Escolha os grupos dos quais deseja participar. O pedido é enviado para confirmação da <strong>Mainha</strong> com 1 clique.
+    </p>
+    <div id="lista-grupos-perfil" aria-live="polite">
+      <p class="perfil-hint">Carregando grupos...</p>
+    </div>
+  </div>
+
+  <!-- Alterar Senha -->
+  <div class="card" style="margin-bottom:1.25rem;">
+    <div class="card-title perfil-card-title"><span aria-hidden="true">🔒</span> Segurança &amp; Senha</div>
+    <div class="form-group">
+      <label for="p-senha-nova">Nova Senha</label>
+      <input type="password" id="p-senha-nova" placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
+    </div>
+    <div class="form-group">
+      <label for="p-senha-conf">Confirmar Nova Senha</label>
+      <input type="password" id="p-senha-conf" placeholder="Repetir nova senha" autocomplete="new-password" />
+    </div>
+    <button class="btn btn-secondary" id="btn-alterar-senha">Alterar Senha</button>
+    <p class="error-msg" id="senha-erro" aria-live="polite"></p>
+    <p class="success-msg" id="senha-ok" aria-live="polite"></p>
+  </div>
+
+  <!-- Notificações -->
+  <div class="card" id="notificacoes">
+    <div class="card-title perfil-card-title"><span aria-hidden="true">🔔</span> Minhas Notificações</div>
+    <div id="lista-notif" aria-live="polite">
+      <p class="perfil-hint">Carregando...</p>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { auth, db, ADMIN_EMAIL } from "./js/firebase-config.js";
+  import { onAuthStateChanged, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import {
+    collection, doc, getDoc, setDoc, getDocs, addDoc, deleteDoc,
+    query, where, orderBy, updateDoc, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const ROLE_LABELS = { admin: "Direção / Mainha", curimba: "Curimba / Atabaque", limpeza: "Zeladoria / Limpeza" };
+
+  let _currentUser = null;
+  let _userRole = null;
+  let _isMainha = false;
+  let _todosGrupos = [];
+  let _perfilData = {};
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = "index.html"; return; }
+    _currentUser = user;
+    document.getElementById("perfil-email").textContent = user.email;
+
+    _isMainha = user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    if (_isMainha) _userRole = "admin";
+
+    // 1. Carregar Role do Membro
+    try {
+      const memSnap = await getDocs(query(collection(db, "membros"), where("email", "==", user.email)));
+      if (!memSnap.empty) {
+        const memData = memSnap.docs[0].data();
+        if (memData.role) _userRole = memData.role;
+      }
+    } catch (e) { /* silencioso */ }
+
+    // Atualizar badge do perfil
+    const labelEl = document.getElementById("perfil-role-label");
+    if (_userRole && ROLE_LABELS[_userRole]) {
+      labelEl.textContent = ROLE_LABELS[_userRole];
+    } else if (_isMainha) {
+      labelEl.textContent = "Direção / Mainha";
+    }
+
+    // 2. Carregar Perfil Salvo
+    try {
+      const perfilDoc = await getDoc(doc(db, "perfis", user.uid));
+      if (perfilDoc.exists()) {
+        _perfilData = perfilDoc.data();
+        document.getElementById("p-nome").value = _perfilData.nome || "";
+        document.getElementById("p-funcao").value = _perfilData.funcao || "";
+        document.getElementById("perfil-display-name").textContent = _perfilData.nome || user.email.split("@")[0];
+
+        // Marcar interesses
+        const interesses = _perfilData.interesses || [];
+        document.querySelectorAll("#interests-grid input").forEach(chk => {
+          if (interesses.includes(chk.value)) {
+            chk.checked = true;
+            chk.parentElement.classList.add("selected");
+          }
+        });
+      } else {
+        document.getElementById("perfil-display-name").textContent = user.displayName || user.email.split("@")[0];
+      }
+    } catch (e) {
+      document.getElementById("perfil-display-name").textContent = user.email.split("@")[0];
+    }
+
+    // Se for a própria Mainha, o botão salva direto sem precisar de aprovação
+    if (_isMainha) {
+      const btnSalvar = document.getElementById("btn-salvar-perfil");
+      btnSalvar.innerHTML = `<span>💾</span> <span>Salvar Alterações (Direto)</span>`;
+    }
+
+    // 3. Renderizar Painéis Especiais (Mainha / Bê / Biel)
+    renderPaineisEspeciais(user, _userRole);
+
+    // 4. Verificar se há pedido pendente deste usuário
+    if (!_isMainha) {
+      await checkPedidoPendente(user.uid);
+    }
+
+    // 5. Carregar Grupos
+    await loadGruposPerfil(user);
+
+    // 6. Carregar Notificações
+    await loadNotificacoes(user.uid);
+  });
+
+  // Interatividade visual dos chips de interesses
+  document.querySelectorAll("#interests-grid .interest-chip").forEach(label => {
+    label.addEventListener("click", () => {
+      const chk = label.querySelector("input");
+      setTimeout(() => {
+        label.classList.toggle("selected", chk.checked);
+      }, 0);
+    });
+  });
+
+  // Renderizar Painéis Especiais
+  function renderPaineisEspeciais(user, role) {
+    const email = (user.email || "").toLowerCase();
+    const nome = (document.getElementById("p-nome")?.value || "").toLowerCase();
+
+    _isMainha = role === "admin" || email === ADMIN_EMAIL.toLowerCase() || nome.includes("mainha") || nome.includes("catarina");
+    const isBe = role === "limpeza" || nome.includes("be") || nome.includes("bê") || email.includes("limpeza");
+    const isBiel = role === "curimba" || nome.includes("biel") || nome.includes("gabriel") || email.includes("curimba");
+
+    // Central da Mainha com lista de pedidos de 1 clique
+    const mainhaPanel = document.getElementById("panel-mainha-aprovacoes");
+    if (_isMainha) {
+      mainhaPanel.style.display = "block";
+      loadPedidosMainha();
+    } else {
+      mainhaPanel.style.display = "none";
+    }
+
+    // Painel Especial
+    const panel = document.getElementById("panel-special-role");
+    const badge = document.getElementById("special-role-badge");
+    const title = document.getElementById("special-role-title");
+    const desc = document.getElementById("special-role-desc");
+    const actionsGrid = document.getElementById("special-role-actions");
+
+    if (!_isMainha && !isBe && !isBiel) {
+      panel.style.display = "none";
+      return;
+    }
+
+    panel.style.display = "block";
+
+    if (_isMainha) {
+      document.getElementById("avatar-icon").textContent = "👑";
+      badge.textContent = "✨ Direção Espiritual — Painel da Mainha";
+      title.textContent = "Bênção, Mainha! Gestão do Terreiro";
+      desc.textContent = "Acesso exclusivo e simplificado para administrar a corrente e todas as giras e trabalhos da casa.";
+      actionsGrid.innerHTML = `
+        <button class="special-action-btn" onclick="window.location.href='admin.html'">
+          <span>🛡️</span> <span>Administração &amp; Membros</span>
+        </button>
+        <button class="special-action-btn" onclick="window.location.href='dashboard.html#calendario'">
+          <span>🥁</span> <span>Criar Nova Gira / Festa</span>
+        </button>
+        <button class="special-action-btn" onclick="window.location.href='dashboard.html#ensinamentos'">
+          <span>📜</span> <span>Publicar Ensinamento Sagrado</span>
+        </button>
+        <button class="special-action-btn" onclick="window.location.href='dashboard.html#limpeza'">
+          <span>📋</span> <span>Revisar Escalas de Limpeza</span>
+        </button>
+      `;
+    } else if (isBe) {
+      document.getElementById("avatar-icon").textContent = "🧹";
+      badge.textContent = "🌿 Zeladoria da Casa — Painel da Bê";
+      title.textContent = "Axé, Bê! Gestão da Limpeza &amp; Firmeza da Casa";
+      desc.textContent = "Comando rápido para organizar escalas de limpeza, mutirões e conferir as tarefas da corrente.";
+      actionsGrid.innerHTML = `
+        <button class="special-action-btn" onclick="window.location.href='dashboard.html#limpeza'">
+          <span>🧹</span> <span>Criar Nova Tarefa / Escala</span>
+        </button>
+        <button class="special-action-btn" onclick="window.location.href='dashboard.html#limpeza'">
+          <span>✅</span> <span>Ver Escalas da Semana</span>
+        </button>
+        <button class="special-action-btn" onclick="window.location.href='dashboard.html#ervas'">
+          <span>🌿</span> <span>Ver Ervas de Limpeza</span>
+        </button>
+      `;
+    } else if (isBiel) {
+      document.getElementById("avatar-icon").textContent = "🥁";
+      badge.textContent = "🎵 Toque Sagrado — Painel do Biel (Curimba)";
+      title.textContent = "Salve o Atabaque, Biel! Gestão da Curimba";
+      desc.textContent = "Acesso prioritário para cadastrar novos pontos cantados, gerenciar letras e repertório das giras.";
+      actionsGrid.innerHTML = `
+        <button class="special-action-btn" onclick="window.location.href='dashboard.html#pontos'">
+          <span>🎵</span> <span>Adicionar Novo Ponto</span>
+        </button>
+        <button class="special-action-btn" onclick="window.location.href='dashboard.html#pontos'">
+          <span>⭐</span> <span>Pontos Favoritos</span>
+        </button>
+        <button class="special-action-btn" onclick="window.location.href='dashboard.html#orixas'">
+          <span>🌊</span> <span>Pontos por Orixá</span>
+        </button>
+      `;
+    }
+  }
+
+  // Verificar se o usuário comum tem pedido pendente
+  async function checkPedidoPendente(uid) {
+    const banner = document.getElementById("banner-pedido-pendente");
+    try {
+      const snap = await getDocs(query(
+        collection(db, "pedidos_mudanca"),
+        where("uid", "==", uid),
+        where("status", "==", "pendente")
+      ));
+      if (!snap.empty) {
+        banner.style.display = "block";
+      } else {
+        banner.style.display = "none";
+      }
+    } catch (e) {
+      banner.style.display = "none";
+    }
+  }
+
+  // Carregar Pedidos na Central da Mainha (Super Fácil: Aprovar / Recusar em 1 Clique)
+  async function loadPedidosMainha() {
+    const el = document.getElementById("lista-pedidos-mainha");
+    try {
+      const snap = await getDocs(query(
+        collection(db, "pedidos_mudanca"),
+        where("status", "==", "pendente"),
+        orderBy("criadoEm", "desc")
+      ));
+
+      if (snap.empty) {
+        el.innerHTML = `<p style="color:var(--muted); font-size:0.85rem; padding:0.5rem 0;">✨ Nenhum pedido de alteração pendente no momento. Tudo em paz!</p>`;
+        return;
+      }
+
+      el.innerHTML = snap.docs.map(d => {
+        const p = d.data();
+        let resumo = "";
+        if (p.tipo === "perfil") {
+          resumo = `<strong>Novo Nome:</strong> ${p.dados.nome || '—'} · <strong>Função:</strong> ${p.dados.funcao || '—'}`;
+        } else if (p.tipo === "entrar_grupo") {
+          resumo = `Pediu para <strong>Entrar no Grupo:</strong> ${p.grupoNome}`;
+        } else if (p.tipo === "sair_grupo") {
+          resumo = `Pediu para <strong>Sair do Grupo:</strong> ${p.grupoNome}`;
+        }
+
+        return `
+          <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:0.85rem 1rem; margin-bottom:0.6rem; display:flex; justify-content:space-between; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+            <div style="flex:1; min-width:240px;">
+              <div style="font-weight:700; color:var(--text); font-size:0.9rem;">${p.userName || p.userEmail}</div>
+              <div style="font-size:0.78rem; color:var(--muted); margin-bottom:0.25rem;">${p.userEmail}</div>
+              <div style="font-size:0.82rem; color:var(--gold);">${resumo}</div>
+            </div>
+            <div style="display:flex; gap:0.5rem; align-items:center;">
+              <button class="btn btn-success" style="font-size:0.78rem; padding:0.4rem 0.8rem;" data-aprovar-pedido="${d.id}">
+                ✓ Aprovar
+              </button>
+              <button class="btn btn-danger" style="font-size:0.78rem; padding:0.4rem 0.8rem;" data-recusar-pedido="${d.id}">
+                ✕ Recusar
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // Handler 1-Clique: Aprovar Pedido
+      el.querySelectorAll("[data-aprovar-pedido]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          btn.disabled = true;
+          btn.textContent = "Aprovando...";
+          const pedidoId = btn.dataset.aprovarPedido;
+          const pedDoc = await getDoc(doc(db, "pedidos_mudanca", pedidoId));
+          if (!pedDoc.exists()) return;
+          const p = pedDoc.data();
+
+          if (p.tipo === "perfil") {
+            // Aplica as mudanças no perfil do usuário
+            await setDoc(doc(db, "perfis", p.uid), {
+              ...p.dados,
+              atualizadoEm: serverTimestamp()
+            }, { merge: true });
+
+            // Atualiza também na coleção de membros se existir
+            const memSnap = await getDocs(query(collection(db, "membros"), where("email", "==", p.userEmail)));
+            if (!memSnap.empty) {
+              await updateDoc(doc(db, "membros", memSnap.docs[0].id), {
+                nome: p.dados.nome || memSnap.docs[0].data().nome
+              });
+            }
+          } else if (p.tipo === "entrar_grupo") {
+            const grpDoc = await getDoc(doc(db, "grupos", p.grupoId));
+            if (grpDoc.exists()) {
+              const grpData = grpDoc.data();
+              const emails = Array.from(new Set([...(grpData.membrosEmails || []), p.userEmail]));
+              const uids = Array.from(new Set([...(grpData.membrosUids || []), p.uid]));
+              await updateDoc(doc(db, "grupos", p.grupoId), { membrosEmails: emails, membrosUids: uids });
+            }
+          } else if (p.tipo === "sair_grupo") {
+            const grpDoc = await getDoc(doc(db, "grupos", p.grupoId));
+            if (grpDoc.exists()) {
+              const grpData = grpDoc.data();
+              const emails = (grpData.membrosEmails || []).filter(e => e !== p.userEmail);
+              const uids = (grpData.membrosUids || []).filter(u => u !== p.uid);
+              await updateDoc(doc(db, "grupos", p.grupoId), { membrosEmails: emails, membrosUids: uids });
+            }
+          }
+
+          // Marca o pedido como aprovado
+          await updateDoc(doc(db, "pedidos_mudanca", pedidoId), {
+            status: "aprovado",
+            respondidoEm: serverTimestamp()
+          });
+
+          // Cria notificação para o usuário
+          await addDoc(collection(db, "notificacoes"), {
+            uid: p.uid,
+            texto: `✨ A Mainha abençoou e APROVOU sua solicitação de ${p.tipo === 'perfil' ? 'atualização de dados' : (p.tipo === 'entrar_grupo' ? 'entrada no grupo ' + p.grupoNome : 'saída do grupo ' + p.grupoNome)}!`,
+            lida: false,
+            criadoEm: serverTimestamp()
+          });
+
+          await loadPedidosMainha();
+          await loadGruposPerfil(_currentUser);
+        });
+      });
+
+      // Handler 1-Clique: Recusar Pedido
+      el.querySelectorAll("[data-recusar-pedido]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          if (!confirm("Deseja recusar este pedido?")) return;
+          btn.disabled = true;
+          btn.textContent = "Recusando...";
+          const pedidoId = btn.dataset.recusarPedido;
+          const pedDoc = await getDoc(doc(db, "pedidos_mudanca", pedidoId));
+          if (!pedDoc.exists()) return;
+          const p = pedDoc.data();
+
+          await updateDoc(doc(db, "pedidos_mudanca", pedidoId), {
+            status: "recusado",
+            respondidoEm: serverTimestamp()
+          });
+
+          // Notifica o usuário
+          await addDoc(collection(db, "notificacoes"), {
+            uid: p.uid,
+            texto: `🙏 Seu pedido de ${p.tipo === 'perfil' ? 'mudança de dados' : 'grupo'} não foi autorizado pela Mainha no momento. Converse com ela na próxima gira para orientações.`,
+            lida: false,
+            criadoEm: serverTimestamp()
+          });
+
+          await loadPedidosMainha();
+        });
+      });
+
+    } catch (err) {
+      el.innerHTML = `<p style="color:var(--muted); font-size:0.85rem;">Sem pedidos pendentes no momento.</p>`;
+    }
+  }
+
+  // Carregar Grupos no Perfil
+  async function loadGruposPerfil(user) {
+    const el = document.getElementById("lista-grupos-perfil");
+    try {
+      const snap = await getDocs(query(collection(db, "grupos"), orderBy("nome", "asc")));
+      _todosGrupos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      if (!_todosGrupos.length) {
+        el.innerHTML = `<p style="color:var(--muted); font-size:0.85rem;">Nenhum grupo ativo no momento.</p>`;
+        return;
+      }
+
+      // Buscar pedidos de grupo pendentes deste usuário
+      let pedidosPendentesGrupos = [];
+      if (!_isMainha) {
+        const pedSnap = await getDocs(query(
+          collection(db, "pedidos_mudanca"),
+          where("uid", "==", user.uid),
+          where("status", "==", "pendente")
+        ));
+        pedidosPendentesGrupos = pedSnap.docs.map(d => d.data());
+      }
+
+      el.innerHTML = _todosGrupos.map(g => {
+        const membrosEmails = g.membrosEmails || [];
+        const isMembro = membrosEmails.includes(user.email);
+        const temPedidoEntrar = pedidosPendentesGrupos.some(p => p.grupoId === g.id && p.tipo === "entrar_grupo");
+        const temPedidoSair = pedidosPendentesGrupos.some(p => p.grupoId === g.id && p.tipo === "sair_grupo");
+
+        let botaoHTML = "";
+        if (_isMainha) {
+          // Mainha entra e sai na hora
+          botaoHTML = isMembro ? `
+            <button class="btn btn-danger" style="font-size:0.75rem; padding:0.35rem 0.7rem;" data-sair-direto="${g.id}">
+              Sair do Grupo
+            </button>
+          ` : `
+            <button class="btn btn-primary" style="font-size:0.75rem; padding:0.35rem 0.7rem;" data-entrar-direto="${g.id}">
+              + Participar
+            </button>
+          `;
+        } else {
+          // Membros enviam solicitação para a Mainha
+          if (temPedidoEntrar) {
+            botaoHTML = `<span style="font-size:0.75rem; color:var(--gold); font-weight:600;">⏳ Pedido para Entrar Enviado</span>`;
+          } else if (temPedidoSair) {
+            botaoHTML = `<span style="font-size:0.75rem; color:var(--danger); font-weight:600;">⏳ Pedido para Sair Enviado</span>`;
+          } else if (isMembro) {
+            botaoHTML = `
+              <button class="btn btn-danger" style="font-size:0.75rem; padding:0.35rem 0.7rem;" data-pedir-sair="${g.id}" data-nome="${g.nome}">
+                Pedir para Sair
+              </button>
+            `;
+          } else {
+            botaoHTML = `
+              <button class="btn btn-primary" style="font-size:0.75rem; padding:0.35rem 0.7rem;" data-pedir-entrar="${g.id}" data-nome="${g.nome}">
+                + Pedir para Entrar
+              </button>
+            `;
+          }
+        }
+
+        return `
+          <div class="group-profile-card">
+            <div class="group-profile-info">
+              <strong>${g.nome}</strong>
+              <span>${g.desc || 'Grupo do Terreiro'} · ${(g.membrosEmails||[]).length} participante(s)</span>
+            </div>
+            <div>${botaoHTML}</div>
+          </div>
+        `;
+      }).join("");
+
+      // Ações diretas da Mainha
+      el.querySelectorAll("[data-entrar-direto]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          btn.disabled = true;
+          const g = _todosGrupos.find(x => x.id === btn.dataset.entrarDireto);
+          if (!g) return;
+          const emails = [...(g.membrosEmails || []), user.email];
+          const uids = [...(g.membrosUids || []), user.uid];
+          await updateDoc(doc(db, "grupos", g.id), { membrosEmails: emails, membrosUids: uids });
+          await loadGruposPerfil(user);
+        });
+      });
+
+      el.querySelectorAll("[data-sair-direto]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          btn.disabled = true;
+          const g = _todosGrupos.find(x => x.id === btn.dataset.sairDireto);
+          if (!g) return;
+          const emails = (g.membrosEmails || []).filter(e => e !== user.email);
+          const uids = (g.membrosUids || []).filter(u => u !== user.uid);
+          await updateDoc(doc(db, "grupos", g.id), { membrosEmails: emails, membrosUids: uids });
+          await loadGruposPerfil(user);
+        });
+      });
+
+      // Ações de Pedido dos Membros (com aviso e envio para a Mainha)
+      el.querySelectorAll("[data-pedir-entrar]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          btn.disabled = true;
+          btn.textContent = "Enviando...";
+          const grupoId = btn.dataset.pedirEntrar;
+          const grupoNome = btn.dataset.nome;
+          const nomeUser = document.getElementById("p-nome").value.trim() || user.email.split("@")[0];
+
+          await addDoc(collection(db, "pedidos_mudanca"), {
+            uid: user.uid,
+            userEmail: user.email,
+            userName: nomeUser,
+            tipo: "entrar_grupo",
+            grupoId,
+            grupoNome,
+            status: "pendente",
+            criadoEm: serverTimestamp()
+          });
+
+          await checkPedidoPendente(user.uid);
+          await loadGruposPerfil(user);
+        });
+      });
+
+      el.querySelectorAll("[data-pedir-sair]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          if (!confirm(`Deseja pedir autorização à Mainha para sair do grupo "${btn.dataset.nome}"?`)) return;
+          btn.disabled = true;
+          btn.textContent = "Enviando...";
+          const grupoId = btn.dataset.pedirSair;
+          const grupoNome = btn.dataset.nome;
+          const nomeUser = document.getElementById("p-nome").value.trim() || user.email.split("@")[0];
+
+          await addDoc(collection(db, "pedidos_mudanca"), {
+            uid: user.uid,
+            userEmail: user.email,
+            userName: nomeUser,
+            tipo: "sair_grupo",
+            grupoId,
+            grupoNome,
+            status: "pendente",
+            criadoEm: serverTimestamp()
+          });
+
+          await checkPedidoPendente(user.uid);
+          await loadGruposPerfil(user);
+        });
+      });
+
+    } catch (err) {
+      el.innerHTML = `<p style="color:var(--danger); font-size:0.85rem;">Erro ao carregar grupos.</p>`;
+    }
+  }
+
+  // Salvar / Enviar Pedido de Atualização de Perfil
+  document.getElementById("btn-salvar-perfil").addEventListener("click", async () => {
+    if (!_currentUser) return;
+    const btn = document.getElementById("btn-salvar-perfil");
+    btn.disabled = true;
+
+    const interesses = Array.from(document.querySelectorAll("#interests-grid input:checked")).map(c => c.value);
+    const nome = document.getElementById("p-nome").value.trim();
+    const funcao = document.getElementById("p-funcao").value;
+
+    if (!nome) {
+      alert("Por favor, informe seu nome.");
+      btn.disabled = false;
+      return;
+    }
+
+    try {
+      if (_isMainha) {
+        // Se for a Mainha, salva direto no perfil sem aprovação
+        await setDoc(doc(db, "perfis", _currentUser.uid), {
+          nome,
+          funcao,
+          interesses,
+          atualizadoEm: serverTimestamp()
+        }, { merge: true });
+
+        document.getElementById("perfil-display-name").textContent = nome;
+        document.getElementById("perfil-ok").textContent = "Alterações salvas com sucesso!";
+        setTimeout(() => document.getElementById("perfil-ok").textContent = "", 3000);
+      } else {
+        // Se for filho de santo, envia o pedido para a Mainha aprovar com 1 clique
+        btn.textContent = "Enviando pedido...";
+        await addDoc(collection(db, "pedidos_mudanca"), {
+          uid: _currentUser.uid,
+          userEmail: _currentUser.email,
+          userName: nome,
+          tipo: "perfil",
+          dados: { nome, funcao, interesses },
+          status: "pendente",
+          criadoEm: serverTimestamp()
+        });
+
+        document.getElementById("banner-pedido-pendente").style.display = "block";
+        document.getElementById("perfil-ok").textContent = "Pedido enviado com sucesso para a Mainha!";
+        setTimeout(() => document.getElementById("perfil-ok").textContent = "", 4000);
+      }
+    } catch (e) {
+      document.getElementById("perfil-ok").textContent = "Erro ao enviar solicitação.";
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = _isMainha ? `<span>💾</span> <span>Salvar Alterações (Direto)</span>` : `<span>📨</span> <span>Enviar Pedido de Atualização para a Mainha</span>`;
+    }
+  });
+
+  // Alterar Senha
+  document.getElementById("btn-alterar-senha").addEventListener("click", async () => {
+    const nova = document.getElementById("p-senha-nova").value;
+    const conf = document.getElementById("p-senha-conf").value;
+    const erroEl = document.getElementById("senha-erro");
+    const okEl   = document.getElementById("senha-ok");
+    erroEl.textContent = ""; okEl.textContent = "";
+    if (nova.length < 8) { erroEl.textContent = "A senha precisa ter pelo menos 8 caracteres."; return; }
+    if (nova !== conf)   { erroEl.textContent = "As senhas não coincidem."; return; }
+    try {
+      await updatePassword(_currentUser, nova);
+      okEl.textContent = "Senha alterada com sucesso!";
+      document.getElementById("p-senha-nova").value = "";
+      document.getElementById("p-senha-conf").value = "";
+      setTimeout(() => okEl.textContent = "", 3000);
+    } catch (e) {
+      erroEl.textContent = e.code === "auth/requires-recent-login"
+        ? "Por segurança, saia e entre novamente antes de alterar a senha."
+        : "Erro ao alterar senha.";
+    }
+  });
+
+  // Carregar Notificações
+  async function loadNotificacoes(uid) {
+    try {
+      const snap = await getDocs(query(
+        collection(db, "notificacoes"),
+        where("uid","==",uid),
+        orderBy("criadoEm","desc")
+      ));
+      const el = document.getElementById("lista-notif");
+      if (snap.empty) {
+        el.innerHTML = `<p style="color:var(--muted);font-size:.85rem;">Nenhuma notificação no momento.</p>`;
+      } else {
+        el.innerHTML = snap.docs.map(d => {
+          const n = d.data();
+          return `<div style="padding:.6rem 0; border-bottom:1px solid var(--border); display:flex; gap:.75rem; align-items:flex-start;">
+            <div style="flex:1;">
+              <p style="font-size:.85rem; ${n.lida ? "color:var(--muted);" : "font-weight:600;"}">${n.texto}</p>
+            </div>
+            ${!n.lida ? `<button class="btn btn-secondary" style="font-size:.72rem;padding:.25rem .5rem;flex-shrink:0;" data-mark-read="${d.id}">Lida</button>` : ""}
+          </div>`;
+        }).join("");
+        el.querySelectorAll("[data-mark-read]").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            await updateDoc(doc(db, "notificacoes", btn.dataset.markRead), { lida: true });
+            btn.closest("div[style]").querySelector("p").style.fontWeight = "";
+            btn.closest("div[style]").querySelector("p").style.color = "var(--muted)";
+            btn.remove();
+          });
+        });
+      }
+    } catch (e) {
+      document.getElementById("lista-notif").innerHTML = `<p style="color:var(--muted);font-size:.85rem;">Sem notificações no momento.</p>`;
+    }
+  }
+</script>
+</body>
+</html>

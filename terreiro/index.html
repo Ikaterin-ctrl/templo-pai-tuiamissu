@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Templo Pai Tuiamissu</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    (function() {
+      const salvo = localStorage.getItem("terreiro_tema");
+      if (salvo === "dark") document.documentElement.setAttribute("data-theme", "dark");
+    })();
+  </script>
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-bg-decor" aria-hidden="true"></div>
+    <div class="login-box" role="main">
+
+      <div class="login-sigil" aria-hidden="true">
+        <svg viewBox="0 0 56 56" fill="none">
+          <circle cx="28" cy="28" r="26" stroke="#b8920b" stroke-width="1"/>
+          <circle cx="28" cy="28" r="20" stroke="#b8920b" stroke-width="0.5" stroke-dasharray="3 3"/>
+          <path d="M28 6 L32 20 L46 20 L35 29 L39 43 L28 34 L17 43 L21 29 L10 20 L24 20 Z"
+                stroke="#8a6000" stroke-width="1" fill="none"/>
+          <circle cx="28" cy="28" r="3" fill="#c8940a" opacity="0.8"/>
+        </svg>
+      </div>
+
+      <h1>Templo Pai Tuiamissu</h1>
+      <p class="subtitle">Umbanda Sagrada &mdash; Acesso Restrito</p>
+
+      <div class="login-tabs" role="tablist" aria-label="Tipo de acesso">
+        <button class="login-tab active" role="tab" aria-selected="true"
+                aria-controls="tab-login" id="btn-tab-login">Entrar</button>
+        <button class="login-tab" role="tab" aria-selected="false"
+                aria-controls="tab-solicitar" id="btn-tab-solicitar">Pedir Acesso</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-login" role="tabpanel" aria-labelledby="btn-tab-login">
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="seu@email.com" required />
+          </div>
+          <div class="form-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" autocomplete="current-password" placeholder="Sua senha" required />
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="login-btn">Entrar no Grimório</button>
+          <p class="error-msg" id="login-error" role="alert" aria-live="polite"></p>
+          <p style="text-align:center; margin-top:0.75rem;">
+            <button type="button" class="btn-link-reset" id="btn-esqueci-senha">Esqueci minha senha</button>
+          </p>
+        </form>
+        <!-- Painel de recuperação de senha (oculto por padrão) -->
+        <div id="painel-reset" hidden>
+          <div class="form-group">
+            <label for="reset-email">E-mail para recuperação</label>
+            <input type="email" id="reset-email" name="reset-email" autocomplete="email" placeholder="seu@email.com" />
+          </div>
+          <button type="button" class="btn btn-secondary btn-full" id="btn-enviar-reset">Enviar link de recuperação</button>
+          <button type="button" class="btn-link-reset" id="btn-voltar-login" style="display:block; text-align:center; margin-top:0.6rem;">← Voltar ao login</button>
+          <p class="error-msg" id="reset-error" role="alert" aria-live="polite"></p>
+          <p class="success-msg" id="reset-success" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-solicitar" role="tabpanel" aria-labelledby="btn-tab-solicitar">
+        <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1.1rem; line-height:1.6;">
+          Preencha seus dados. O pai de santo receberá sua solicitação e criará seu acesso.
+        </p>
+        <form id="solicitar-form" novalidate>
+          <div class="form-group">
+            <label for="sol-nome">Seu nome</label>
+            <input type="text" id="sol-nome" name="nome" autocomplete="name" placeholder="Como você é conhecido no terreiro" required />
+          </div>
+          <div class="form-group">
+            <label for="sol-email">E-mail</label>
+            <input type="email" id="sol-email" name="email" autocomplete="email" placeholder="seu@email.com" required />
+          </div>
+          <div class="form-group">
+            <label for="sol-funcao">Função no terreiro</label>
+            <select id="sol-funcao" name="funcao">
+              <option value="">— Selecionar —</option>
+              <option>Filho de Santo</option>
+              <option>Ogã</option>
+              <option>Ekedi</option>
+              <option>Médium em desenvolvimento</option>
+              <option>Simpatizante</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="sol-msg">Mensagem (opcional)</label>
+            <textarea id="sol-msg" name="mensagem" rows="2" placeholder="Apresente-se ao pai de santo..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full" id="sol-btn">Enviar Pedido de Acesso</button>
+          <p class="error-msg" id="sol-error" role="alert" aria-live="polite"></p>
+          <p class="success-msg" id="sol-success" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from "./js/firebase-config.js";
+    import { signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) window.location.href = "dashboard.html";
+    });
+
+    document.getElementById("btn-tab-login").addEventListener("click", () => setTab("login"));
+    document.getElementById("btn-tab-solicitar").addEventListener("click", () => setTab("solicitar"));
+
+    function setTab(name) {
+      document.querySelectorAll(".login-tab").forEach(t => {
+        t.classList.toggle("active", t.id === "btn-tab-" + name);
+        t.setAttribute("aria-selected", t.id === "btn-tab-" + name ? "true" : "false");
+      });
+      document.querySelectorAll(".tab-panel").forEach(p => {
+        p.classList.toggle("active", p.id === "tab-" + name);
+      });
+    }
+
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("login-btn");
+      const errorEl = document.getElementById("login-error");
+      btn.disabled = true;
+      btn.textContent = "Verificando...";
+      errorEl.textContent = "";
+      try {
+        await signInWithEmailAndPassword(auth,
+          document.getElementById("email").value.trim(),
+          document.getElementById("password").value);
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        let msg = "E-mail ou senha incorretos.";
+        if (err.code === "auth/too-many-requests") msg = "Muitas tentativas. Tente mais tarde.";
+        if (err.code === "auth/user-disabled")     msg = "Esta conta foi desativada.";
+        errorEl.textContent = msg;
+        btn.disabled = false;
+        btn.textContent = "Entrar no Grimório";
+      }
+    });
+
+    document.getElementById("solicitar-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn       = document.getElementById("sol-btn");
+      const errorEl   = document.getElementById("sol-error");
+      const successEl = document.getElementById("sol-success");
+      const nome   = document.getElementById("sol-nome").value.trim();
+      const email  = document.getElementById("sol-email").value.trim();
+      const funcao = document.getElementById("sol-funcao").value;
+      const msg    = document.getElementById("sol-msg").value.trim();
+
+      if (!nome || !email) { errorEl.textContent = "Preencha nome e e-mail."; return; }
+
+      btn.disabled = true;
+      btn.textContent = "Enviando...";
+      errorEl.textContent = "";
+      successEl.textContent = "";
+
+      try {
+        const existe = await getDocs(query(collection(db, "solicitacoes"), where("email", "==", email)));
+        if (!existe.empty) {
+          errorEl.textContent = "Este e-mail já tem um pedido em análise.";
+          btn.disabled = false;
+          btn.textContent = "Enviar Pedido de Acesso";
+          return;
+        }
+        await addDoc(collection(db, "solicitacoes"), {
+          nome, email, funcao, mensagem: msg, aprovado: false, criadoEm: serverTimestamp()
+        });
+        successEl.textContent = "Pedido enviado! Aguarde o contato do pai de santo. Axé.";
+        document.getElementById("solicitar-form").reset();
+      } catch (err) {
+        errorEl.textContent = "Erro ao enviar. Tente novamente.";
+      }
+      btn.disabled = false;
+      btn.textContent = "Enviar Pedido de Acesso";
+    });
+
+    // ── Recuperação de senha ──
+    document.getElementById("btn-esqueci-senha").addEventListener("click", () => {
+      document.getElementById("login-form").hidden = true;
+      document.getElementById("btn-esqueci-senha").closest("p").hidden = true;
+      document.getElementById("painel-reset").hidden = false;
+      document.getElementById("reset-email").value = document.getElementById("email").value.trim();
+      document.getElementById("reset-email").focus();
+    });
+
+    document.getElementById("btn-voltar-login").addEventListener("click", () => {
+      document.getElementById("painel-reset").hidden = true;
+      document.getElementById("login-form").hidden = false;
+      document.getElementById("btn-esqueci-senha").closest("p").hidden = false;
+      document.getElementById("reset-error").textContent = "";
+      document.getElementById("reset-success").textContent = "";
+    });
+
+    document.getElementById("btn-enviar-reset").addEventListener("click", async () => {
+      const btn = document.getElementById("btn-enviar-reset");
+      const errorEl = document.getElementById("reset-error");
+      const successEl = document.getElementById("reset-success");
+      const email = document.getElementById("reset-email").value.trim();
+      if (!email) { errorEl.textContent = "Preencha o e-mail."; return; }
+      btn.disabled = true;
+      btn.textContent = "Enviando...";
+      errorEl.textContent = "";
+      successEl.textContent = "";
+      try {
+        await sendPasswordResetEmail(auth, email);
+        successEl.textContent = "Link de recuperação enviado! Verifique sua caixa de entrada.";
+      } catch (err) {
+        errorEl.textContent = "E-mail não encontrado ou erro ao enviar.";
+      }
+      btn.disabled = false;
+      btn.textContent = "Enviar link de recuperação";
+    });
+  </script>
+</body>
+</html>

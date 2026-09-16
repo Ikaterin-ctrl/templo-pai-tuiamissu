@@ -1,0 +1,16 @@
+{
+  "name": "Templo Pai Tuiamissu — Grimório Vivo",
+  "short_name": "Pai Tuiamissu",
+  "description": "Grimório e Gestão do Templo Pai Tuiamissu",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#151413",
+  "theme_color": "#8a6000",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%231e1c19' stroke='%238a6000' stroke-width='4'/><path d='M50 14 L57 38 L81 38 L62 53 L69 77 L50 62 L31 77 L38 53 L19 38 L43 38 Z' stroke='%23e0b034' stroke-width='2' fill='%23c8940a'/></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

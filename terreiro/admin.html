@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Templo Pai Tuiamissu</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script>
+    (function() {
+      const salvo = localStorage.getItem("terreiro_tema");
+      if (salvo === "dark") document.documentElement.setAttribute("data-theme", "dark");
+    })();
+  </script>
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar" aria-label="Navegação">
+    <div class="sidebar-logo">
+      <svg class="sigil" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <circle cx="24" cy="24" r="22" stroke="#b8860b" stroke-width="1"/>
+        <path d="M24 4 L27 16 L39 16 L30 24 L33 36 L24 29 L15 36 L18 24 L9 16 L21 16 Z"
+              stroke="#d4a017" stroke-width="0.8" fill="none"/>
+        <circle cx="24" cy="24" r="2.5" fill="#d4a017" opacity="0.6"/>
+      </svg>
+      <h2>Pai Tuiamissu</h2>
+      <p>Painel do Admin</p>
+    </div>
+    <nav class="sidebar-nav" aria-label="Menu">
+      <button class="nav-item active" data-section="solicitacoes" aria-current="page">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <rect x="2" y="2" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M5 7h8M5 10h5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Solicitações
+      </button>
+      <button class="nav-item" data-section="pedidos">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M9 5v4l2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Pedidos dos Filhos
+      </button>
+      <button class="nav-item" data-section="membros">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M3 16c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Membros
+      </button>
+      <button class="nav-item" id="link-dashboard">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <path d="M3 9L9 3l6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M5 9v6h3v-4h2v4h3V9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        Ir ao Grimório
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <strong id="admin-email">—</strong>
+      <button class="btn btn-danger" id="logout-btn"
+              style="width:100%; margin-top:0.5rem; font-size:0.78rem; padding:0.45rem;">Sair</button>
+    </div>
+  </aside>
+
+  <main class="main-content" id="main-content">
+    <div class="topbar-mobile">
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar">&#9776;</button>
+      <h2>Admin</h2>
+    </div>
+
+    <section class="page active" id="section-solicitacoes" aria-labelledby="h-sol">
+      <div class="page-header">
+        <h1 id="h-sol">Solicitações de Acesso</h1>
+        <button class="btn btn-secondary" id="btn-refresh-sol">Atualizar</button>
+      </div>
+      <div id="lista-solicitacoes" aria-live="polite">
+        <p style="color:var(--muted);">Carregando...</p>
+      </div>
+    </section>
+
+    <section class="page" id="section-pedidos" aria-labelledby="h-pedidos">
+      <div class="page-header">
+        <h1 id="h-pedidos"><span aria-hidden="true">👑</span> Pedidos de Alteração dos Filhos</h1>
+        <button class="btn btn-secondary" id="btn-refresh-pedidos">Atualizar</button>
+      </div>
+      <p style="font-size:0.83rem; color:var(--text-dim); margin-bottom:1rem;">
+        Autorize ou recuse com 1 clique mudanças de dados, funções ou pedidos de entrada/saída em grupos.
+      </p>
+      <div id="lista-pedidos-admin" aria-live="polite">
+        <p style="color:var(--muted);">Carregando pedidos...</p>
+      </div>
+    </section>
+
+    <section class="page" id="section-membros" aria-labelledby="h-mem">
+      <div class="page-header">
+        <h1 id="h-mem">Membros Aprovados</h1>
+        <button class="btn btn-secondary" id="btn-refresh-mem">Atualizar</button>
+      </div>
+      <div id="lista-membros" aria-live="polite">
+        <p style="color:var(--muted);">Carregando...</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<!-- Modal: Aprovar -->
+<div class="modal-overlay" id="modal-aprovar" role="dialog" aria-modal="true" aria-labelledby="modal-aprovar-title">
+  <div class="modal">
+    <h2 id="modal-aprovar-title">Aprovar e Criar Acesso</h2>
+    <input type="hidden" id="apr-sol-id" />
+    <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1.25rem; line-height:1.6;">
+      Defina a senha inicial para <strong id="apr-nome"></strong>. Ela poderá alterar depois.
+    </p>
+    <div class="form-group">
+      <label for="apr-email">E-mail</label>
+      <input type="text" id="apr-email" readonly style="opacity:0.6;" />
+    </div>
+    <div class="form-group">
+      <label for="apr-senha">Senha inicial</label>
+      <input type="password" id="apr-senha" placeholder="Mínimo 8 caracteres" autocomplete="new-password" />
+    </div>
+    <div class="form-group">
+      <label for="apr-role">Papel / Permissões</label>
+      <select id="apr-role">
+        <option value="">Sem papel especial (só leitura)</option>
+        <option value="curimba">Curimba — edita Pontos Cantados</option>
+        <option value="limpeza">Limpeza — edita Limpeza da Casa</option>
+        <option value="admin">Admin — edita tudo</option>
+      </select>
+      <p style="font-size:0.75rem; color:var(--muted); margin-top:0.4rem;">Podes alterar isto depois na lista de membros.</p>
+    </div>
+    <p class="error-msg" id="apr-error" role="alert" aria-live="polite"></p>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-cancelar-apr">Cancelar</button>
+      <button class="btn btn-success" id="btn-confirmar-apr">Aprovar e Criar Acesso</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Editar role -->
+<div class="modal-overlay" id="modal-role" role="dialog" aria-modal="true" aria-labelledby="modal-role-title">
+  <div class="modal">
+    <h2 id="modal-role-title">Alterar papel</h2>
+    <input type="hidden" id="role-mem-id" />
+    <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1rem;">
+      Membro: <strong id="role-mem-nome"></strong>
+    </p>
+    <div class="form-group">
+      <label for="role-select">Papel / Permissões</label>
+      <select id="role-select">
+        <option value="">Sem papel especial (só leitura)</option>
+        <option value="curimba">Curimba — edita Pontos Cantados</option>
+        <option value="limpeza">Limpeza — edita Limpeza da Casa</option>
+        <option value="admin">Admin — edita tudo</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-cancelar-role">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-role">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { auth, db, ADMIN_EMAIL } from "./js/firebase-config.js";
+  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { collection, getDocs, getDoc, doc, updateDoc, deleteDoc, addDoc, setDoc, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user) { window.location.href = "index.html"; return; }
+    if (user.email !== ADMIN_EMAIL) { window.location.href = "dashboard.html"; return; }
+    document.getElementById("admin-email").textContent = user.email;
+    loadSolicitacoes();
+    loadPedidos();
+    loadMembros();
+  });
+
+  document.getElementById("logout-btn").addEventListener("click", () => {
+    signOut(auth).then(() => window.location.href = "index.html");
+  });
+  document.getElementById("link-dashboard").addEventListener("click", () => {
+    window.location.href = "dashboard.html";
+  });
+
+  document.querySelectorAll(".nav-item[data-section]").forEach(item => {
+    item.addEventListener("click", () => {
+      document.querySelectorAll(".nav-item").forEach(n => { n.classList.remove("active"); n.removeAttribute("aria-current"); });
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      item.classList.add("active");
+      item.setAttribute("aria-current", "page");
+      document.getElementById("section-" + item.dataset.section).classList.add("active");
+      document.getElementById("sidebar").classList.remove("open");
+      document.getElementById("sidebar-overlay").classList.remove("open");
+    });
+  });
+
+  document.getElementById("menu-toggle").addEventListener("click", () => {
+    const open = document.getElementById("sidebar").classList.toggle("open");
+    document.getElementById("sidebar-overlay").classList.toggle("open", open);
+    document.getElementById("menu-toggle").setAttribute("aria-expanded", open);
+  });
+  document.getElementById("sidebar-overlay").addEventListener("click", () => {
+    document.getElementById("sidebar").classList.remove("open");
+    document.getElementById("sidebar-overlay").classList.remove("open");
+  });
+
+  let _solicitacoes = [];
+
+  async function loadSolicitacoes() {
+    const snap = await getDocs(query(collection(db, "solicitacoes"), orderBy("criadoEm", "desc")));
+    _solicitacoes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderSolicitacoes();
+  }
+
+  function renderSolicitacoes() {
+    const el = document.getElementById("lista-solicitacoes");
+    const pendentes = _solicitacoes.filter(s => !s.aprovado && !s.negado);
+    if (!_solicitacoes.length) {
+      el.innerHTML = `<div class="empty-state"><div class="empty-glyph">&#x2736;</div><p>Nenhuma solicitação ainda.</p></div>`;
+      return;
+    }
+    let html = "";
+    if (pendentes.length) {
+      html += `<p style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem;">Aguardando aprovação (${pendentes.length})</p>`;
+      html += pendentes.map(s => `
+        <div class="member-row">
+          <div class="member-info">
+            <strong>${s.nome}</strong>
+            <span>${s.email}</span>
+            ${s.funcao ? `<span>${s.funcao}</span>` : ""}
+            ${s.mensagem ? `<p style="font-size:0.78rem;color:var(--muted);margin-top:.2rem;font-style:italic;">"${s.mensagem}"</p>` : ""}
+          </div>
+          <div class="member-actions">
+            <button class="btn btn-success" style="font-size:0.75rem;padding:.3rem .65rem;"
+                    data-aprovar="${s.id}" data-nome="${s.nome}" data-email="${s.email}">Aprovar</button>
+            <button class="btn btn-danger" style="font-size:0.75rem;padding:.3rem .65rem;"
+                    data-negar="${s.id}">Negar</button>
+          </div>
+        </div>
+      `).join("");
+    } else {
+      html += `<p style="color:var(--muted);font-size:0.85rem;">Nenhuma solicitação pendente.</p>`;
+    }
+    el.innerHTML = html;
+
+    el.querySelectorAll("[data-aprovar]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.getElementById("apr-sol-id").value = btn.dataset.aprovar;
+        document.getElementById("apr-nome").textContent = btn.dataset.nome;
+        document.getElementById("apr-email").value = btn.dataset.email;
+        document.getElementById("apr-senha").value = "";
+        document.getElementById("apr-role").value = "";
+        document.getElementById("apr-error").textContent = "";
+        document.getElementById("modal-aprovar").classList.add("open");
+        document.getElementById("apr-senha").focus();
+      });
+    });
+    el.querySelectorAll("[data-negar]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (!confirm("Negar esta solicitação?")) return;
+        await updateDoc(doc(db, "solicitacoes", btn.dataset.negar), { negado: true });
+        await loadSolicitacoes();
+      });
+    });
+  }
+
+  document.getElementById("btn-refresh-sol").addEventListener("click", loadSolicitacoes);
+
+  document.getElementById("btn-cancelar-apr").addEventListener("click", () => {
+    document.getElementById("modal-aprovar").classList.remove("open");
+  });
+
+  document.getElementById("btn-confirmar-apr").addEventListener("click", async () => {
+    const solId = document.getElementById("apr-sol-id").value;
+    const email = document.getElementById("apr-email").value;
+    const senha = document.getElementById("apr-senha").value;
+    const role  = document.getElementById("apr-role").value;
+    const errEl = document.getElementById("apr-error");
+
+    if (senha.length < 8) { errEl.textContent = "A senha precisa ter pelo menos 8 caracteres."; return; }
+
+    const btn = document.getElementById("btn-confirmar-apr");
+    btn.disabled = true;
+    btn.textContent = "Criando...";
+    errEl.textContent = "";
+
+    try {
+      const API_KEY = "AIzaSyDVM2sdW3qGgY4Lj7fOTaxtmkBqCUTwFRk";
+      const resp = await fetch(
+        `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`,
+        { method:"POST", headers:{"Content-Type":"application/json"},
+          body: JSON.stringify({ email, password: senha, returnSecureToken: false }) }
+      );
+      const data = await resp.json();
+      if (data.error && data.error.message !== "EMAIL_EXISTS") throw new Error(data.error.message);
+
+      await updateDoc(doc(db, "solicitacoes", solId), { aprovado: true });
+      const sol = _solicitacoes.find(s => s.id === solId);
+      await addDoc(collection(db, "membros"), {
+        nome: sol.nome, email: sol.email, aprovado: true,
+        role: role || null, criadoEm: serverTimestamp()
+      });
+
+      document.getElementById("modal-aprovar").classList.remove("open");
+      await loadSolicitacoes();
+      await loadMembros();
+    } catch (err) {
+      errEl.textContent = "Erro: " + err.message;
+    }
+    btn.disabled = false;
+    btn.textContent = "Aprovar e Criar Acesso";
+  });
+
+  let _membros = [];
+
+  async function loadMembros() {
+    const snap = await getDocs(query(collection(db, "membros"), orderBy("criadoEm", "desc")));
+    _membros = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderMembros();
+  }
+
+  function renderMembros() {
+    const el = document.getElementById("lista-membros");
+    if (!_membros.length) {
+      el.innerHTML = `<div class="empty-state"><div class="empty-glyph">&#x2736;</div><p>Nenhum membro ainda.</p></div>`;
+      return;
+    }
+    const ROLE_LABELS = { admin:"Admin", curimba:"Curimba", limpeza:"Limpeza" };
+    el.innerHTML = _membros.map(m => `
+      <div class="member-row">
+        <div class="member-info">
+          <strong>${m.nome}</strong>
+          <span>${m.email}</span>
+          <span style="font-size:0.72rem; color:var(--gold); margin-top:0.15rem;">
+            ${m.role ? (ROLE_LABELS[m.role] || m.role) : "Sem papel"}
+          </span>
+        </div>
+        <div class="member-actions">
+          <button class="btn btn-secondary" style="font-size:0.72rem;padding:.28rem .55rem;"
+                  data-editar-role="${m.id}" data-nome="${m.nome}" data-role="${m.role || ''}">Papel</button>
+          <button class="btn btn-danger" style="font-size:0.72rem;padding:.28rem .55rem;"
+                  data-revogar="${m.id}">Revogar</button>
+        </div>
+      </div>
+    `).join("");
+
+    el.querySelectorAll("[data-revogar]").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const m = _membros.find(x => x.id === btn.dataset.revogar);
+        if (!m || !confirm(`Revogar acesso de ${m.nome}?`)) return;
+        await deleteDoc(doc(db, "membros", m.id));
+        await loadMembros();
+      });
+    });
+    el.querySelectorAll("[data-editar-role]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.getElementById("role-mem-id").value = btn.dataset.editarRole;
+        document.getElementById("role-mem-nome").textContent = btn.dataset.nome;
+        document.getElementById("role-select").value = btn.dataset.role || "";
+        document.getElementById("modal-role").classList.add("open");
+      });
+    });
+  }
+
+  document.getElementById("btn-refresh-mem").addEventListener("click", loadMembros);
+  document.getElementById("btn-refresh-pedidos").addEventListener("click", loadPedidos);
+
+  // ── Pedidos de Alteração dos Filhos (1 Clique) ──
+  async function loadPedidos() {
+    const el = document.getElementById("lista-pedidos-admin");
+    try {
+      const snap = await getDocs(query(
+        collection(db, "pedidos_mudanca"),
+        where("status", "==", "pendente"),
+        orderBy("criadoEm", "desc")
+      ));
+
+      if (snap.empty) {
+        el.innerHTML = `<div class="empty-state"><div class="empty-glyph">✨</div><p>Nenhum pedido pendente dos filhos no momento.</p></div>`;
+        return;
+      }
+
+      el.innerHTML = snap.docs.map(d => {
+        const p = d.data();
+        let resumo = "";
+        if (p.tipo === "perfil") {
+          resumo = `<strong>Novo Nome:</strong> ${p.dados.nome || '—'} · <strong>Função:</strong> ${p.dados.funcao || '—'}`;
+        } else if (p.tipo === "entrar_grupo") {
+          resumo = `Pediu para <strong>Entrar no Grupo:</strong> ${p.grupoNome}`;
+        } else if (p.tipo === "sair_grupo") {
+          resumo = `Pediu para <strong>Sair do Grupo:</strong> ${p.grupoNome}`;
+        }
+
+        return `
+          <div class="member-row">
+            <div class="member-info">
+              <strong>${p.userName || p.userEmail}</strong>
+              <span>${p.userEmail}</span>
+              <span style="font-size:0.8rem; color:var(--gold); margin-top:0.25rem;">${resumo}</span>
+            </div>
+            <div class="member-actions">
+              <button class="btn btn-success" style="font-size:0.75rem; padding:0.35rem 0.75rem;" data-adm-aprovar="${d.id}">
+                ✓ Aprovar
+              </button>
+              <button class="btn btn-danger" style="font-size:0.75rem; padding:0.35rem 0.75rem;" data-adm-recusar="${d.id}">
+                ✕ Recusar
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      el.querySelectorAll("[data-adm-aprovar]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          btn.disabled = true;
+          btn.textContent = "Aprovando...";
+          const pedidoId = btn.dataset.admAprovar;
+          const pedDoc = await getDoc(doc(db, "pedidos_mudanca", pedidoId));
+          if (!pedDoc.exists()) return;
+          const p = pedDoc.data();
+
+          if (p.tipo === "perfil") {
+            await setDoc(doc(db, "perfis", p.uid), {
+              ...p.dados,
+              atualizadoEm: serverTimestamp()
+            }, { merge: true });
+
+            const memSnap = await getDocs(query(collection(db, "membros"), where("email", "==", p.userEmail)));
+            if (!memSnap.empty) {
+              await updateDoc(doc(db, "membros", memSnap.docs[0].id), {
+                nome: p.dados.nome || memSnap.docs[0].data().nome
+              });
+            }
+          } else if (p.tipo === "entrar_grupo") {
+            const grpDoc = await getDoc(doc(db, "grupos", p.grupoId));
+            if (grpDoc.exists()) {
+              const grpData = grpDoc.data();
+              const emails = Array.from(new Set([...(grpData.membrosEmails || []), p.userEmail]));
+              const uids = Array.from(new Set([...(grpData.membrosUids || []), p.uid]));
+              await updateDoc(doc(db, "grupos", p.grupoId), { membrosEmails: emails, membrosUids: uids });
+            }
+          } else if (p.tipo === "sair_grupo") {
+            const grpDoc = await getDoc(doc(db, "grupos", p.grupoId));
+            if (grpDoc.exists()) {
+              const grpData = grpDoc.data();
+              const emails = (grpData.membrosEmails || []).filter(e => e !== p.userEmail);
+              const uids = (grpData.membrosUids || []).filter(u => u !== p.uid);
+              await updateDoc(doc(db, "grupos", p.grupoId), { membrosEmails: emails, membrosUids: uids });
+            }
+          }
+
+          await updateDoc(doc(db, "pedidos_mudanca", pedidoId), {
+            status: "aprovado",
+            respondidoEm: serverTimestamp()
+          });
+
+          await addDoc(collection(db, "notificacoes"), {
+            uid: p.uid,
+            texto: `✨ A Mainha abençoou e APROVOU sua solicitação de ${p.tipo === 'perfil' ? 'atualização de dados' : (p.tipo === 'entrar_grupo' ? 'entrada no grupo ' + p.grupoNome : 'saída do grupo ' + p.grupoNome)}!`,
+            lida: false,
+            criadoEm: serverTimestamp()
+          });
+
+          await loadPedidos();
+          await loadMembros();
+        });
+      });
+
+      el.querySelectorAll("[data-adm-recusar]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          if (!confirm("Recusar este pedido?")) return;
+          btn.disabled = true;
+          btn.textContent = "Recusando...";
+          const pedidoId = btn.dataset.admRecusar;
+          const pedDoc = await getDoc(doc(db, "pedidos_mudanca", pedidoId));
+          if (!pedDoc.exists()) return;
+          const p = pedDoc.data();
+
+          await updateDoc(doc(db, "pedidos_mudanca", pedidoId), {
+            status: "recusado",
+            respondidoEm: serverTimestamp()
+          });
+
+          await addDoc(collection(db, "notificacoes"), {
+            uid: p.uid,
+            texto: `🙏 Seu pedido de ${p.tipo === 'perfil' ? 'mudança de dados' : 'grupo'} não foi autorizado pela Mainha no momento.`,
+            lida: false,
+            criadoEm: serverTimestamp()
+          });
+
+          await loadPedidos();
+        });
+      });
+
+    } catch (e) {
+      el.innerHTML = `<p style="color:var(--muted);">Sem pedidos no momento.</p>`;
+    }
+  }
+
+  document.getElementById("btn-cancelar-role").addEventListener("click", () => {
+    document.getElementById("modal-role").classList.remove("open");
+  });
+  document.getElementById("btn-salvar-role").addEventListener("click", async () => {
+    const memId = document.getElementById("role-mem-id").value;
+    const role  = document.getElementById("role-select").value;
+    await updateDoc(doc(db, "membros", memId), { role: role || null });
+    document.getElementById("modal-role").classList.remove("open");
+    await loadMembros();
+  });
+</script>
+</body>
+</html>

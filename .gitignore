@@ -1,0 +1,23 @@
+# ── Dependências ──────────────────────────────────────
+node_modules/
+.npm/
+
+# ── Segredos e chaves de serviço ──────────────────────
+# NUNCA commitar chaves de conta de serviço Firebase/GCP
+terreiro/importar/*-firebase-adminsdk-*.json
+*-firebase-adminsdk-*.json
+google-services.json
+*.keystore
+*.jks
+.env
+.env.*
+
+# ── Dados brutos / exportações temporárias ────────────
+posts_terreiro*.json
+
+# ── Artefatos de build e sistema ──────────────────────
+.DS_Store
+Thumbs.db
+*.log
+dist/
+build/

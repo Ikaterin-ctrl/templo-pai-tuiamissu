@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Seed — Templo Pai Tuiamissu</title>
+  <style>
+    body { font-family: sans-serif; background:#f5f0e8; color:#2c1f0e; padding:2rem; max-width:700px; margin:0 auto; }
+    h2 { color:#8a6000; margin-bottom:.5rem; }
+    button { background:#8a6000; color:#fff; border:none; padding:0.75rem 2rem; border-radius:6px; font-size:1rem; cursor:pointer; margin-top:1rem; }
+    button:disabled { opacity:0.5; cursor:not-allowed; }
+    #log { margin-top:1.5rem; background:#faf7f2; border:1px solid #e0d8cc; border-radius:8px; padding:1rem; font-size:0.82rem; line-height:1.9; white-space:pre-wrap; max-height:500px; overflow-y:auto; }
+    .ok { color:#1a5c2a; } .err { color:#8b1a1a; } .sec { color:#8a6000; font-weight:bold; }
+  </style>
+</head>
+<body>
+  <h2>Importar dados iniciais — Templo Pai Tuiamissu</h2>
+  <p>Clique para importar <strong>Orixás, Datas Sagradas, Ensinamentos, Ervas &amp; Banhos e Rezas &amp; Orações</strong> no Firestore.<br>
+  <strong style="color:#8b1a1a;">Execute apenas uma vez! Se já importou antes, use o botão "Só Ensinamentos" abaixo.</strong></p>
+  <button id="btn-seed">Importar tudo</button>
+  <button id="btn-seed-ensinamentos" style="background:#5a3e00; margin-left:1rem;">Reimportar só Ensinamentos</button>
+  <div id="log">Aguardando...</div>
+
+  <script type="module">
+    import { db, auth } from "./js/firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const log = document.getElementById("log");
+    function print(msg, type = "ok") {
+      const span = document.createElement("span");
+      span.className = type;
+      span.textContent = msg + "\n";
+      log.appendChild(span);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        log.textContent = "Não autenticado. Faça login primeiro.";
+        document.getElementById("btn-seed").disabled = true;
+        document.getElementById("btn-seed-ensinamentos").disabled = true;
+      }
+    });
+
+const ORIXAS = [
+  {
+    nome: "Oxalá",
+    saudacao: "Epá Babá Oxalá ou Exê Babá",
+    cores: "Branco, cristalino, furta-cor",
+    trono: "Trono da Fé (polo positivo)",
+    dominios: "Seu campo de atuação preferencial é a religiosidade dos seres, aos quais ele envia o tempo todo suas vibrações estimuladoras da fé individual e suas irradiações geradoras de sentimentos de religiosidade, também atua no campo da paz, harmonia e serenidade.",
+    desc: "Oxalá está assentado no polo positivo do Trono da Fé, a primeira das Sete Linhas de Umbanda. É o Sol da vida. O recebimento do batismo de Umbanda é a bênção de Oxalá, que consagra os filhos adeptos como forma de protegê-los contra o mal e contra a negatividade."
+  },
+  {
+    nome: "Oyá-Tempo (Logunã)",
+    saudacao: "Oiá Tempo",
+    cores: "Azul escuro, branco, preto e prata",
+    trono: "Trono da Fé (polo negativo/cósmico)",
+    dominios: "Oyá é o próprio Tempo por onde caminham os seres que estão buscando o Criador; é o rigor divino para com os filhos que Lhe voltaram as costas, abdicando da fé no Criador. Sua atuação se dá principalmente naqueles que vivem sob a ilusão da ausência de religiosidade/espiritualidade.",
+    desc: "Oyá-Tempo é a Orixá assentada no polo negativo do Trono da Fé e seu campo preferencial de atuação é o religioso, onde ela atua como ordenadora do caos religioso. O \"Tempo\" é a chave do mistério da Fé — é na eternidade do tempo e na infinitude de Deus que todas as evoluções acontecem. Oxalá é o Sol da vida enquanto Oyá é o Tempo, onde tudo se realiza."
+  },
+  {
+    nome: "Oxum",
+    saudacao: "Ora ie iê ô",
+    cores: "Rosa, dourado, azul e amarelo",
+    trono: "Trono do Amor (polo positivo)",
+    dominios: "É o Trono irradiador do Amor Divino e da Concepção da Vida em todos os sentidos. Como \"Mãe da Concepção\" ela estimula a união matrimonial, e como Trono Mineral ela favorece a conquista da riqueza espiritual e a abundância material.",
+    desc: "Oxum está assentada no polo positivo do Trono do Amor."
+  },
+  {
+    nome: "Oxumaré",
+    saudacao: "Arroboboi",
+    cores: "Azul, furta-cor, lilás e azul celeste",
+    trono: "Trono do Amor (polo negativo/cósmico)",
+    dominios: "Seus principais Fatores são o Diluidor e o Renovador, pois a Energia de Oxumaré se movimenta por meio de uma onda dupla: uma onda dilui as negatividades dos seres e a outra onda, simultaneamente, os renova. Quando alimentamos ódio, ciúmes, ressentimentos e mágoas ou dificuldades no campo da sexualidade, podemos pedir a Ele que dilua esses sentimentos negativos e renove o nosso íntimo, curando esses bloqueios indesejáveis.",
+    desc: "Oxumaré está assentado no polo negativo do Trono do Amor."
+  },
+  {
+    nome: "Oxóssi",
+    saudacao: "Okê Arô",
+    cores: "Verde, azul escuro e magenta",
+    trono: "Trono do Conhecimento (polo positivo)",
+    dominios: "Atua em nossa inteligência, conhecimento, sabedoria e curiosidade em nosso mental em aprender como um todo. Ele estimula a vontade em nós que é necessária para conquistarmos a prosperidade.",
+    desc: "Oxóssi está assentado no polo positivo do Trono do Conhecimento."
+  },
+  {
+    nome: "Obá",
+    saudacao: "Akiro Obá Yê!",
+    cores: "Magenta, dourado e vermelho",
+    trono: "Trono do Conhecimento (polo negativo/cósmico)",
+    dominios: "Como divindade cósmica responsável por paralisar os excessos cometidos pelas pessoas que dominam o conhecimento religioso, uma de suas funções é paralisar os conhecimentos viciados e aquietar os seres antes que cometam erros irreparáveis. Atrai e paralisa os seres que estão se desvirtuando no caminho do Conhecimento, desenvolve o raciocínio e a capacidade de assimilação mental da realidade visível.",
+    desc: "Obá é regida pelos elementos terra e vegetal, e forma com Oxóssi a terceira linha de Umbanda Sagrada, que rege o Conhecimento. Oxóssi está assentado no polo positivo e irradiante desta linha e Obá está assentada em seu polo negativo ou cósmico, que é absorvente. Ela atua de forma silenciosa e vai paralisando os seres que dão mau uso ao dom do raciocínio e aos conhecimentos adquiridos, atuando preferencialmente no campo religioso."
+  },
+  {
+    nome: "Ogum",
+    saudacao: "Patakori Ogum ou Ogum Yê!",
+    cores: "Azul escuro, prateado, vermelho",
+    trono: "Trono da Lei e da Ordem (polo positivo)",
+    dominios: "É sinônimo de lei e de ordem porque ele tanto aplica a Lei quanto ordena a evolução dos seres, não permitindo que alguém tome uma direção errada. Por isto ele é chamado de \"O Senhor dos Caminhos\" (das direções); seu outro aspecto divino é o de aplicador \"religioso\" da Lei Maior. Ogum é vital para quem quer conseguir vencer as suas batalhas com força, coragem e determinação, sempre está de \"ronda\" para proteger os injustiçados.",
+    desc: "Exu é Guardião, verdadeiro \"policial\" do astral inferior. Ogum está assentado no polo positivo do Trono da Lei e da Ordem."
+  },
+  {
+    nome: "Iansã",
+    saudacao: "Eparrei!",
+    cores: "Amarelo, dourado, vermelho-coral",
+    trono: "Trono da Lei e da Ordem (polo negativo/cósmico)",
+    dominios: "É a senhora dos ventos e das tempestades, é o temporal que desaba e a ventania que faz tudo balançar. Ela é o próprio sentido de direção da lei; é um mistério que só entra na vida de um ser, caso a direção que este esteja dando à sua evolução e a sua religiosidade não siga a linha reta traçada pela Lei Maior. Ela é o ar que areja nosso emocional e nos proporciona um novo sentido da vida e uma nova direção ou meio de vida, renovando a fé na mente e no coração dos seres.",
+    desc: "Iansã está assentada no polo negativo do Trono da Lei e da Ordem."
+  },
+  {
+    nome: "Xangô",
+    saudacao: "Kaô Kabecilê",
+    cores: "Marrom claro, dourado, vermelho",
+    trono: "Trono da Justiça (polo positivo)",
+    dominios: "Seu campo de atuação preferencial é a razão, despertando nos seres o senso de equilíbrio e equidade, pois só conscientizando e despertando para os reais valores da vida a evolução se processa num fluir contínuo. Irradia Justiça o tempo todo, de forma passiva não forçando ninguém a vivenciá-la, mas sustentando a todos que a buscam.",
+    desc: "Xangô está assentado no polo positivo do Trono da Justiça."
+  },
+  {
+    nome: "Egunitá",
+    saudacao: "Kali Yê, minha Mãe!",
+    cores: "Laranja, dourado e vermelho",
+    trono: "Trono da Justiça (polo negativo/cósmico)",
+    dominios: "Orixá consumidora dos vícios e dos desequilíbrios; purificadora dos meios ambientes religiosos (templos), das casas (moradas) e do íntimo dos seres (sentimentos). Nos rituais, ela é evocada para purificar os seres viciados, as magias negras, as injustiças, etc. Representa a chama purificadora da justiça divina, que ilumina o caminho dos justos e pulveriza as más intenções dos injustos.",
+    desc: "Egunitá está assentada no polo negativo do Trono da Justiça."
+  },
+  {
+    nome: "Obaluaê",
+    saudacao: "Atotô",
+    cores: "Branco, prateado, violeta e branco/preto",
+    trono: "Trono da Evolução (polo positivo)",
+    dominios: "Evoluir significa crescer, aprimorar, lapidar, transformar, crescer mentalmente, passar de um estágio a outro, seguir em uma linha da vida de forma contínua e estável. Significa uma renovação contínua do ser, uma reposição constante de valores, deixando para trás conhecimentos ultrapassados, hábitos e costumes inadequados, atitudes e posturas velhas e decadentes.",
+    desc: "Obaluaê é o Orixá que atua na Evolução e seu campo preferencial é aquele que sinaliza as passagens de um nível vibratório ou estágio da evolução para outro. É o \"Senhor das Passagens\" de um plano para outro, de uma dimensão para a outra, e mesmo do espírito para a carne e vice-versa. Nanã decanta os espíritos que irão reencarnar e Obaluaê estabelece o cordão energético que une o espírito ao corpo (feto)."
+  },
+  {
+    nome: "Nanã Buruquê",
+    saudacao: "Saluba Nanã",
+    cores: "Lilás, azul claro e roxo",
+    trono: "Trono da Evolução (polo negativo/cósmico)",
+    dominios: "É a orixá que rege sobre a maturidade e seu campo preferencial de atuação é o racional dos seres. Age decantando-os de seus vícios e desequilíbrios mentais e preparando-os para uma nova vida, mais equilibrada. Ela desfaz os excessos e decanta, ou enterra, os vícios.",
+    desc: "Nanã Buruquê é representada como a grande avó, de energia amorosa e feminina — é a Ela que clamamos quando precisamos nos auto-perdoar e nos libertar do passado. Ela representa o colo que aconchega, acolhendo amorosamente nossas dores para nos ajudar a transformá-las com sabedoria. É Ela quem faz esquecer, é Ela quem deixa morrer para renascer. Data festiva: 26 de julho. Sincretismo religioso: Nossa Senhora Sant'Ana. Instrumento: Vassoura de palha ou Ibiri (cetro de palha da costa, com talos de dendezeiro e búzios). Pedra: Ametista. Oferendas: Velas brancas, roxas e rosas; flores brancas e lilases, champanhe rosé, calda de ameixa ou de figo; melancia, uva, figo, ameixa e melão, mingau de sagu, milho branco e arroz, tudo depositado à beira de um lago ou mangue."
+  },
+  {
+    nome: "Iemanjá",
+    saudacao: "Odoyá ou Odocyabá",
+    cores: "Branco azulado, prateado cristalino, azul profundo (anil) e azul claro",
+    trono: "Trono da Geração (polo positivo)",
+    dominios: "É a orixá maior, doadora da vida e dona do ponto de força da natureza, o mar, santuário aberto, onde tudo é levado para ser purificado e depois devolvido. Foi gerada na qualidade criativa e geradora do criador Olorum e é a criatividade e a geração em si mesma. Rege sobre a geração e simboliza a maternidade, o amparo materno. A energia salina das sete águas de Yemanjá cura enfermidades do espírito, queima larvas astrais e irradia energias purificadoras para o nosso organismo.",
+    desc: "Iemanjá está assentada no polo positivo do Trono da Geração, a sétima Linha de Umbanda."
+  },
+  {
+    nome: "Omolu",
+    saudacao: "Atotô",
+    cores: "Vermelho, preto, roxo, branco",
+    trono: "Trono da Geração (polo negativo/cósmico)",
+    dominios: "Omolu não traz a morte, como alguns parecem imaginar. Na verdade, Ele representa \"a morte\" daquilo que atenta contra o Sentido da Vida e da Geração. E Omolu também não traz a doença. Ele traz, sim, \"a morte\" da doença, do desequilíbrio e do vício, para viabilizar a restauração da saúde geral dos seres desvirtuados e desequilibrados (saúde espiritual, moral, mental, emocional e física). Ele é um Orixá da Cura.",
+    desc: "Omulú é o Orixá Cósmico assentado no polo negativo (absorvedor) da Linha da Geração, que é a sétima Linha de Umbanda, onde polariza com o Orixá Universal Yemanjá. Omolu representa \"a morte\" no sentido de trazer o fim a um estado de doença ou de desequilíbrio; e sempre para a preservação da Vida, no sentido mais elevado da palavra."
+  },
+  {
+    nome: "Exu",
+    saudacao: "Laroiê ou Mojubá",
+    cores: "Preto e vermelho",
+    trono: "Esquerda da Umbanda",
+    dominios: "Exu é Guardião, verdadeiro \"policial\" do astral inferior, contendo ataques oriundos do baixo-astral, protegendo as casas que realizam trabalho espiritual de qualquer tipo. São também grandes desobsessores, realizando desobsessões dificílimas, recolhem e manipulam facilmente energias densas sendo muito bons para o \"descarrego\" e limpeza espiritual, além de cortarem e desmancharem as nefastas magias negativas. Também fazem maravilhosos trabalhos de cura.",
+    desc: "Exu é sem sombra de dúvida a divindade mais incompreendida de todas. Taxado muitas vezes de Diabo ou demônio, Exu é cultuado em muitas e muitas culturas com outros nomes. Na África ele é cultuado como Exu, que vem do Yorubá e quer dizer esfera. Exu não é o Diabo nem o demônio. Por isso o chamamos de Exu de Lei, pois trabalha dentro da Lei da criação e dentro da Lei Religiosa de Umbanda, sendo assim NUNCA PRESTANDO-SE PARA TRABALHOS NEGATIVOS DENTRO DE UM VERDADEIRO TERREIRO DE UMBANDA! Laroyê Exu! Exu Mojibá!"
+  },
+  {
+    nome: "Pomba Gira",
+    saudacao: "Laroiê, Salve as moças ou Pombagira Saravá",
+    cores: "Vermelho e preto",
+    trono: "Esquerda da Umbanda",
+    dominios: "",
+    desc: ""
+  }
+];
+
+const DATAS_SAGRADAS = [
+  { nome:"Dia de Ogum / São Jorge", data:"23/04", orixa:"Ogum", santo:"São Jorge", tipo:"Dia de Orixá", desc:"Dia consagrado a Ogum, o guerreiro que abre caminhos." },
+  { nome:"Fundação da Umbanda", data:"15/11", orixa:"Umbanda (Geral)", santo:"", tipo:"Data da Umbanda", desc:"Em 15 de novembro de 1908, Zélio de Moraes incorporou o Caboclo das Sete Encruzilhadas, dando origem à Umbanda." },
+  { nome:"Dia de Iemanjá", data:"02/02", orixa:"Iemanjá", santo:"Nossa Senhora dos Navegantes", tipo:"Dia de Orixá", desc:"Maior celebração de Iemanjá. Oferendas são levadas ao mar." },
+  { nome:"Dia de Oxum / N. Sra. Aparecida", data:"08/12", orixa:"Oxum", santo:"Nossa Senhora Aparecida", tipo:"Dia de Orixá", desc:"Flores amarelas e mel são as oferendas preferidas de Oxum." },
+  { nome:"Dia de Iansã / Santa Bárbara", data:"04/12", orixa:"Iansã", santo:"Santa Bárbara", tipo:"Dia de Orixá", desc:"Dia da guerreira Iansã. Muito cultuado no Nordeste." },
+  { nome:"Dia de Omulu / Obaluaê", data:"16/08", orixa:"Omulu / Obaluaê", santo:"São Roque", tipo:"Dia de Orixá", desc:"Pipoca é jogada para saudar e pedir proteção de Omulu." },
+  { nome:"Dia de Xangô / São João", data:"29/06", orixa:"Xangô", santo:"São João / São Pedro", tipo:"Dia de Orixá", desc:"Festa junina e dia de Xangô, o Orixá da justiça e dos trovões." },
+  { nome:"Dia dos Pretos Velhos", data:"13/05", orixa:"Preto Velho", santo:"São Benedito", tipo:"Dia de Orixá", desc:"13 de maio, abolição da escravatura. Dia de homenagem aos Pretos Velhos." },
+  { nome:"Dia do Índio / Caboclos", data:"19/04", orixa:"Caboclo", santo:"São Sebastião", tipo:"Dia de Orixá", desc:"Dia dos Caboclos, espíritos indígenas que trabalham na Umbanda." },
+  { nome:"Dia de Oxalá / N. Sra. do Bonfim", data:"06/01", orixa:"Oxalá", santo:"Nosso Senhor do Bonfim", tipo:"Dia de Orixá", desc:"Tudo é branco neste dia — paz, pureza e renovação." },
+  { nome:"Dia de Nanã / Sant'Ana", data:"26/07", orixa:"Nanã", santo:"Sant'Ana", tipo:"Dia de Orixá", desc:"Dia de respeito aos ancestrais e à sabedoria dos mais velhos." },
+  { nome:"Dia de Exu / São Bartolomeu", data:"24/08", orixa:"Exu", santo:"São Bartolomeu", tipo:"Dia de Orixá", desc:"Neste dia se abrem os caminhos e se pede licença ao guardião das encruzilhadas." },
+  { nome:"Dia de Cosme e Damião / Ibejis", data:"27/09", orixa:"Umbanda (Geral)", santo:"Santos Cosme e Damião", tipo:"Data Católica", desc:"Dia das crianças espirituais (Ibejis / Erês). Doce é distribuído." },
+  { nome:"Finados — Dia dos Eguns", data:"02/11", orixa:"Iansã", santo:"", tipo:"Data da Umbanda", desc:"Dia de homenagear os Eguns (espíritos ancestrais) e pedir proteção a Iansã." },
+  { nome:"Dia de Oxumaré", data:"24/08", orixa:"Oxumaré", santo:"São Bartolomeu", tipo:"Dia de Orixá", desc:"Dia do Orixá do arco-íris. Oferendas coloridas e mel." },
+  { nome:"Ano Novo de Umbanda — Virada", data:"31/12", orixa:"Umbanda (Geral)", santo:"", tipo:"Data da Umbanda", desc:"A virada do ano é muito importante na Umbanda. Banho de ervas, roupas brancas e agradecimento pelos ciclos encerrados." }
+];
+
+const ENSINAMENTOS_FUNDAMENTOS = [
+  {
+    titulo: "VOCÊ PODE ESTAR CHAMANDO OBSESSORES PARA SUA VIDA",
+    categoria: "Fundamentos",
+    conteudo: `Essa é uma verdade que poucos têm coragem de dizer: os espíritos sombrios não pedem permissão para entrar. Eles não precisam de rituais, portas abertas ou convites formais.
+
+Basta uma brecha.
+
+Um pensamento de ódio, um desejo velado de vingança, um ressentimento cultivado em silêncio. Uma tristeza que se alimenta dia após dia. Uma culpa que corrói por dentro.
+
+São pequenas rachaduras no campo espiritual. E por essas fendas, eles vêm.
+
+Você talvez já tenha sentido: um cansaço que não passa, uma opressão no peito, um desânimo inexplicável, pensamentos pesados que surgem do nada. Irritabilidade sem motivo.
+
+Isso não é mero acaso. Não é só estresse. É sintonia.
+
+Obsessores não precisam bater à porta. Eles se aproximam quando você vibra na mesma frequência que eles.
+
+Cada pensamento tóxico, cada palavra de raiva, cada julgamento impiedoso é um chamado sutil.
+
+Quando percebem que sua luz está enfraquecida, se instalam. E o que era um incômodo passageiro se torna um ciclo. Um ciclo que suga sua energia, distorce suas emoções, enfraquece sua vontade.
+
+Mas aqui está a verdade maior: você não está condenado a isso. Da mesma forma que sua mente pode atrair sombras, ela tem o poder de atrair a luz.
+
+Cada escolha sua conta. Cada pensamento, cada emoção, cada atitude molda a energia que te cerca.
+
+Vigie seu interior, tire a raiva e a vingança do seu coração e de sua cabeça . Eleve sua vibração. Ore. Medite. Reeduque seus sentimentos, perdoe.
+
+AXÉ!`
+  },
+  {
+    titulo: "Teologia básica da Umbanda Sagrada",
+    categoria: "Fundamentos",
+    conteudo: `A Umbanda é a religião que tem como um dos fundamentos a não existência de preconceitos, além da ajuda mútua. É composta por diversas misturas de crenças vindas de outras religiões. A Umbanda é uma religião 100% brasileira, com influências da cultura africana, indígena tupiniquim, orientais, católicos, kardecistas e misticismo, um verdadeiro acolhimento de culturas.
+
+A Umbanda foi fundada pelo guia espiritual Caboclo das Sete Encruzilhadas, incorporando no médium Zélio Fernandino de Moraes, em 1908 em sua casa chamando-a de Tenda de Umbanda Nossa Senhora da Piedade. O nome surgiu em referência a mãe de Jesus acolher a todos sem preconceitos.
+
+Inicialmente as sessões não eram compostas de atabaques e palmas, sendo introduzidas depois. Os ensinamentos de Umbanda são passados de geração em geração, e o principal motivador disso é o conhecimento e o desenvolvimento humano e espiritual.
+
+A teologia da Umbanda é disciplinadora, sendo rígida, mas com recompensa dos esforços dos seus filhos guiados por forças superiores desenvolvidas. O principal fundamento e lei da Umbanda é a caridade, ou seja, fazer o bem sem ver a quem. Outros mandamentos são: humildade, fraternidade, amor ao próximo e o desenvolvimento espiritual e pessoal.
+
+Conheça outros fundamentos teológicos da Umbanda:
+
+• Acredita-se em um Deus único, supremo e fundador de todas as coisas.
+• Todas as leis são baseadas naquelas que Jesus Cristo deixou como ensinamento na terra, portanto estuda se o evangelho e os mandamentos, também as orações.
+• Os orixás são manifestações de Deus nas coisas e na natureza e comandam a sete linhas de vibrações, ou seja, Deus está presente em tudo.
+• Acredita se em vida após a morte, onde o espírito desencarnado poderá progredir sua evolução, e até ajudar os que precisam em vida.
+• Há possibilidade de comunicação com os espíritos através da mediunidade.
+• A mediunidade é um presente especial que Deus confia para um humano comunicar-se com outros mundos e vibrações através do seu corpo
+• Existe uma lei de causa e efeito, tudo o que se deseja, se tem de volta.
+• A caridade é a lei suprema, através de atendimentos os guias espirituais ajudam as pessoas que socorrem a Umbanda.
+• A única força que cura e possibilita milagre é a fé de cada indivíduo
+• Não existem seres voltados para o mal, mas sim os que estão tendo uma oportunidade de aprendizagem e evolução espiritual.
+• Não existe sorte, ou coincidência, tudo ocorre por uma razão, para um aprendizado e experiência.
+• O universo é composto de energias, e um equilíbrio entre negativo e positivo, assim também é composta a Umbanda, sendo o positivo as forças acolhedoras, e o negativo as forças guardiãs e protetoras.`
+  },
+  {
+    titulo: "Eguns — os espíritos que ainda não evoluíram",
+    categoria: "Fundamentos",
+    conteudo: `Embora Egum signifique todos os espíritos que já desencarnaram, para nós Umbandistas, Eguns são espíritos que ainda não adquiriram um grau de consciência e às vezes nem mesmo sabem que estão desencarnados.
+
+Ele pode se tornar um obsessor quando se liga a algum encarnado para, por exemplo, vivenciar seus vícios materiais (álcool, droga, sexo, etc.) ou por não admitir se afastar de algum encarnado (esposa, filhos, amigos) ou ainda para se vingar de seus inimigos.
+
+As pessoas obsediadas irão ser "vampirizadas" por eles, pois mesmo sem saber, quando um Egum entra no campo vibratório de um encarnado, por osmose, ele irá sugar a energia vital do encarnado, desvitalizando um e vitalizando o outro.
+
+O obsediado irá sentir uma forte apatia, "oco" por dentro, não saber mais o que quer direito, angústia, frio, sono, fraqueza, dores pelo corpo, calafrios, indisposição, sentimentos inconstantes, medo...
+
+A presença do Egum também poderá intensificar nossos vícios e fraquezas nos desequilibrando — como por exemplo: se aquele obsessor tiver o vício de beber e o encarnado beber, poderá beber além da conta.
+
+Os Eguns ficam vagando em nosso meio e às vezes são aprisionados por "quiumbas" (seres que já sabem que são desencarnados e fogem do auxílio), servindo-lhes como escravos e muitas vezes usados para sugarem energia de seus desafetos, atuando através dos sete estados tidos como capitais (vaidade, inveja, ira, preguiça, avareza, gula, luxúria).
+
+Precisamos mudar a frequência de nosso campo vibratório para que este obsessor não consiga nos perturbar e se desligue de nós.
+
+A Oração eleva nossa vibração e consequentemente eleva a do obsessor, possibilitando que entidades de luz se aproximem e o esclareça.
+
+Banho de ervas também tem o mesmo efeito e protege nosso campo mediúnico não permitindo o acoplamento de energias contrárias.
+
+Qualquer entidade da linha de Umbanda — seja ela Preto Velho, Caboclo, Boiadeiro, Exu, Baiano — irá identificar a atuação de um Egum e afastar, às vezes à força, do convívio do encarnado. Ele será enviado a uma colônia de esclarecimento ou será entregue a um Exu, que através da Lei Maior irá encaminhá-lo.`
+  },
+  {
+    titulo: "Egrégora: a corrente que sustenta a Umbanda",
+    categoria: "Fundamentos",
+    conteudo: `"Segundo as doutrinas que aceitam a existência de egrégoras, estão presentes em todas as coletividades, sejam nas mais simples associações, ou mesmo nas assembleias religiosas. É gerado pelo somatório de energias físicas, emocionais e mentais de duas ou mais pessoas, quando se reúnem com qualquer finalidade."
+
+A corrente é a grande força do Templo Umbandista. Merece mais cuidados do que as paredes e toda a estrutura física do templo. Tudo gira em torno dela. Quando um elo dessa corrente estiver fraco pode desestruturar todo o trabalho e dar acesso às energias negativas. Devemos sempre lembrar: ninguém é tão forte quanto todos nós juntos.
+
+Quando existe uma boa corrente, as entidades afins são atraídas para o interior. Espíritos inferiores tendem a ser barrados por uma força invisível, já que a energia deve ser incompatível com suas baixas vibrações.
+
+Energia positiva atrai energia positiva. Egrégoras são energias que podem ser geradas e fortalecidas a cada dia. Se serão negativas ou positivas, depende de quem as criará.
+
+Além de ser formada e nutrida, também é favorecida pelas "firmezas" ou "assentamentos" que devem ser tratados, reforçados e respeitados.
+
+Axé!`
+  },
+  {
+    titulo: "Solo Sagrado — o terreiro como espaço de luz",
+    categoria: "Fundamentos",
+    conteudo: `Este assunto pode parecer batido, mas infelizmente ainda vemos muitos irmãos que simplesmente ignoram a importância da preservação de energias salutares para que um trabalho ocorra de forma satisfatória, tanto para a espiritualidade quanto para os médiuns.
+
+Não podemos esquecer que independente do trabalho e da forma com que esse trabalho ocorre dentro do Templo, ali ainda é o local de acolhimento, amparo e socorro de irmãos adoentados, tanto no plano físico como no plano espiritual.
+
+Toda casa séria de Umbanda possui atrelado a ela no Plano Astral um hospital espiritual, onde irmãos que são socorridos ficam passando por um longo período de refazimento espiritual.
+
+Adentrar um Templo exige grande respeito. Na Umbanda temos algumas formas de demonstrar nosso respeito ao solo do Terreiro e aos Dirigentes Espirituais da casa:
+
+— Jamais fazer comentários negativos da casa ou de seus frequentadores ou dirigentes. Esta projeção mental e verbal atrai para este solo todo tipo de kiumbas.
+— Reverenciar e saudar a firmeza da entrada do templo.
+— Reverenciar, saudar e pedir permissão para entrar no solo do Terreiro. Isso é feito com gestos de entrega e respeito ao solo.
+— Reverenciar e saudar o Congá com gestos, oração e entrega de seu mental, espiritual e físico ao trabalho.
+
+Quando deixamos de nos importar pelo Solo Sagrado estamos também indiretamente deixando de nos importar com o que ali dentro ocorre. Mesmo nos dias que não tenha giras, ao entrarmos no Terreiro ele PRECISA E DEVE ser saudado. Os trabalhadores espirituais continuam ali presentes e participantes. O Congá é uma fonte de energia que irradia incessantemente, independente de ter ou não trabalho acontecendo.
+
+Vamos amar a nossa religião, vamos amar nosso Terreiro e vamos, principalmente, amar o nosso Congá.
+
+Axé`
+  },
+  {
+    titulo: "Sete Corpos Sutis",
+    categoria: "Fundamentos",
+    conteudo: `Somos formados por sete corpos sutis:
+
+CORPO FÍSICO
+É um instrumento de manifestação material no planeta. Totalmente passivo, reagindo às atividades dos outros corpos.
+
+CORPO DUPLO-ETÉRICO
+É o corpo da vitalidade, que anima o corpo físico. É onde ficam os chakras e é identificado pela aura. Pode ser visto por clarividentes.
+
+CORPO ASTRAL (ou corpo emocional)
+É o corpo das vibrações, onde ficam registradas todas as emoções vivenciadas ao longo da vida. Não tem racionalidade, apenas sensações. Em casos de traumas emocionais, pode causar bloqueios energéticos.
+
+CORPO MENTAL INFERIOR (ou corpo mental concreto)
+É o corpo da inteligência e da associação de ideias. Um banco de dados de informações racionais, mentais e intelectuais, onde habitam o ego e a individualidade.
+
+CORPO MENTAL SUPERIOR (ou corpo mental abstrato)
+É o corpo que contém o projeto de vida e tudo o que deve ser trabalhado na vivência atual na face da Terra. Fonte de inspiração para novas descobertas e elaboração de ideias abstratas.
+
+CORPO BÚDICO
+É o corpo que contém os registros akáshicos, que são todas as experiências de todas as encarnações. É o berço da intuição e origem de déjà vus.
+
+CORPO ÁTMICO
+É o corpo correspondente à centelha ou essência divina, princípio fundamental e transcendente — é o espírito propriamente dito.`
+  }
+];
+
+
+const ENSINAMENTOS_RITUAIS = [
+  {
+    titulo: "Bebidas e Fumo na Umbanda",
+    categoria: "Rituais",
+    conteudo: `O fumo, Tabaco, é considerado uma "Erva de Poder", usada há milênios pelos povos indígenas, considerado sagrado com larga utilização em seus trabalhos de cura, pajelança e xamanismo.
+
+Algo muito parecido acontece com o álcool que como "Bebida de Poder" atrai forças e poderes das divindades, também utilizado para curas.
+
+Dentro do conceito elemental, o fumo é o vegetal que traz o elemento terra e água; quando utilizado no fumo e defumação traz elemento ar e fogo. Resumindo, o fumo é uma defumação direcionada, que traz além do vegetal, os quatro elementos básicos (terra, água, ar e fogo) para trabalhos de magia prática.
+
+O Sopro por si só traz efeitos terapêuticos e espirituais muito valorosos e eficazes nos trabalhos de cura e limpeza, que somado ao poder das ervas é potencializado muitas vezes em resultados largamente vistos durante os trabalhos de Umbanda.
+
+O álcool é do elemento água, provindo de um vegetal (a cana), que se sustenta na terra, altamente volátil no ar e considerado o "Fogo líquido", de fácil combustão.
+
+Tanto o Fumo quanto o Álcool são utilizados para desagregar energia negativa, queimar larvas e miasmas astrais, e no caso do Álcool para desinfetar e limpar no externo e no interno já que pode ser ingerido. Logo, as entidades de Umbanda não têm vício e nem apego a estes elementos — não bebem além de alguns poucos goles e nem tragam a fumaça que é manipulada.
+
+Uma outra função da bebida, muito usado pelas linhas da direita é usá-los como o "Contraste", usado pela medicina tradicional. Quando algum problema de ordem física está ocorrendo, eles magnetizam a bebida — tal como vinho, água de coco, água pura, batida, etc. — e pedem para o consulente ingerir uma pequena quantidade; aí eles conseguem visualizar outras coisas no organismo, é como um check-up.
+
+Umbanda é Luz, e onde não houver bom senso e ética, não tem Umbanda.
+
+Um forte abraço a todos e muita luz!`
+  },
+  {
+    titulo: "Oferendas na Umbanda",
+    categoria: "Rituais",
+    conteudo: `Um dos grandes questionamentos que nós umbandistas recebemos é o motivo das oferendas se espírito "não come e não bebe". Porém, as oferendas são fundamentos muito importantes na Umbanda e é preciso fazê-lo de forma correta — como bem diz aquele clássico ponto cantado nas defumações: "Umbanda tem fundamento, é preciso preparar."
+
+Tudo na Umbanda tem fundamento. Todos os procedimentos, rituais e sacramentos adotados em cada terreiro possuem uma justificativa e um propósito.
+
+Popularmente tratadas como "comidas de santo" ou "despachos", as oferendas constituem uma forma de se conectar magisticamente com Orixás ou entidades espirituais para diferentes fins: agradecimento, pedido, propiciatório e até mesmo para descarrego. A magia da oferenda atua como um catalisador e movimentador do axé, assim entendido como parte do fluido cósmico universal que a tudo interpenetra.
+
+O conceito de oferenda seria o ato religioso de interação do fiel com seu guia, Orixá e forças da natureza. Energeticamente o prana das oferendas é usado em benefício de quem oferenda ou para quem se destina. Magisticamente é a movimentação de energias e elementais em benefício próprio ou de outrem. A Umbanda é o culto à natureza e na oferenda colocamos tudo que é natural.
+
+As oferendas são firmadas por invocações mentais, mas também podem ser conduzidas por mantras (ou comandos verbais). Tanto a invocação mental quanto os comandos verbais têm como objetivo fazer a ligação da dimensão física com o plano extrafísico, onde as entidades espirituais sintonizadas com a intenção depositada na oferenda receberão e movimentarão a sua contraparte astral, conduzindo esta energia a seu destino.
+
+O que diferencia uma oferenda da outra é a intenção ou sentimento que alavanca o pedido. A intenção fará a sintonia da pessoa encarnada com espíritos benfazejos. Todavia, se a intenção foge dos propósitos da Umbanda, a sintonia é firmada no plano invisível com espíritos sem ética e moral.
+
+Uma vela e um copo de água com uma intenção altruísta tem mais valia do que uma bela oferenda com flores, frutos e demais elementos com um pensamento egoísta.
+
+O preparo manual dos elementos e a montagem dos pratos numa oferenda já faz parte do processo de catalisação e movimentação do axé, fazendo com que sintonizemos desde o início com as melhores vibrações que necessitamos.
+
+Como sempre se diz: se fosse só para comer ou beber, as entidades não aguardariam as oferendas — iriam a um supermercado e saciariam a fome e a sede.
+
+AXÉ!`
+  },
+  {
+    titulo: "Elementos de Trabalho na Umbanda",
+    categoria: "Rituais",
+    conteudo: `O axé dos elementos de trabalho na Umbanda. Afinal, nós e todos os nossos guias trabalham com velas, ervas, pembas, bebidas, fumo, pedras — e muitos de nós não sabem as funções destes objetos.
+
+Fatores Divinos são as menores partículas de Deus, energias primordiais, energias indivisíveis. São as energias mais sutis da Criação. Tudo e todos exteriorizados por Deus são compostos destas energias. Nós, uma planta, uma pedra, os animais, tudo!
+
+Com esse conceito você já sabe que cada elemento tem o seu axé. Cada elemento tem os seus fatores. Cada elemento é composto de muitas energias fatorais que se amalgamaram, se aglutinaram, para chegar na energia elemental complexa que forma tudo o que vemos neste plano da vida.
+
+Vejamos alguns exemplos:
+
+Quartzo Rosa: Fator Conceptivo, agregador, acalmador, tranquilizador, sensibilizador.
+Quartzo Verde: Fator Expansor, direcionador, curador, racionalizador, revitalizador, prosperador.
+Tabaco: Fator limpador, dissolvedor, cicatrizador, curador, protetor, equilibrador.
+Anis Estrelado: Fator Iluminador, Equilibrador, Aclarador, Fortalecedor, Desenvolvedor, Gerador, Criativista.
+Vela Vermelha: Estimulador, Energizador, Equilibrador, Purificador.
+Vela Preta: Recolhedor, Absorvedor, Esvaziador, Anulador, Dragador, Protetor.
+
+Descobrir qual é o Axé dos Elementos de Trabalho na Umbanda passa por um olhar apurado sobre a composição de fatores que aquele elemento tem.
+
+Vejamos as rosas, por exemplo:
+— Rosa Vermelha: Fator Estimulador, Embelezador, Sensualizador.
+— Rosa Amarela: Fator Energizador, Movimentador, Direcionador.
+— Rosa da cor Rosa: Harmonizador, Conceptivo, Vivificador.
+— Rosa Branca: Pacificador, Acalmador, Tranquilizador.
+
+Cada rosa tem uma composição de fatores diferentes e cumprem funções diferentes.
+
+Cerveja preta tem mais axé ígneo, equilibrador — por isso para Xangô. Já a Cerveja clara tem axé da lei: Purificador, Fermentador, Direcionador, Cortador, Diluidor, Higienizador, Protetor (sim, cria um plasma energético protetor com a parte do "colarinho").
+
+Axé!`
+  },
+  {
+    titulo: "Limpeza e Organização — Faxina Astral",
+    categoria: "Rituais",
+    conteudo: `A sujeira física, em diversas tradições espirituais, é vista como um reflexo de desordem interior, atraindo energias negativas ou estagnadas. Ambientes limpos e organizados promovem bem-estar, facilitam o fluxo de energia positiva e estão associados à paz e harmonia. A organização da casa é considerada um primeiro passo para organizar a alma e renovar a energia espiritual.
+
+Acredita-se que o acúmulo de sujeira — louça suja, lixo e bagunça — atrai vibrações de baixa frequência e espíritos obsessores. Um espaço bagunçado pode aumentar a ansiedade e pensamentos negativos, enquanto um ambiente limpo e cheiroso traz tranquilidade e facilita o descanso mental.
+
+A limpeza física é frequentemente vista como um ato de cuidado com o próprio corpo e com o ambiente, agindo como uma limpeza energética que abre caminhos e permite que a luz entre.
+
+Ambientes sujos ou caóticos simbolizam negligência, desequilíbrio e uma possível estagnação na vida do indivíduo. A casa é frequentemente vista como uma extensão do seu interior. Limpar a casa pode ser um exercício de limpeza emocional, jogando fora "dores antigas".
+
+Na perspectiva espiritual e energética, uma casa desorganizada e suja funciona como um "ímã" para larvas astrais e miasmas (energias densas e estagnadas). Essa condição simboliza desordem interior, negligência espiritual e falta de equilíbrio.
+
+COMO LIMPAR A CASA — FAXINA ASTRAL:
+
+1. Limpeza Física Profunda: Comece limpando a sujeira física. Lave a louça, tire o lixo, limpe o chão e organize as gavetas. A limpeza com água e sabão já purifica o ambiente.
+
+2. Uso de Sal Grosso: Passar um pano no chão com água e sal grosso ajuda a descarregar as energias negativas e eliminar miasmas.
+
+3. Ervas e Defumação: Utilize incensos de sálvia ou palo santo, passando a fumaça pelos cantos e janelas para renovar a energia.
+
+4. Ervas de Limpeza: Utilize ervas como alecrim, pimenteira ou arruda para afastar energias densas.
+
+5. Atenção aos Cantos: Miasmas tendem a se acumular em ralos, cantos de paredes e locais úmidos.
+
+Manter a casa e o corpo limpos não é apenas higiene — é um ato de vigilância espiritual e amor-próprio, garantindo que o seu lar e você sejam um refúgio de paz.
+
+AXÉ!`
+  },
+  {
+    titulo: "O Batismo na Casa de Pai Tuiamissu",
+    categoria: "Rituais",
+    conteudo: `BATISMO NA UMBANDA É DIFERENTE EM DIFERENTES CASAS, CADA UMA COM SEUS FUNDAMENTOS PRÓPRIOS ONDE NÃO NOS CABE JULGAR.
+
+NA CASA DE PAI TUIAMISSU REALIZAMOS O BATISMO COM O AMACI DE OXALÁ, ONDE O MÉDIUM RECEBE A PROTEÇÃO DE OXALÁ ATRAVÉS DO AMACI NO SEU ORI (CHAKRA CORONÁRIO). O AMACI É PREPARADO COM ERVAS — PODER DO MUNDO VEGETAL — E ÁGUA — PODER DO MUNDO AQUÁTICO.
+
+Outros elementos utilizados para este sacramento:
+— AZEITE: poder do mundo vegetal, fecha buracos energéticos, purifica e movimenta o que está parado, equilibra os chakras.
+— PEMBA: poder do mundo mineral, traz a proteção ao mental e é condicionadora de energia.
+— VELA BATISMAL: poder ígneo, simboliza Olorum, fecha o mental negativo e acolhe o médium na Umbanda, em seus caminhos na Terra.
+
+TODOS OS ELEMENTOS DEVIDAMENTE PREPARADOS E CONSAGRADOS!
+
+O SIGNIFICADO DO BATISMO
+
+O Batismo dentro da Umbanda aparece como sacramento indispensável, pois só após realizá-lo o médium terá uma vida religiosa completa. O recebimento deste sacramento marca o momento em que Oxalá consagra os filhos adeptos como forma de protegê-los contra o mal e contra a negatividade.
+
+O ritual fundamenta-se na limpeza áurica e na ativação dos chakras. A água realiza a limpeza, a purificação. Jogada normalmente sobre a cabeça, na altura do chakra coronário, ativa este chakra promovendo uma unificação com as forças espirituais superiores. Na Umbanda, além de ativarmos a ligação do chakra coronário com a força de Oxalá, consagramos ainda a cabeça às energias da natureza — promovendo não só a limpeza espiritual como o fortalecimento e o equilíbrio da relação matéria-espírito.
+
+PRECEITOS ANTES DO BATISMO:
+
+— Banho de Ervas: antes de ir para o Templo, com objetivo de limpar e sutilizar o campo energético. Recomenda-se arruda, guiné, fumo (tabaco), eucalipto, espada de São Jorge ou de Santa Bárbara. Use pelo menos duas destas ervas.
+
+— Carne: não comer carne 24h antes do trabalho espiritual. A carne é impregnada de energia densa por conta do sangue e do sofrimento no abate.
+
+— Ingestão Alcoólica: o elemento etílico é potencialmente densificador vibratório e magnético. Após ingerir bebida alcoólica moderadamente, demora cerca de 24h para ser metabolizado pelos chakras.
+
+— Relação Sexual: evitar 24h antes dos trabalhos. Com ou sem amor, na relação sexual o campo energético é inundado pela energia do parceiro, alterando completamente a estrutura magnética do seu campo vibratório.
+
+Receber a bênção do batismo de Umbanda é ser portador da missão de transmitir a palavra de Deus através de ensinamentos de fé, amor e caridade.
+
+OXALÁ ABENÇOE A TODOS!`
+  },
+  {
+    titulo: "Bater Cabeça na Umbanda",
+    categoria: "Rituais",
+    conteudo: `O ato de bater cabeça é a oportunidade que médium, ogã, cabone, sacerdote — enfim, todo o terreiro — tem de estabelecer a conexão com os guias e divindades antes mesmo de tomar o passe ou incorporar.
+
+O altar é o local do templo onde se encontra a maior concentração energética pura vinda dos assentamentos e das irradiações fluídicas dos Orixás. Ao se prostrar diante do congá, posicionando o Ori na horizontal, estamos não só exercendo um ato ritualístico — como também abrindo o chakra coronário para a entrada dessas irradiações puras.
+
+O ritual que se faz presente em diversas culturas como o budismo, o islamismo e até mesmo o catolicismo sinaliza o ato de reverência e respeito diante do culto, da religião, dos ensinamentos e de tudo o que congrega com aquela crença e tradição.
+
+Bater cabeça então é o ato de submissão no sentido de que você está submetendo seu trabalho, está reconhecendo a hierarquia do terreiro e está disposto a obedecer as doutrinas daquele templo.
+
+Axé!`
+  },
+  {
+    titulo: "Usar Branco na Umbanda",
+    categoria: "Rituais",
+    conteudo: `Ao adentrar um terreiro, vestimos o branco e nos despimos do ego.
+
+A roupa branca carrega inúmeros fundamentos espirituais, conduz a energia com pureza, representa a paz que a Umbanda prega. Mas há também fundamentos mais sutis — aqueles que não estão escritos em nenhum livro, mas se revelam a quem sabe observar.
+
+A vestimenta tem o poder de igualar. Quando todos se vestem dessa cor, desaparecem as marcas, os rótulos e as diferenças sociais. Não há mais o rico nem o pobre, o dono do avião ou o da bicicleta — há apenas filhos e filhas de fé, lado a lado, sob a mesma luz de Oxalá.
+
+Dentro do terreiro, estamos todos sob a mesma vibração, diante do mesmo congá, recebendo o mesmo amor vindo dos Orixás. Não há motivo, portanto, para a vaidade, a comparação ou o desejo de ser "melhor" que o outro. Somos irmãos espirituais e irmãos cuidam, amparam e respeitam.
+
+MAS "USAR BRANCO" VAI ALÉM DA ROUPA:
+
+Quando escutamos o termo "por branco", os guias não estão se referindo diretamente às roupas.
+
+Por branco é se auto refazer, é mudar as suas condutas perante a você mesmo e perante aos outros.
+Por branco é buscar uma paz interior e uma união com o sagrado.
+Por branco é se revestir do amor fraternal.
+Por branco é praticar a caridade sem olhar a quem.
+Por branco é amar aos outros como a ti mesmo.
+Por branco é a união do médium com Deus, guias e Orixás.
+Por branco é o ato de compaixão e amor ao próximo.
+Por branco é purificar seu próprio coração!
+
+Quanto à roupa em si: as roupas devem ser conservadas limpas, lavadas e passadas depois de todas as giras, bem cuidadas e usadas exclusivamente nos trabalhos. Quando a roupa fica velha ou estragada, jamais o médium deverá dar ou jogar fora — ela deverá ser despachada, pois trata-se de um instrumento de trabalho do médium.
+
+Somos soldados de Oxalá e branco é a sua cor.
+
+Salve a Umbanda! Axé!`
+  }
+];
+
+const ENSINAMENTOS_MEDIUNIDADE = [
+  {
+    titulo: "Autoanálise Mediúnica",
+    categoria: "Mediunidade",
+    conteudo: `Médiuns, procurem sempre fazer uma autoanálise de seus comportamentos junto à egrégora mediúnica. Às vezes, e não por mal, o médium se torna deslumbrado sem perceber — e tenham certeza, é o que mais observamos no meio umbandista.
+
+O médium deslumbrado é aquele que não fala de outra coisa a não ser sobre os "seus" guias (SEUS?), sobre o terreiro; tudo para ele é algo fantástico, paranormal. Se ouve um barulho diferente é o guia caminhando pela casa; se sonha é aviso; se acontece alguma coisa no serviço de errado, são espíritos nefastos querendo obsediá-lo. Se forem alimentados tais deslumbramentos e ilusões, o médium pode se encaminhar para um fanatismo religioso — então o assunto é sério.
+
+Uma outra observação: não utilizem o nome dos guias para pendengas pessoais. Não é bacana nem no mundo físico — imagine perante o mundo espiritual.
+
+É extremamente necessário que esse médium tenha esta observação para que não passe a ser desacreditado, porque esse deslumbramento gera aqueles médiuns que não podem estar em um momento social sem falar sobre sua mediunidade, seu conhecimento, e ficam procurando justificativas para os problemas alheios na espiritualidade. Detalhe: um guia sabe perfeitamente onde trabalhar e quando acoplar em seu médium — não subestimem a INTELIGÊNCIA E SABEDORIA DE UM GUIA IDÔNEO.
+
+Mas infelizmente alguns médiuns, quando percebem que os guias que incorporam estão atendendo várias pessoas e recebendo elogios, podem despertar A VAIDADE, ARROGÂNCIA, ORGULHO — o ego exacerbado pode levá-lo a achar que ele é quem está fazendo as graças acontecerem, e não mais a espiritualidade.
+
+HUMILDADE, HUMILDADE, HUMILDADE — esta palavrinha tão importante e essencial na vida de um médium deveria ser bordada em seu uniforme branco, como lembrete para que o médium nunca desviasse de seu propósito primordial: FÉ, AMOR e CARIDADE.
+
+Aprenderá que haverá situações que os guias não poderão intervir, mesmo se tratando de si mesmo como seu instrumento. Há situações que os guias que trabalham conosco não poderão intervir mesmo sendo para nós — porque mesmo o médium está sujeito às leis espirituais: ação e reação, causa e efeito, semeadura, merecimento e retorno.
+
+Nada nos pertence — nem a religião, nem a gira, nem os consulentes ou filhos da casa, muito menos as entidades espirituais. Não são nossas posses. Tudo pertence à Umbanda. Estamos apenas para humildemente servir.
+
+Saravá!`
+  },
+  {
+    titulo: "Médium e Guia — Cavalo e Cavaleiro",
+    categoria: "Mediunidade",
+    conteudo: `Muitos médiuns em início de desenvolvimento — e quando digo desenvolvimento, não está relacionado ao "tipo de transe mediúnico" (se consciente, semiconsciente ou inconsciente), e sim em como o médium desenvolve o trabalho com seu guia, como o guia em comunhão com seu médium age durante um trabalho, um atendimento.
+
+Semelhante ao cavaleiro que necessita um árduo treinamento com seu cavalo antes de montá-lo durante uma batalha, assim é o relacionamento e a comunhão de um médium com seus guias e vice-versa.
+
+O cavaleiro sábio não colocará seu cavalo em risco, pois sabe que ele é o seu fiel escudeiro, companheiro que durante a batalha será o seu maior aliado em todas as situações — enfrentando a batalha sob o risco de morte e socorrendo o cavaleiro ao menor sinal de risco.
+
+O cavalo, em sintonia com a vontade do cavaleiro, sabe que o cavaleiro não o colocará em risco durante a batalha. O treinamento entre os dois coloca em sintonia todos os movimentos necessários a serem feitos, onde um depende do outro e ambos prezam pela segurança de ambos.
+
+Se não houvesse o treinamento, certamente o cavaleiro não poderia saber dos limites de seu cavalo, e o cavalo não teria confiança e segurança no que o cavaleiro lhe dirigisse a fazer — e certamente reagiria com o instinto de auto preservação.
+
+O cavalo reconhece seu cavaleiro e, mesmo que outros cavaleiros venham a utilizá-lo, ainda assim o cavalo, em parte, saberá como se comportar — e a adaptação é simultânea devido ao seu treinamento.
+
+Creio que esta metáfora pode explicar o que acontece durante o desenvolvimento mediúnico. A função do médium esbarra no que pertence à sua própria natureza.
+
+Não pensem que um guia poderá mudar o médium, pois isso vai contra o livre arbítrio. Porém cabe ao médium procurar adequar-se o máximo possível ao jeito de seu guia trabalhar. Esse jeito — acredite — todos os guias igualmente passam por uma escola espiritual para aprenderem a fazê-lo dentro das leis divinas.
+
+O ser consciente, semiconsciente ou inconsciente nesse momento pouco importa, pois o espírito do médium, mesmo inconsciente, ainda tem o domínio de todas as ações que lhe são peculiares e de sua própria natureza.
+
+Portanto, médiuns: instruam-se, meditem e não deixem de fazer a sua reforma íntima, pois a verdadeira mudança vem de dentro para fora, e ninguém muda ninguém a não ser a si mesmo por sua própria vontade.`
+  },
+  {
+    titulo: "Médium não é Superior a Ninguém",
+    categoria: "Mediunidade",
+    conteudo: `Ué, você não é médium e está desempregado?
+Ué, você não é médium e ficou doente?
+Ué, você não é médium e sua companheira(o) lhe traiu?
+Ué, você não é médium e está sem dinheiro?
+Ué, você não é médium e não sabia que iria acontecer isso em sua vida?
+Aonde estão as entidades que você diz tanto que lhe protegem e lhe ajudam?
+
+Com o perdão da palavra, é falta de conhecimento achar que só porque somos médiuns temos que estar livres e imunes a tudo e a todos. Só porque sou médium eu não posso perder o emprego ou ficar doente? Não funciona desta forma. Mediunidade não é moeda de troca. Se nós médiuns fôssemos superiores aos demais, qual a finalidade, então, da reencarnação e da evolução espiritual?
+
+Nós médiuns temos que ter noção do que é mediunidade, e deixar bem claro para pessoas que têm pouco conhecimento sobre nossa amada Umbanda, que o fato de sermos médiuns não nos torna melhores ou piores do que elas. Pelo contrário: nossa responsabilidade é dobrada, pois nós mesmos, antes de reencarnarmos, pedimos para vir nesta condição de médium para evoluir e cumprir as dívidas de outras encarnações.
+
+Nós médiuns, sejamos mais coerentes e sábios para não transferirmos nossos problemas para nossas entidades ou nossa religião.
+
+Quando fui questionado sobre onde estavam minhas entidades, com um lindo sorriso no rosto respondi:
+
+Minhas entidades estão comigo o tempo todo! Meu Exu está me dando firmeza. Minha Pomba Gira está me dando equilíbrio. Meu Caboclo está me dando forças. Meu Preto Velho está me dando sabedoria. Meus Orixás estão me dando fé para que eu não deixe de acreditar que com os joelhos no chão sou mais forte, que com os joelhos no chão e realizando uma oração eu consigo vencer na vida.
+
+A Umbanda me ensina que mediunidade não é superioridade. Mediunidade é trabalho, é dom — não moeda de troca.`
+  },
+  {
+    titulo: "A Qualidade da Energia que Você Está Doando",
+    categoria: "Mediunidade",
+    conteudo: `A Umbanda é uma religião que lida com diferentes vibrações. Todos os elementos do ritual — seja os pontos cantados, seja as imagens no congá, a organização do espaço, as ervas utilizadas, entre outros — contribuem para formar as energias necessárias para o bom atendimento dos consulentes.
+
+Durante o passe mediúnico, há uma união entre a energia vital do médium com as vibrações da espiritualidade, as quais são manipuladas pelos guias para o benefício daquele que busca ajuda. Por esta razão, é muito importante que o médium se prepare para o momento do trabalho.
+
+Já conhecemos os preceitos básicos a serem observados — evitar o consumo de carnes, bebidas alcoólicas e relações sexuais antes da gira. Não podem ser ignorados. Têm como objetivo não permitir que o campo vibracional do médium esteja carregado de energias densas.
+
+No entanto, além desses preceitos materiais, e mais importantes ainda, há os preceitos mentais, emocionais e espirituais. Como você poderá enviar boas energias para os consulentes se, no momento da incorporação, estiver vibrando ódio, vingança, melindre, intriga, maledicência e outros sentimentos negativos? É necessário estar sintonizado espiritualmente para um bom acoplamento mediúnico.
+
+É claro que as entidades procuram sempre contornar esta situação. Antes de se efetivar o acoplamento, limpam e harmonizam, na medida do possível, o campo do médium. Entretanto, quanto mais pesado o nível vibratório, mais difícil será a incorporação e mais difícil manter a sintonia.
+
+Por esta razão, para um bom desempenho mediúnico, nada melhor que o desenvolvimento moral do médium. A boa e velha reforma íntima. Isto é mais importante que qualquer firmeza que se possa realizar.
+
+Tenha um especial cuidado com a vaidade. Este é o maior inimigo dos médiuns. Lembre-se sempre de que a Umbanda é humildade e simplicidade. Nosso objetivo no terreiro é, acima de tudo, exercer a caridade ao próximo — e não provar nossa força perante ninguém. Não estamos ali para disputar quem incorpora mais entidades, quem está mais firme, quem dança mais bonito, quem brada mais alto, quem roda mais veloz, quem usa as roupas mais elaboradas.
+
+Quanto mais você se aproxima da espiritualidade e permite que as vibrações elevadas cresçam em seu coração, mais elevada torna-se a qualidade dos fluidos que doará à espiritualidade.
+
+Para isso, faz-se necessário bons pensamentos, uma conduta correta e, principalmente, amor no coração.
+
+Saravá a todos!`
+  },
+  {
+    titulo: "Você Ouve a Deus e aos Guias?",
+    categoria: "Mediunidade",
+    conteudo: `Ficar em silêncio para ouvir Deus é uma prática espiritual de aquietar as preocupações, ansiedades e o barulho externo para discernir a voz divina, que muitas vezes fala ao coração como uma "brisa suave". O silêncio não é apenas ausência de palavras, mas um espaço sagrado de entrega, confiança e oração, permitindo intimidade com Deus e os guias espirituais.
+
+O silêncio é fundamental para a oração e a conexão profunda com a espiritualidade, agindo como um "alfabeto" da prece e um amplificador da sua voz, permitindo a escuta interior. Criar esse espaço sagrado, desconectando-se do ruído exterior, favorece a reflexão, a meditação e o fortalecimento da fé.
+
+O silêncio, mesmo aparente (quando Deus parece não responder), é um tempo para aprender a confiar, amadurecer a fé e refletir.
+
+Vivemos num mundo em contínuo movimento. As cidades onde habitamos exigem uma vida frenética: trabalho, estudo, atividades sociais... e muito trânsito. Numa sociedade onde tudo deve ser rápido e eficaz, a tecnologia acaba por permitir às pessoas estarem conectadas o tempo todo.
+
+Num mundo assim, cheio de ruídos internos e barulhos externos, como é possível ouvir a voz de Deus? Como dar espaço para a dimensão espiritual numa vida repleta de exigências?
+
+Percebo que, nessas condições, ouvir a Deus que fala ao coração humano é bastante difícil. Muitas pessoas procuram uma orientação espiritual, mas sequer cultivam uma vida espiritual de qualidade ou dedicam um tempo para a sua oração pessoal.
+
+Vamos deixar um pouco os celulares de lado. Este tempo poderá ser aproveitado para estar com Deus num momento silencioso de oração, no recolhimento de sua própria casa ou até mesmo em uma caminhada contemplando a natureza.
+
+Ao silenciarmos, Deus poderá falar ao nosso coração. Esta será também a ocasião para um encontro vivo e verdadeiro com o Deus criador que nos ama por aquilo que nós somos, e não por aquilo que fazemos ou possuímos.
+
+Como diz a música:
+Se eu quiser falar com Deus
+Tenho que ficar a sós
+Tenho que apagar a luz
+Tenho que calar a voz
+Tenho que encontrar a paz`
+  },
+  {
+    titulo: "O Dia em que um Preto Velho foi Expulso de um Centro Espírita",
+    categoria: "Mediunidade",
+    conteudo: `Essa é uma história verdadeira. Ela de fato aconteceu em um centro espírita de uma pequena cidade do estado de Minas Gerais, há algum tempo atrás.
+
+Conta-se que os médiuns estavam realizando seus trabalhos de esclarecimento e doutrinação. Subitamente um Preto Velho incorporou numa médium e começou a falar. No momento em que os trabalhadores perceberam que o espírito incorporado era um Preto Velho, mandaram suspender a incorporação. Nesse centro não eram aceitos Pretos Velhos, pois os dirigentes consideravam que são espíritos não muito evoluídos. O espírito foi então convidado a se retirar. O Preto Velho fez o que eles pediram e foi embora.
+
+Logo depois, a médium incorporou um espírito de um filósofo, um doutor de nome difícil, provavelmente europeu, que foi muito bem recebido por todos os presentes. O filósofo deu instruções, fez os trabalhos de doutrinação e todos ficaram felizes e maravilhados.
+
+Os dirigentes então resolveram encerrar os trabalhos. No entanto, a médium novamente começou a incorporar um espírito. Um dos trabalhadores perguntou quem estava ali. O espírito respondeu que era de novo o Preto Velho. O dirigente fez cara de tédio e perguntou o que ele ainda queria. O Preto Velho então disse:
+
+"Zifio... Ce suncê mi permiti, só quiria que ocês sobessem qui o dotô que apareceu agora há poquinho era este preto velho aqui, que agora proseia com vosmicês."
+
+Todos ficaram espantados com a revelação... O Preto Velho então começou a não mais falar como um Preto Velho:
+
+"É engraçado isso, meus irmãos, pois quando eu apareci como Preto Velho, fui praticamente expulso dos trabalhos de vocês. Mas quando eu apareci no formato de um doutor, um filósofo europeu prestigiado, com toda a pompa e com ar de autoridade, todos me trataram muito bem, ouviram meus conselhos e ficaram felizes e maravilhados com a aparição. Por que isso, meus filhos?
+
+No plano espiritual não existem aparências. As aparências existem apenas aqui na Terra. Deus, em sua sabedoria infinita, oculta aos vossos olhos as verdades do espírito camufladas pelas aparências do mundo... para que vocês aprendam a vê-las com os olhos do coração.
+
+No plano espiritual não existem doutores, não existem classes sociais, não existem nacionalidades, não existem religiões, não existem raças. O que vale é o que você é lá no fundo, e não o que você tem. O que vale é o amor, a verdade, a paz, a harmonia interior.
+
+Quando cada um de vocês chegar ao plano espiritual, os anjos de Deus não vão perguntar quantos títulos de doutor vocês conquistaram, quantos bens acumularam, quanto sucesso fizeram. Não, meus queridos filhos... os anjos vão perguntar quanta luz você espalhou pela Terra; quanto você tocou o coração dos outros com justiça e benevolência e o quanto a sua obra foi pautada no amor e na paz.
+
+Vamos tomar cuidado com o veneno da hipocrisia e do preconceito. O importante é o que cada um traz em sua alma, em seu espírito. O que importa de verdade é ser simples e verdadeiro, ser honesto e ter caráter, ser caridoso e ter o amor de Deus no coração."
+
+O Preto Velho despediu-se de todos e então deixou a sala de atendimento. Os trabalhadores ficaram envergonhados com seu próprio comportamento, mas adquiriram uma pérola de sabedoria que nunca mais, em toda a sua vida, seria esquecida.
+
+AXÉ!`
+  },
+  {
+    titulo: "Ajude Só Quem Pedir",
+    categoria: "Mediunidade",
+    conteudo: `"Não coloque a mão na cambuca dos outros."
+
+Nunca se envolva no sofrimento dos outros — cada um carrega o seu fardo.
+
+O homem tem que cansar, beber até o fundo do copo de veneno que é para ele. E nesse momento, se ele pedir socorro, vai chegar.
+
+Não seja pretensioso e espere ajudar todo mundo. Nunca force seus cuidadores espirituais a oferecer algo que não será apreciado. Você só pode ajudar aqueles que estão dispostos e humildes a aceitar ajuda de coração.
+
+Uma pessoa sofrida vê o mundo através da sua dor, por isso é surda, cega, ignorante e egoísta.
+
+Se você se intrometer no sofrimento alheio sem ser chamado e preparado, o vórtice cármico vai te arrastar para um jogo estrangeiro e você verá a cara da ingratidão — além de carregar a energia ruim que cerca a outra pessoa.
+
+Lembre-se... O homem é capaz de espalhar o seu sofrimento.
+
+Continue seu caminho, resolvendo sua vida em silêncio. Seguindo o teu próprio caminho, encontrarás a força e a sabedoria necessária para ajudar as pessoas a levantarem-se.`
+  },
+  {
+    titulo: "Cuidado com Seus Achismos",
+    categoria: "Mediunidade",
+    conteudo: `A primeira coisa que um médium deve fazer ao chegar no terreiro:
+— Pedir bênção ao seu Pai/Mãe no Santo.
+— Ter feito suas saudações de porteira, trunqueira e casa de Exu.
+— Bater a cabeça no congá e fazer a reverência aos atabaques.
+
+Dito isso, vamos ao achismo!
+
+Não dê sua opinião quando não lhe for pedido. Lembre-se: em seu terreiro tem um dirigente. Além disso, tem o Comando Espiritual da Casa. São eles quem determinam o que deve ser feito. E se bem lembrarmos, toda Casa tem seu regimento interno — regras que são passadas aos filhos antes de entrarem para a corrente.
+
+Tem dúvidas? Leia de novo os regimentos da Casa. Leia quantas vezes for preciso até entender. Continua com dúvidas? Pergunte ao seu dirigente!
+
+Para você não se tornar um médium inconveniente — um palpiteiro cheio de achismo! Dando opiniões inoportunas e fazendo achismos que são desnecessários e cansativos.
+
+Quem acha ou deixa de achar é o Comando Espiritual da Casa e o Dirigente.
+
+Terreiro sério não fica paparicando médium mimado. Não existem preferidos ou panelinhas — todos são iguais!
+
+Umbanda é uma religião! Tem fundamentos, regras e hierarquias. Assim como em outras religiões, ninguém vai à igreja ensinar o padre a rezar missa. Pois então, ninguém vai ao terreiro ensinar o sacerdote a tocar gira.
+
+Mais humildade, menos ego e mais respeito. Ouvir mais e falar menos!
+
+Como diziam os antigos:
+"Quem fala demais dá bom dia pra cavalo."
+"Boca fechada não entra mosquito."
+"As palavras valem prata, mas o silêncio vale ouro."
+
+Saravá Fraterno!`
+  },
+  {
+    titulo: "O Que Torna um Médium Forte",
+    categoria: "Mediunidade",
+    conteudo: `É preciso entender que a força do médium ou da entidade não está em só fazer oferendas, acender vela em encruzilhadas ou cemitérios, e achar que isso é o suficiente — isso é demonstração de falta de conhecimento.
+
+A força de um Médium não está em incorporar a qualquer hora ou em qualquer lugar — isto é sinal de mediunidade desequilibrada.
+
+A força de um Médium não está em incorporar várias entidades numa mesma gira — isto é um sinal de falta de firmeza.
+
+A força de uma Entidade não está em usar roupas extravagantes, luxuosas, super coloridas e muitos apetrechos — isto indica vaidade e superficialidade.
+
+A força de uma Entidade não está no grito mais alto, nos movimentos mais extravagantes — isto demonstra animismo e às vezes mistificação.
+
+A força da Entidade não está em beber litros e litros de álcool, falar palavrão, nem no sotaque mais puxado — isto indica muita coisa errada.
+
+A força do Médium não está em ter lido todos os livros, falar palavras difíceis, fazer todos os cursos de Umbanda — isto pode muito bem ser sinal de presunção e arrogância.
+
+A verdadeira força está no médium bem preparado, sintonizado com seus Guias e Protetores.
+
+A verdadeira força se encontra num bom coração, disposto a fazer a Caridade!
+
+Assim como o médium aprende a cada incorporação com suas entidades, as entidades se valem dos conhecimentos de seus médiuns.
+
+A Umbanda é humildade, simplicidade, amor, caridade.
+
+Saravá Fraterno!`
+  }
+];
+
+const ENSINAMENTOS_SAUDACOES = [
+  {
+    titulo: "O Significado das Saudações aos Orixás da Umbanda",
+    categoria: "Saudações",
+    conteudo: `As saudações aos Orixás da Umbanda são formas de contemplar e louvar as entidades. Cada linha ou cada casa de Umbanda pode manifestar a sua fé e sua saudação de forma diferente — não existe uma saudação certa ou errada. Aqui apresentamos as mais comuns para saudar os Orixás, entidades e seres de luz da religião brasileira.
+
+Cada saudação é composta de sua forma original, seja nas línguas de nossos antepassados, seja em sua forma já traduzida, e também de uma expressão corporal que devemos realizar quando formos entoá-las.
+
+OXALÁ
+· Termo: Epá Babá Oxalá ou Exê Babá
+· Significado: O senhor realiza / Obrigado Pai
+· Expressão corporal: os fiéis abrem os braços com as mãos abertas em gesto semelhante à imagem de Jesus Cristo. Lembramos que Oxalá é sincretizado com Jesus na Umbanda.
+
+IEMANJÁ
+· Termo: Odoyá ou Odocyabá
+· Significado: Salve a Senhora das águas!
+· Expressão corporal: braços abertos com as mãos para o alto, ou mãos espalmadas para cima na altura da cintura fazendo movimentos circulares.
+
+OXUM
+· Termo: Ora ie iê ô
+· Significado: Olha por nós, mãezinha!
+· Expressão corporal: com as mãos abertas, faz-se gestos semelhantes ao de ninar um bebê, na altura da cintura.
+
+OXUMARÊ
+· Termo: Arroboboi
+· Significado: Salve o Senhor das águas supremas!
+· Expressão corporal: mãos postas em oração à frente do corpo, com uma pequena distância, sem cruzar os dedos.
+
+OXÓSSI
+· Termo: Okê Arô
+· Significado: Dê seu brado, Majestade!
+· Expressão corporal: punhos cruzados com o dedo indicador estendido, mãos na altura da cintura, ou mãos em formato de flecha.
+
+XANGÔ
+· Termo: Kaô Kabecilê
+· Significado: Permita-me vê-lo, Majestade!
+· Expressão corporal: o movimento para Xangô é feito alternando as mãos: uma vai para a testa e a outra para a nuca, alternando. Em outras casas, as mãos são colocadas na cabeça logo em cima das orelhas, e em seguida espalmadas em direção ao alto.
+
+OBÁ
+· Termo: Akiro Obá Yê!
+· Significado: Eu saúdo o seu conhecimento, Senhora da Terra!
+· Expressão corporal: tocar no chão três vezes com as duas mãos.
+
+EGUNITÁ
+· Termo: Kali Yê, minha Mãe!
+· Significado: Salve a Senhora Negra, Minha Mãe!
+· Expressão corporal: com uma das mãos levantada, faz-se movimentos para frente e para trás três vezes intensamente.
+
+LOGUNÃ
+· Termo: Oiá Tempo
+· Significado: Olha o tempo, minha mãe!
+· Expressão corporal: movimento circular com uma das mãos apontando para o alto com o dedo indicador, como se mostrasse o tempo.
+
+OGUM
+· Termo: Patakori Ogum ou Ogum Yê!
+· Significado: Salve o cortador de caminhos! Salve Ogum!
+· Expressão corporal: braços cruzados à frente do peito, com os dedos indicadores e polegares estendidos e os demais recolhidos.
+
+IANSÃ
+· Termo: Eparrei!
+· Significado: Salve o raio, Iansã!
+· Expressão corporal: oscilar as mãos de forma enérgica e apontada para o alto (como quando queremos dizer "mais ou menos", virando a mão de um lado para o outro). Outra variação: colocar as mãos espalmadas acima da cabeça, oscilando e fazendo movimentos circulares.
+
+OBALUAÊ
+· Termo: Atotô
+· Significado: Peço Quietude, meu Pai!
+· Expressão corporal: com a mão direita, faz-se uma cruz no chão.
+
+NANÃ BUROQUÊ
+· Termo: Saluba Nanã
+· Significado: Salve a Mãe das águas Pantaneiras!
+· Expressão corporal: braços abertos e mãos espalmadas para baixo, fazendo movimentos circulares.
+
+OMULU
+· Termo: Atotô
+· Significado: Peço quietude, meu Pai!
+· Expressão corporal: fazer uma cruz no chão com a mão esquerda.
+
+EXU
+· Termo: Laroiê ou Mojubá
+· Significado: Vós sois grande, Exu! / Eu me curvo a ti, vós sois poderoso Exu!
+· Expressão corporal: dedos cruzados com as mãos voltadas para o chão realizando movimentos circulares; ou mãos encolhidas apontadas para o chão, encostando as costas das mãos uma na outra 3 vezes seguidas; ou com os punhos cruzados bater as costas das mãos três vezes no chão.
+
+POMBAGIRA
+· Termo: Laroiê, Salve as moças ou Pombagira Saravá
+· Significado: Salve Pombagira
+· Expressão corporal: dedos cruzados com as mãos voltadas para o chão realizando movimentos circulares.
+
+EXU MIRIM
+· Termo: Laroyê, Exu Mirim
+· Significado: Olhe por mim, Exu Mirim!
+· Expressão corporal: iguais às de Exu.`
+  }
+];
+
+const ENSINAMENTOS_ANJO = [
+  {
+    titulo: "Anjo da Guarda na Umbanda",
+    categoria: "Anjo da Guarda",
+    conteudo: `Na Umbanda o Anjo da Guarda não é considerado um Guia ou Orixá — é um Espírito Celestial, iluminado, de essência pura e de energia poderosíssima. Pertence à dimensão celestial, dimensão esta de grande pureza e de grande atuação em todas as outras dimensões subsequentes. Portanto, a essência e a energia dos Anjos atingem a todos independente de religião, doutrina ou crença.
+
+Para os médiuns, os Anjos da Guarda são tão importantes quanto os próprios Orixás e Entidades, pois são eles que os protegem no momento da incorporação ou desincorporação. Momento esse que acontece em segundos de desacoplamento do corpo astral e que, por um mínimo descuido, podem sofrer um ataque do baixo astral com a entrada de seres inferiores na corrente mediúnica do médium.
+
+Saiba que quando o Orixá/Entidade está incorporado no médium, o Anjo da Guarda fica ao lado. No entanto, no momento da desincorporação ou incorporação, o Anjo da Guarda se aproxima mais ativamente, ajudando a manter o equilíbrio do médium.
+
+Os Anjos de Guarda nos protegem e nos acompanham a cada dia. Por isso é aconselhável manter sempre acesa uma vela branca ao lado de um copo d'água. Quando colocamos o copo de água junto à vela do anjo da guarda, estamos compondo mais um elemento do qual este Espírito Superior irá utilizar para nosso maior benefício. A água é elemento purificador e fonte de vida — ao possibilitarmos o elemento para o trabalho da entidade, anjo da guarda etc., estamos deixando fonte elemental para ser utilizada a nosso benefício.
+
+COMO ATIVAR A VELA DO ANJO DA GUARDA:
+
+Acenda a vela branca e segure-a com a mão direita à frente e acima da cabeça.
+
+Faça esta evocação:
+"Pai Olorum, consagre essa chama para que entre no campo vibracional do meu Anjo da Guarda."
+
+(vela próxima ao tórax)
+"Ofereço essa chama divina para que entre no campo vibracional do meu Anjo da Guarda.
+Evoco meu Anjo da Guarda, ofereço a vós esta vela e peço que a imante, cruze e consagre em vosso poder, se fazendo presente por meio dela em minha vida, em meu coração, palavras e mente!"
+
+Encoste a vela em cima de sua cabeça e imagine a luz dela alcançando o infinito, no alto onde se encontra seu Anjo da Guarda com o Altíssimo. A luz sobe como um facho e, quando alcança o Anjo, a luz Dele desce por este facho, iluminando ainda mais, até alcançar o alto de sua cabeça — entrando por seu corpo, de dentro para fora e de fora para dentro, envolvendo-o todo em sua luz.
+
+Se você é médium de Umbanda, tenha em seu Anjo da Guarda uma das mais simples e poderosas proteções que um médium pode ter. Mantenha a vela acesa com vela de sete dias ininterruptamente e reze diariamente ao seu Anjo da Guarda — no mínimo, antes de dormir e ao acordar.`
+  }
+];
+
+const ENSINAMENTOS_AULAS = [
+  {
+    titulo: "Aula 1 — História da Umbanda",
+    categoria: "Fundamentos",
+    autor: "Pai Yolando",
+    conteudo: `No final de 1908, aos 17 anos, Zélio Fernandino de Moraes, sentiu a abertura da mediunidade. Em algumas ocasiões falava coisas sem sentido em linguagem muito simples; em outras parecia conhecer muito da Natureza. Seus familiares o levaram a consultar um médico, que era também o tio do rapaz, mas este, desconhecendo os sintomas apresentados, orientou que Zélio fosse levado a um padre. Com isso, acabou sendo levado à Federação Espírita de Niterói, sendo convidado a participar da sessão mediúnica no dia 15 de novembro.
+
+Após sentar-se à mesa Zélio e os médiuns da casa incorporaram entidades que se denominavam índios e escravos negros. O dirigente do trabalho não aprovou a manifestação desses espíritos, pois os considerava atrasados e pediu que se retirassem; a entidade incorporada em Zélio questionou a reprovação dizendo que ainda não havia transmitido a mensagem. Um médium vidente observou que o índio que se manifestava era na verdade um jesuíta e indagou ao "caboclo" quem era e qual era o seu nome, e então a entidade explicou que havia sido um jesuíta em sua penúltima encarnação na Terra (Gabriel Malagrida, morto em 1761 pela Inquisição) e que a partir desse momento seria chamado Caboclo das Sete Encruzilhadas, pois que não haveriam caminhos fechados para ele. Informou também que no dia seguinte iniciaria um novo tipo de culto na casa de seu aparelho, uma religião que falaria aos humildes, simbolizando a igualdade que deve existir entre todos os irmãos, encarnados e desencarnados.
+
+Mesmo sob a descrença dos membros da Federação Espírita de Niterói, em 16 de novembro, deu-se início ao culto que foi nomeado como "Umbanda - Manifestação do Espírito para a Caridade" tendo como trabalhadores espíritos de escravos africanos e de índios brasileiros. A prática da caridade, no sentido do amor fraterno, seria a característica principal deste culto, que teria por base o Evangelho de Jesus. As normas foram então estabelecidas: trabalhos diários, das 20:00 às 22:00 h; vestimentas brancas e o atendimento seria gratuito. A Casa de Trabalhos recebeu o nome de Nossa Senhora da Piedade, porque assim como Maria acolheu o filho nos braços, também seriam acolhidos como filhos todos os que necessitassem de ajuda ou de conforto.
+
+A gira foi iniciada pelo Caboclo, que realizou a cura de muitos consulentes. Nesse mesmo dia, Zélio incorporou um preto velho chamado Pai Antônio, entidade muito sábia e humilde que pediu um cachimbo, o primeiro elemento de trabalho para essa religião. Pediu também uma guia, carinhosamente chamada de "Guia de Pai Antônio" que é usada até hoje pelos médiuns.
+
+No dia seguinte e nos demais que se sucederam, muitas pessoas vieram ao local em busca de cura e palavras de consolo. Médiuns, cuja manifestação mediúnica foi considerada loucura, deixaram os sanatórios e deram provas de suas qualidades excepcionais. A partir daí, o Caboclo das Sete Encruzilhadas começou a trabalhar incessantemente para o esclarecimento, difusão e sedimentação da religião de Umbanda. Além de Pai Antônio, tinha como auxiliar o Caboclo Orixá Malé, entidade com grande experiência no desmanche de trabalhos de baixa magia.
+
+Em 1918, o Caboclo das Sete Encruzilhadas recebeu ordens do Astral Superior para fundar sete tendas para a propagação da Umbanda. As agremiações ganharam os seguintes nomes: Tenda Espírita Nossa Senhora da Guia; Tenda Espírita Nossa Senhora da Conceição; Tenda Espírita Santa Bárbara; Tenda Espírita São Pedro; Tenda Espírita Oxalá, Tenda Espírita São Jorge; e Tenda Espírita São Gerônimo. Enquanto Zélio estava encarnado, foram fundadas mais de 10.000 tendas a partir das mencionadas.
+
+Zélio nunca fez da religião sua profissão. Trabalhava para o sustento de sua família e do Terreiro, além das pessoas que se hospedavam em sua casa para os tratamentos espirituais. Nunca aceitou ajuda monetária de ninguém, apesar de inúmeras vezes isto ser oferecido a ele, o Caboclo, por sua vez, nunca permitiu.
+
+O ritual estabelecido era bem simples com cânticos baixos, vestimenta branca, proibição de sacrifícios de animais, uso de guias que determinavam a entidade manifestante, banhos de ervas e amacis, constituíam os principais elementos de preparação do médium. Os atabaques foram incorporados posteriormente em outros Terreiros.
+
+Em 1971 foi gravada uma mensagem do Caboclo das Sete Encruzilhadas que reforçava que a Umbanda vai progredir, sendo necessário haver sinceridade, honestidade, humildade. Para que os médiuns tomassem cuidado com as tentações, sejam elas quais forem. Umbanda é humildade, amor e caridade – esta é a bandeira. Que os médiuns devessem manter seus corpos e mentes limpos e puros, para trabalhar com os espíritos superiores.
+
+Zélio Fernandino de Moraes dedicou 66 anos de sua vida à Umbanda, tendo retornado ao plano espiritual em 03 de outubro de 1975, com a certeza de missão cumprida.`
+  },
+  {
+    titulo: "Aula 2 — Umbanda, Candomblé e Kardecismo: religiões espiritualistas",
+    categoria: "Fundamentos",
+    autor: "Pai Yolando",
+    conteudo: `Muitas pessoas acreditam que as religiões espiritualistas por trabalharem com a comunicação com espíritos desencarnados são todas iguais; já outras acreditam que o Kardecismo é um "alto espiritismo" e Umbanda e Candomblé são "baixo espiritismo" por estes trabalharem com as forças e energias da Criação. O correto é que não existe uma religião igual a outra e nenhuma é melhor que a outra: todas são únicas e importantes. Essas religiões fazem parte de um grande grupo de religiões espiritualistas, pois têm como base de trabalho a mediunidade. A seguir encontra-se uma breve descrição de cada uma delas.
+
+KARDECISMO
+O Kardecismo foi iniciado na França com Allan Kardec (Hippolyte Léon Denizard Rivail), que codificou a doutrina espírita em cinco volumes: "O livro dos Espíritos" (1857), "O Livro dos Médiuns" (1861), "O Evangelho Segundo o Espiritismo" (1864), "O Céu e o Inferno" (1865) e "A Gênese" (1868). No Brasil, Chico Xavier foi o médium que mais se destacou na prática da psicografia, chegando a publicar mais de 400 livros. As principais práticas karcedistas são os trabalhos de mesa branca, os trabalhos de cura e as psicografias. Nessa doutrina, o médium recebe a incorporação ou a inspiração de um trabalhador do astral (Espírito de Luz). Não há o uso de elementos nos trabalhos e nem imagens de santos, exceto o uso de vestimenta branca, toalhas brancas sobre a mesa e água para receber a fluidificação. Também não há celebrações de rituais como batizados, casamentos, etc.
+
+UMBANDA
+A Umbanda teve início no Brasil em 1908 através do médium Zélio Fernandino de Moraes e do Caboclo das Sete Encruzilhadas. Sua prática principal é a incorporação de entidades para atendimento às pessoas que carecem de cuidados físicos e/ou espirituais. Tem como base sete linhas de Orixás, onde cada linha representa um Dom Divino (Fé, Amor, Conhecimento, Justiça, Lei, Evolução e Geração da Vida). São usados vários tipos de elementos em suas práticas: fumo, ervas, defumação, oferendas, fios de contas, som do atabaque etc. O médium que se destacou na psicografia, até então atribuída somente ao Kardecismo, foi Pai Rubens Saraceni. Há a celebração de rituais, como o batismo, o casamento, o funeral, a coroação etc.
+
+CANDOMBLÉ
+Religião africana, de culto aos Orixás, classificada em dois grandes grupos que predominaram aqui no Brasil, dos yorubá (nagô, vindos principalmente da Nigéria) e djedje (foi em sua maioria do Daomé) onde o primeiro excedia em número de quase oito vezes maior que o segundo. No Candomblé existe a incorporação dos Orixás, mas os médiuns incorporados não realizam atendimento ao público, sendo este feito através do "jogo de búzios" ou "Ifà", não aceitando a comunicação de espíritos e proibindo sua incorporação, os trabalhos mediúnicos de incorporação contam apenas com a presença de Orixás que transmitem seu Axé aos presentes.`
+  },
+  {
+    titulo: "Aula 3 — Teologia de Umbanda",
+    categoria: "Fundamentos",
+    autor: "Pai Yolando",
+    conteudo: `Antes de escrever sobre Teologia de Umbanda vamos definir o que é Teologia.
+
+Teologia: tratado de Deus e das coisas divinas; ciência que tem como objetivo o dogma e a moral.
+
+A Umbanda possui fundamentos próprios, Mito, Rito, Símbolos, Doutrina e Liturgia. Mesmo que possa haver semelhanças com outras religiões, pois, como já dizia Pai Rubens Saraceni "(...) nenhuma religião é pura, todas são derivadas de cultos antigos que já se perderam no tempo quando se instalaram e começaram a fazer parte da religiosidade do ser humano".
+
+A Umbanda é uma religião mágico-religiosa, pois ao mesmo tempo em que trabalha com a fé, a religiosidade, as orações, utiliza elementos mágicos como amuletos, ervas, rezas, na composição do trabalho espiritual de atendimento aos necessitados.
+
+Ao contrário do que muitos possam pensar, a Umbanda é uma religião monoteísta, pois há apenas um Deus, chamado de Olorum ou Zambi. Os Orixás não são deuses, são divindades regentes de Mistérios Divinos, sendo sete os mistérios que foram abertos ao conhecimento até o momento: Fé, Amor, Conhecimento, Justiça, Lei, Evolução e Geração da Vida.
+
+Cada Mistério Divino é regido por dois Orixás, com características complementares, sendo: feminino/masculino, ativo/passivo, universal/cósmico etc. Os Orixás são seres de natureza divina, nunca encarnaram e nem foram espíritos humanos. Os Orixás possuem linhas de trabalhadores chamados guias espirituais que utilizam elementos durante o trabalho. Os mais utilizados são: Pemba, fumo, vela, erva, bebida e ponto cantado.
+
+Tem como fundamento básico de seus rituais: o uso do branco, não cobrar pelos trabalhos, não matar ou fazer sacrifício animal. A obediência aos ensinamentos básicos dos valores humanos, como: fraternidade, caridade, respeito ao próximo e a si mesmo, sendo a caridade uma máxima encontrada em todas manifestações existentes.
+
+Existem muitas formas de se cultuar a Umbanda: Umbanda Sagrada, Umbanda Branca, Umbanda Tradicional e muitas outras, mas nenhuma delas é melhor e nem pior que as demais. Cada uma escolheu seus elementos e formas de desenvolver seus rituais. A que nós desenvolvemos em nosso terreiro é a Umbanda Sagrada, fundamentada por Pai Rubens Saraceni e seus guias espirituais Pai Benedito de Aruanda e Mestre Seiman Hamiser Yê.
+
+Para finalizar, as palavras do Caboclo das Sete Encruzilhadas:
+"Umbanda é a manifestação do espírito para a prática da caridade".
+"Aprender com que sabe mais e ensinar a quem sabe menos e a ninguém virar as costas".
+
+Muito Axé!`
+  },
+  {
+    titulo: "Aula 4 — As Sete Linhas de Umbanda e Suas Falanges",
+    categoria: "Fundamentos",
+    autor: "Pai Yolando",
+    conteudo: `DEUS: OLORUM ou ZAMBI – Senhor de tudo e de todos, o Criador de todas as coisas.
+
+Abaixo de Zambi, temos 7 Tronos Divinos à direita no Lado Universal da Criação e 3 Tronos Divinos no Lado Cósmico da Criação.
+
+TRONOS DIVINOS À DIREITA
+
+1- TRONO DA FÉ
+OXALÁ: Orixá masculino, cor: branco, Saudação: Epa Babá!, Falanges de trabalho: caboclos e pretos-velhos.
+OYÁ-LOGUNAN: Orixá feminino, Cor: azul marinho, Saudação: Olha o Tempo, minha Mãe!, Falanges de trabalho: boiadeiros.
+
+2- TRONO DO AMOR
+OXUM: Orixá feminino, Cor: rosa, dourado, Saudação: Ora yê yê ô!, Falanges de trabalho: crianças, caboclos.
+OXUMARÉ: Orixá masculino, Cor: azul turquesa, Saudação: Arroboboi!, Falanges de trabalho: caboclos.
+
+3- TRONO DO CONHECIMENTO
+OXÓSSI: Orixá masculino, Cor: verde, Saudação: Okê Arô!, Falanges de trabalho: caboclos.
+OBÁ: Orixá feminino, Cor: magenta, Saudação: Akirô Obá Yê!, Falanges de trabalho: caboclos.
+
+4- TRONO DA JUSTIÇA
+XANGÔ: Orixá masculino, Cor: marrom, vermelho, Saudação: Kaô Kabecilê!, Falanges de trabalho: caboclos, pretos-velhos.
+OROINÁ (EGUNITÁ): Orixá feminino, Cor: laranja, Saudação: Kali Yê, minha Mãe!, Falanges de trabalho: ciganos.
+
+5- TRONO DA LEI
+OGUM: Orixá masculino, Cor: azul royal, vermelho e branco, Saudação: Patacori Ogum, Ogum Yê!, Falanges de trabalho: caboclos.
+YANSÃ: Orixá feminino, Cor: amarelo, vermelho, Saudação: Eparrei, Yansã!, Falanges de trabalho: baianos, caboclos.
+
+6- TRONO DA EVOLUÇÃO
+OBALUAIÊ: Orixá masculino, Cor: branco e preto, violeta, Saudação: Atotô, Obaluaiê!, Falanges de trabalho: pretos-velhos.
+NANÃ BURUQUÊ: Orixá feminino, Cor: lilás, Saudação: Saluba, Nanã!, Falanges de trabalho: pretos-velhos.
+
+7- TRONO DA GERAÇÃO DA VIDA
+YEMANJÁ: Orixá feminino, Cor: azul claro, Saudação: Adocyaba!, Falanges de trabalho: marinheiros, sereias, caboclos.
+OMULU: Orixá masculino, Cor: roxo, Saudação: Atotô, meu Pai! Omulu Yê!, Falanges de trabalho: pretos-velhos.
+
+TRONOS DIVINOS À ESQUERDA
+
+1- TRONO DA VITALIDADE
+EXU: Orixá masculino, Cor: preto, Saudação: Laroyê, Exu! Exu Mojubá, Falanges de trabalho: Exu.
+
+2- TRONO DOS DESEJOS
+POMBAGIRA: Orixá feminino, Cor: vermelho, Saudação: Saravá, Pombagira! Falanges de trabalho: Pombagira.
+
+3- TRONO DAS INTENÇÕES
+EXU MIRIM: Orixá masculino, Cor: preto e vermelho, Saudação: Laroyê, Exu Mirim! Exu Mirim Mojubá, Falanges de trabalho: Exu Mirim.`
+  }
+];
+
+const ERVAS = [
+  { nome:"Arruda", tipo:"Quente", orixas:"Ogum, Exu", usos:"Descarrego, proteção, afasta olho gordo e energias negativas", preparo:"Banho do pescoço para baixo. Não jogar na cabeça. Usar com guiné ou eucalipto." },
+  { nome:"Guiné", tipo:"Quente", orixas:"Oxóssi, Caboclo", usos:"Limpeza profunda, abre caminhos, protege a corrente mediúnica", preparo:"Banho do pescoço para baixo. Combinar com arruda ou espada de São Jorge." },
+  { nome:"Espada de São Jorge", tipo:"Quente", orixas:"Ogum", usos:"Proteção, corta negatividades, afasta demandas e quiumbas", preparo:"Banho do pescoço para baixo. Também usada em defumação de ambientes." },
+  { nome:"Eucalipto", tipo:"Quente", orixas:"Oxalá, Ogum", usos:"Limpeza do campo energético, abre as vias respiratórias espirituais", preparo:"Banho ou defumação. Pode ser usado antes da gira combinado com arruda." },
+  { nome:"Fumo (Tabaco)", tipo:"Quente", orixas:"Preto Velho, Exu, Caboclo", usos:"Defumação direcionada, quebra larvas astrais, limpa o ambiente", preparo:"Usado em defumação pelos guias. Não fumar — manipular a fumaça externamente." },
+  { nome:"Mamona", tipo:"Quente", orixas:"Nanã, Omulu", usos:"Limpeza densa, rompe feitiços e trabalhos", preparo:"Banho do pescoço para baixo. Usar com cautela — erva de grande força." },
+  { nome:"Pimenta (vermelha ou malagueta)", tipo:"Quente", orixas:"Exu, Iansã", usos:"Afasta energias negativas, quebra demandas", preparo:"Usada em banhos de descarrego e em firmezas externas." },
+  { nome:"Alecrim", tipo:"Morna", orixas:"Oxalá, Iemanjá", usos:"Energização, equilíbrio, harmonia do lar e do campo áurico", preparo:"Banho completo ou apenas do pescoço para baixo. Pode ser usado diariamente." },
+  { nome:"Alfazema", tipo:"Morna / Fria", orixas:"Oxum, Iemanjá, Oxalá", usos:"Harmonia, paz, intuição, abre canais mediúnicos", preparo:"Banho completo. Excelente para fortalecer a mediunidade." },
+  { nome:"Manjericão", tipo:"Morna", orixas:"Oxóssi, Oxum", usos:"Prosperidade, amor, harmonia, afasta inveja", preparo:"Banho ou defumação. Pode ser usado no lar para atrair boas energias." },
+  { nome:"Boldo (Tapete de Oxalá)", tipo:"Morna", orixas:"Oxalá", usos:"Equilíbrio, purificação suave, protege o ori", preparo:"Banho ou chá. Considerado tapete de Oxalá pelo seu formato de folha." },
+  { nome:"Camomila", tipo:"Morna / Fria", orixas:"Oxalá, Nanã", usos:"Calmante, relaxamento, traz paz interior e sono tranquilo", preparo:"Banho ou chá. Ótima para estados de ansiedade e agitação." },
+  { nome:"Hortelã", tipo:"Morna", orixas:"Oxóssi, Oxum", usos:"Revitalização, clareza mental, atração de prosperidade", preparo:"Banho ou chá. Refrescante no campo energético." },
+  { nome:"Canela", tipo:"Morna", orixas:"Oxum, Xangô", usos:"Atrai prosperidade, amor, abre caminhos financeiros", preparo:"Banho ou defumação. Usada em firmezas de prosperidade." },
+  { nome:"Girassol", tipo:"Morna", orixas:"Oxum, Oxalá", usos:"Alegria, otimismo, atrair luz e prosperidade", preparo:"Banho com as flores ou defumação. Planta solar de grande axé." },
+  { nome:"Sálvia", tipo:"Morna", orixas:"Oxalá, Preto Velho", usos:"Limpeza de ambientes, cura, sabedoria", preparo:"Defumação de ambientes ou banho. Muito usada em limpeza de casas." },
+  { nome:"Rosa Branca", tipo:"Fria", orixas:"Oxalá, Iemanjá, Oxum", usos:"Paz, pureza, fortalece intuição e mediunidade", preparo:"Banho completo incluindo a cabeça. Erva fria de consagração." },
+  { nome:"Rosa Vermelha", tipo:"Fria", orixas:"Iansã, Oxum", usos:"Amor, paixão, força feminina", preparo:"Banho completo. Atua nos fatores femininos e emocionais." },
+  { nome:"Folha de Louro", tipo:"Fria (masculina)", orixas:"Oxóssi, Ogum", usos:"Prosperidade, vitória, potencializa fatores masculinos materiais", preparo:"Banho ou defumação. Também usada em firmezas de trabalho e sucesso." },
+  { nome:"Alfavaca Roxa", tipo:"Morna", orixas:"Nanã, Oxóssi", usos:"Proteção, limpeza suave, acolhimento espiritual", preparo:"Banho ou defumação. Ligada às águas pantaneiras de Nanã." },
+  { nome:"Babosa (Aloe Vera)", tipo:"Morna", orixas:"Omulu / Obaluaê", usos:"Cura, regeneração, proteção contra doenças", preparo:"Suco externo (banho) ou uso tópico. Orixá das curas e da terra." },
+  { nome:"Pata de Vaca", tipo:"Morna", orixas:"Oxum", usos:"Amor, fertilidade, saúde feminina", preparo:"Chá ou banho. Ligada às águas doces e à maternidade de Oxum." },
+  { nome:"Erva Doce (Anis)", tipo:"Morna / Fria", orixas:"Oxum, Oxalá", usos:"Doçura, harmonia, iluminação espiritual", preparo:"Banho ou chá. O Anis Estrelado tem fator iluminador e equilibrador." },
+  { nome:"Quebra-Pedra", tipo:"Morna", orixas:"Xangô", usos:"Justiça, resolve impasses legais, quebra obstáculos", preparo:"Chá ou banho. Usada em trabalhos de Xangô para resolver questões de justiça." },
+  { nome:"Baleeira", tipo:"Morna", orixas:"Xangô", usos:"Equilíbrio, fortalece a verdade, ajuda em disputas", preparo:"Banho ou chá. Erva de Xangô para situações que exigem julgamento." }
+];
+
+const REZAS = [
+  {
+    titulo: "Juramento de Fé da Umbanda Sagrada",
+    categoria: "Oração",
+    texto: `Eu creio na existência de um Deus único, onipotente, onisciente, oniquerente e onipresente.
+
+Eu creio na existência dos sagrados Orixás, as divindades de Deus às quais Ele confiou as suas qualidades Divinas e que são os seres superiores responsáveis pela conscientização de sua infinita obra colocada à disposição de todos os seres, de todas as criaturas e de todas as espécies que Ele criou.
+
+Eu creio que cada um dos sagrados Orixás é uma divindade unigênita dotada do poder Divino de transmitir sua qualidade e caráter Divino aos seres, às criaturas e às espécies. Este fato os distingue como auxiliares diretos do Criador do Universo e Divinos pais dos seres.
+
+Eu creio na existência de uma essência viva e Divina ou corpo etérico de Deus, por meio do qual se manifestam tanto suas divindades quanto os espíritos que incorporam nas sessões religiosas umbandistas.
+
+Eu creio na imortalidade dos espíritos e na capacidade de se comunicarem com os encarnados.
+
+Eu creio na capacidade dos espíritos de atuarem sobre os encarnados e de influenciá-los positiva ou negativamente.
+
+Eu creio na existência da incorporação mediúnica e no benefício que os espíritos luzeiros trazem a todos os encarnados quando incorporam em seus mediadores umbandistas.
+
+Eu creio na evolução dos espíritos e no aperfeiçoamento consciencial que a religião Umbanda proporciona a todos os seus fiéis, adeptos e seguidores.
+
+Eu creio na existência de múltiplas faculdades mediúnicas e esforçar-me-ei no estudo e no entendimento delas.
+
+Eu creio na existência de uma evolução contínua de toda a criação Divina e creio que só por intermédio do estudo, da dedicação e do aprendizado poderei ser útil a essa evolução.
+
+Eu creio que, por ter sido gerado por Deus e por ter sido qualificado por uma de suas divindades, sou um ser de origem Divina e dotado de múltiplas faculdades, as quais desenvolverei e aperfeiçoarei.
+
+Eu creio em Deus, em suas divindades, nos senhores Orixás, e creio em mim mesmo, pois também sou um ser de origem Divina e sou dotado de inteligência, de raciocínio e da razão para poder diferenciar o bom do ruim, o certo do errado, o justo do injusto, o Divino do profano.
+
+Amém!`
+  },
+  {
+    titulo: "Oração de Abertura dos Trabalhos",
+    categoria: "Abertura",
+    texto: `Salve Deus Pai, Criador do universo!
+Salve Jesus Cristo, Mestre dos mestres!
+Salve todos os Orixás, divindades do axé!
+Salve os Guias, Mentores e Protetores desta Casa!
+
+Nós vos pedimos que abençoeis estes trabalhos.
+Que a luz do Pai Oxalá ilumine este terreiro.
+Que os Caboclos e Pretos Velhos tragam sua sabedoria.
+Que os Exus guardem as porteiras.
+Que a corrente seja forte, unida e harmoniosa.
+
+Que nenhuma energia contrária adentre este espaço sagrado.
+Que cada filho presente seja protegido, abençoado e iluminado.
+Que os consulentes que aqui chegam encontrem conforto, cura e orientação.
+
+Em nome de Deus e de toda a falange de luz:
+Que assim seja!
+Axé!`
+  },
+  {
+    titulo: "Oração de Fechamento dos Trabalhos",
+    categoria: "Encerramento",
+    texto: `Senhor Deus, agradecemos por mais uma gira de luz.
+Agradecemos aos Orixás por sua presença e proteção.
+Agradecemos aos Guias e Entidades pelo trabalho de caridade realizado.
+Agradecemos aos médiuns pela entrega e dedicação.
+Agradecemos aos consulentes pela fé e confiança.
+
+Pedimos que cada um que esteve aqui presente leve em seu coração
+a paz, a força e a luz que foi trabalhada nesta noite.
+
+Que os portais sejam fechados com harmonia.
+Que os espíritos que vieram para receber ajuda sejam encaminhados.
+Que a egrégora desta casa seja preservada e fortalecida.
+
+Saravá a todos os Orixás!
+Saravá aos Guias e Entidades!
+Saravá a este Templo e seus filhos!
+
+Axé! Axé! Axé!`
+  },
+  {
+    titulo: "Oração ao Anjo da Guarda",
+    categoria: "Proteção",
+    texto: `Meu Anjo da Guarda,
+mensageiro de Deus,
+guardião da minha alma,
+protetor do meu caminho.
+
+Em nome de Deus Pai, Filho e Espírito Santo,
+e de todos os Orixás e Guias de luz,
+peço que estejais sempre ao meu lado.
+
+Protegei meu corpo e meu espírito.
+Iluminai minha mente e meu coração.
+Guardai minha corrente mediúnica.
+Afastai de mim toda energia contrária.
+
+No momento da incorporação e da desincorporação,
+sede o escudo que me protege.
+No cotidiano, sede a voz que me orienta.
+Na escuridão, sede a luz que me guia.
+
+Gratidão, meu Anjo, por cada dia de proteção.
+Que sua luz permaneça sempre comigo.
+Amém. Axé!`
+  },
+  {
+    titulo: "Oração de Proteção para o Médium",
+    categoria: "Proteção",
+    texto: `Senhor Deus, protejai este seu filho/filha.
+Oxalá, pai de todos, abençoai este caminho.
+Guias de luz, fortalecei esta corrente.
+
+Que meu ori esteja sempre protegido.
+Que meu campo energético esteja sempre fechado para energias negativas.
+Que minha mente esteja clara e aberta apenas para a luz.
+Que meu coração esteja puro e disposto para a caridade.
+
+Afastai de mim o orgulho e a vaidade.
+Dai-me humildade para servir sem esperar recompensa.
+Dai-me paciência para aprender com cada lição.
+Dai-me discernimento para reconhecer a verdade.
+
+Que eu seja instrumento de cura, paz e amor.
+Que cada pessoa que eu tocar sinta a luz do Criador.
+Que minha mediunidade seja sempre usada para o bem.
+
+Axé!`
+  },
+  {
+    titulo: "Ponto de Defumação — Umbanda tem Fundamento",
+    categoria: "Ponto Cantado",
+    texto: `Umbanda tem fundamento,
+é preciso preparar.
+Com incenso e com pemba,
+vou meu templo defumar.
+
+Que a fumaça sagrada
+limpe tudo por aqui.
+Que os espíritos de luz
+venham trabalhar aqui.
+
+Saravá, saravá,
+saravá todo povo de Deus.
+Saravá, saravá,
+saravá os Orixás dos céus.`
+  },
+  {
+    titulo: "Oração pelos Eguns — Dia de Finados",
+    categoria: "Eguns",
+    texto: `Eparrei Oyá! Iansã, senhora dos ventos e dos mortos!
+
+Pedimos que sejais guia e proteção para os Eguns que vagam ainda sem luz.
+Que cada espírito que ainda não encontrou seu caminho
+seja acolhido, orientado e encaminhado para a evolução.
+
+Para os nossos antepassados — pedimos paz e luz.
+Para os que sofreram e ainda carregam as marcas da carne — pedimos alívio.
+Para os que ainda não sabem que partiram — pedimos esclarecimento.
+Para os obsessores — pedimos misericórdia e encaminhamento.
+
+Que Iansã abra os portais para que todos encontrem a luz.
+Que os Exus guardem as porteiras e não deixem entrar o que não deve.
+Que este dia de homenagem aos Eguns seja de paz para os dois planos — o físico e o espiritual.
+
+Saluba! Eparrei! Axé!`
+  }
+];
+
+    // ======== HANDLERS DOS BOTÕES ========
+
+    document.getElementById("btn-seed").addEventListener("click", async () => {
+      const btn = document.getElementById("btn-seed");
+      const btn2 = document.getElementById("btn-seed-ensinamentos");
+      btn.disabled = true;
+      btn2.disabled = true;
+      log.textContent = "";
+      print("=== IMPORTAÇÃO COMPLETA INICIADA ===\n", "sec");
+
+      const ALL_ENSINAMENTOS = [
+        ...ENSINAMENTOS_AULAS,
+        ...ENSINAMENTOS_FUNDAMENTOS,
+        ...ENSINAMENTOS_RITUAIS,
+        ...ENSINAMENTOS_MEDIUNIDADE,
+        ...ENSINAMENTOS_SAUDACOES,
+        ...ENSINAMENTOS_ANJO
+      ];
+
+      // Orixás
+      print("--- Orixás ---", "sec");
+      for (const o of ORIXAS) {
+        try { await addDoc(collection(db, "orixas"), { ...o, criadoEm: serverTimestamp() }); print("✔ " + o.nome); }
+        catch(e) { print("✘ " + o.nome + ": " + e.message, "err"); }
+      }
+
+      // Datas Sagradas
+      print("\n--- Datas Sagradas ---", "sec");
+      for (const d of DATAS_SAGRADAS) {
+        try { await addDoc(collection(db, "datasagradas"), { ...d, criadoEm: serverTimestamp() }); print("✔ " + d.nome); }
+        catch(e) { print("✘ " + d.nome + ": " + e.message, "err"); }
+      }
+
+      // Ensinamentos
+      print("\n--- Ensinamentos (" + ALL_ENSINAMENTOS.length + " textos) ---", "sec");
+      for (const e of ALL_ENSINAMENTOS) {
+        try { await addDoc(collection(db, "ensinamentos"), { ...e, criadoEm: serverTimestamp() }); print("✔ [" + e.categoria + "] " + e.titulo); }
+        catch(err) { print("✘ " + e.titulo + ": " + err.message, "err"); }
+      }
+
+      // Ervas
+      print("\n--- Ervas & Banhos ---", "sec");
+      for (const er of ERVAS) {
+        try { await addDoc(collection(db, "ervas"), { ...er, criadoEm: serverTimestamp() }); print("✔ " + er.nome); }
+        catch(e) { print("✘ " + er.nome + ": " + e.message, "err"); }
+      }
+
+      // Rezas
+      print("\n--- Rezas & Orações ---", "sec");
+      for (const r of REZAS) {
+        try { await addDoc(collection(db, "rezas"), { ...r, criadoEm: serverTimestamp() }); print("✔ " + r.titulo); }
+        catch(e) { print("✘ " + r.titulo + ": " + e.message, "err"); }
+      }
+
+      print("\n=== IMPORTAÇÃO CONCLUÍDA! ===", "sec");
+      btn.disabled = false;
+      btn2.disabled = false;
+    });
+
+    document.getElementById("btn-seed-ensinamentos").addEventListener("click", async () => {
+      const btn = document.getElementById("btn-seed");
+      const btn2 = document.getElementById("btn-seed-ensinamentos");
+      btn.disabled = true;
+      btn2.disabled = true;
+      log.textContent = "";
+      print("=== REIMPORTANDO ENSINAMENTOS ===\n", "sec");
+
+      const ALL_ENSINAMENTOS = [
+        ...ENSINAMENTOS_AULAS,
+        ...ENSINAMENTOS_FUNDAMENTOS,
+        ...ENSINAMENTOS_RITUAIS,
+        ...ENSINAMENTOS_MEDIUNIDADE,
+        ...ENSINAMENTOS_SAUDACOES,
+        ...ENSINAMENTOS_ANJO
+      ];
+
+      // Apagar todos os ensinamentos existentes
+      print("Apagando ensinamentos antigos...", "sec");
+      try {
+        const snap = await getDocs(collection(db, "ensinamentos"));
+        for (const d of snap.docs) { await deleteDoc(doc(db, "ensinamentos", d.id)); }
+        print("✔ " + snap.size + " ensinamentos apagados.\n");
+      } catch(e) { print("✘ Erro ao apagar: " + e.message, "err"); }
+
+      // Reimportar
+      print("Importando " + ALL_ENSINAMENTOS.length + " ensinamentos...", "sec");
+      for (const e of ALL_ENSINAMENTOS) {
+        try { await addDoc(collection(db, "ensinamentos"), { ...e, criadoEm: serverTimestamp() }); print("✔ [" + e.categoria + "] " + e.titulo); }
+        catch(err) { print("✘ " + e.titulo + ": " + err.message, "err"); }
+      }
+
+      print("\n=== ENSINAMENTOS REIMPORTADOS! ===", "sec");
+      btn.disabled = false;
+      btn2.disabled = false;
+    });
+
+  </script>
+</body>
+</html>

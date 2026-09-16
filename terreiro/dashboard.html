@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Templo Pai Tuiamissu — Grimório</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#8a6000" />
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="ico-home" viewBox="0 0 18 18">
+    <path d="M3 9L9 3l6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+    <path d="M5 9v6h3v-4h2v4h3V9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  </symbol>
+  <symbol id="ico-wave" viewBox="0 0 18 18">
+    <path d="M1 11c1-2 2-3 3-3s2 2 3 2 2-3 3-3 2 1 3 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+    <path d="M1 7c1-2 2-3 3-3s2 2 3 2 2-3 3-3 2 1 3 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  </symbol>
+  <symbol id="ico-calendar" viewBox="0 0 18 18">
+    <rect x="2" y="4" width="14" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2" fill="none"/>
+    <path d="M2 8h14M6 2v4M12 2v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="ico-broom" viewBox="0 0 18 18">
+    <path d="M14 4L7 11M7 11l-4 5 5-2 3-3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+    <circle cx="14" cy="4" r="1.5" stroke="currentColor" stroke-width="1.2" fill="none"/>
+  </symbol>
+  <symbol id="ico-book" viewBox="0 0 18 18">
+    <path d="M4 3h8a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+    <path d="M6 7h6M6 10h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="ico-leaf" viewBox="0 0 18 18">
+    <path d="M14 4C10 4 5 7 4 14c3-1 6-2 8-5M4 14l4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  </symbol>
+  <symbol id="ico-prayer" viewBox="0 0 18 18">
+    <path d="M9 2v14M6 5c0 0 0 4 3 6 3-2 3-6 3-6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+    <path d="M5 14c1-1 2-2 4-2s3 1 4 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  </symbol>
+  <symbol id="ico-note" viewBox="0 0 18 18">
+    <path d="M9 3a6 6 0 1 0 0 12A6 6 0 0 0 9 3z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+    <path d="M9 7v4M9 12.5v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="ico-user" viewBox="0 0 18 18">
+    <circle cx="9" cy="6" r="3" stroke="currentColor" stroke-width="1.2" fill="none"/>
+    <path d="M3 16c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  </symbol>
+  <symbol id="ico-logout" viewBox="0 0 18 18">
+    <path d="M7 3H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3M12 12l3-3-3-3M7 9h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  </symbol>
+  <symbol id="ico-bell" viewBox="0 0 18 18">
+    <path d="M9 2a5 5 0 0 1 5 5v3l1.5 2.5H2.5L4 10V7a5 5 0 0 1 5-5z" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+    <path d="M7 14.5a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.2" fill="none"/>
+  </symbol>
+  <symbol id="ico-group" viewBox="0 0 18 18">
+    <circle cx="6" cy="6" r="2.5" stroke="currentColor" stroke-width="1.2" fill="none"/>
+    <circle cx="12" cy="6" r="2.5" stroke="currentColor" stroke-width="1.2" fill="none"/>
+    <path d="M1 16c0-2.8 2.2-5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+    <path d="M17 16c0-2.8-2.2-5-5-5M9.5 11a5 5 0 0 1 4 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+  </symbol>
+</svg>
+
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar" aria-label="Navegação principal">
+    <div class="sidebar-logo">
+      <svg class="sigil" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <circle cx="24" cy="24" r="22" stroke="#b8860b" stroke-width="1"/>
+        <circle cx="24" cy="24" r="15" stroke="#b8860b" stroke-width="0.5" stroke-dasharray="2 3"/>
+        <path d="M24 4 L27 16 L39 16 L30 24 L33 36 L24 29 L15 36 L18 24 L9 16 L21 16 Z"
+              stroke="#d4a017" stroke-width="0.8" fill="none"/>
+        <circle cx="24" cy="24" r="2.5" fill="#d4a017" opacity="0.6"/>
+      </svg>
+      <h2>Pai Tuiamissu</h2>
+      <p>Umbanda Sagrada</p>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Módulos">
+      <span class="nav-section-label">Principal</span>
+      <button class="nav-item active" data-page="dashboard" aria-current="page">
+        <svg class="nav-icon" aria-hidden="true"><use href="#ico-home"/></svg>Início
+      </button>
+      <button class="nav-item" data-page="orixas">
+        <svg class="nav-icon" aria-hidden="true"><use href="#ico-wave"/></svg>Orixás
+      </button>
+      <button class="nav-item" data-page="datas">
+        <svg class="nav-icon" aria-hidden="true"><use href="#ico-calendar"/></svg>Datas Sagradas
+      </button>
+
+      <span class="nav-section-label">Terreiro</span>
+      <button class="nav-item" data-page="pontos">
+        <svg class="nav-icon" aria-hidden="true"><use href="#ico-note"/></svg>Pontos Cantados
+      </button>
+      <button class="nav-item" data-page="calendario">
+        <svg class="nav-icon" aria-hidden="true"><use href="#ico-calendar"/></svg>Calendário
+      </button>
+      <button class="nav-item" data-page="limpeza">
+        <svg class="nav-icon" aria-hidden="true"><use href="#ico-broom"/></svg>Limpeza da Casa
+      </button>
+
+      <span class="nav-section-label">Conhecimento</span>
+      <button class="nav-item" data-page="ensinamentos">
+        <svg class="nav-icon" aria-hidden="true"><use href="#ico-book"/></svg>Ensinamentos
+      </button>
+      <button class="nav-item" data-page="ervas">
+        <svg class="nav-icon" aria-hidden="true"><use href="#ico-leaf"/></svg>Ervas &amp; Banhos
+      </button>
+      <button class="nav-item" data-page="rezas">
+        <svg class="nav-icon" aria-hidden="true"><use href="#ico-prayer"/></svg>Rezas &amp; Orações
+      </button>
+
+      <span class="nav-section-label">Comunidade</span>
+      <button class="nav-item" data-page="grupos">
+        <svg class="nav-icon" aria-hidden="true"><use href="#ico-group"/></svg>Grupos
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-user">
+        <button class="btn-icon-link" id="btn-perfil" aria-label="Meu perfil">
+          <svg style="width:18px;height:18px;" aria-hidden="true"><use href="#ico-user"/></svg>
+          <span id="user-name">—</span>
+        </button>
+        <button class="btn-icon-link bell-btn" id="btn-notif" aria-label="Notificações" style="position:relative;">
+          <svg style="width:18px;height:18px;" aria-hidden="true"><use href="#ico-bell"/></svg>
+          <span class="notif-badge" id="notif-badge" aria-live="polite" hidden>0</span>
+        </button>
+      </div>
+      <button class="theme-toggle-btn" id="theme-toggle-desktop" style="width:100%; margin-top:0.4rem; justify-content:center;">
+        <span class="theme-icon">🌙</span> <span class="theme-label">Modo Noite</span>
+      </button>
+      <button class="btn btn-danger" id="logout-btn"
+              style="width:100%; margin-top:0.5rem; font-size:0.78rem; padding:0.45rem;">
+        <svg style="width:14px;height:14px;" aria-hidden="true"><use href="#ico-logout"/></svg>
+        Sair
+      </button>
+    </div>
+  </aside>
+
+  <main class="main-content" id="main-content">
+    <div class="topbar-mobile">
+      <div class="topbar-mobile-left">
+        <button class="menu-toggle" id="menu-toggle"
+                aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar">&#9776;</button>
+        <h2 style="font-family:Georgia,serif; font-size:1.15rem; color:var(--gold);">Grimório Vivo</h2>
+      </div>
+      <button class="theme-toggle-btn" id="theme-toggle-mobile" aria-label="Alternar tema">
+        <span class="theme-icon">🌙</span>
+      </button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section class="page active" id="page-dashboard" aria-labelledby="h-dashboard">
+      <div class="page-header">
+        <h1 id="h-dashboard">Início</h1>
+        <div class="dashboard-top-actions">
+          <button class="btn-global-search-trigger" id="btn-open-search" aria-label="Busca Global">
+            <span>🔍</span>
+            <span>Buscar no Grimório...</span>
+            <kbd class="search-kbd">⌘K</kbd>
+          </button>
+        </div>
+      </div>
+
+      <!-- Banner Diário: Saudação, Sabedoria & Astrologia Mística -->
+      <div class="daily-axe-banner">
+        <div class="daily-axe-content">
+          <div class="daily-greeting">
+            <h2 id="greeting-title">Saravá, Irmão(ã)!</h2>
+            <p class="daily-quote" id="daily-quote">"O silêncio é a prece que a alma faz quando busca a sabedoria dos mais velhos."</p>
+          </div>
+          <div class="daily-regency-grid">
+            <div class="regency-badge-card" title="Regência de hoje">
+              <span class="regency-badge-icon" id="today-orixa-icon">⚔️</span>
+              <div class="regency-badge-info">
+                <span class="label">Orixá de Hoje</span>
+                <span class="val" id="today-orixa-name">Carregando...</span>
+              </div>
+            </div>
+            <div class="regency-badge-card" title="Fase da Lua Atual">
+              <span class="regency-badge-icon" id="today-moon-icon">🌕</span>
+              <div class="regency-badge-info">
+                <span class="label">Fase da Lua</span>
+                <span class="val" id="today-moon-name">Carregando...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ações Rápidas (Quick Actions) -->
+      <div class="quick-actions-bar">
+        <button class="btn-quick-action" id="qa-calc-banhos">
+          <span>🌿</span> <span>Calculadora de Banhos</span>
+        </button>
+        <button class="btn-quick-action" id="qa-random-ponto">
+          <span>🎵</span> <span>Ponto Aleatório</span>
+        </button>
+        <button class="btn-quick-action" id="qa-ver-giras">
+          <span>📅</span> <span>Ver Giras</span>
+        </button>
+        <button class="btn-quick-action" id="qa-minhas-limpezas">
+          <span>🧹</span> <span>Minhas Limpezas</span>
+        </button>
+      </div>
+
+      <!-- Hero Próxima Gira -->
+      <div class="next-gira-hero" id="next-gira-hero" style="display:none;">
+        <div class="next-gira-info">
+          <h3 id="hero-gira-titulo">Próxima Gira</h3>
+          <p id="hero-gira-desc">Aguardando calendário...</p>
+        </div>
+        <div class="next-gira-countdown" id="hero-gira-countdown">
+          <span>🕯️</span> <span id="hero-gira-dias">—</span>
+        </div>
+      </div>
+
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card">
+          <svg class="stat-icon-svg" aria-hidden="true"><use href="#ico-wave"/></svg>
+          <div class="stat-num" id="stat-orixas">—</div>
+          <div class="stat-label">Orixás</div>
+        </div>
+        <div class="stat-card">
+          <svg class="stat-icon-svg" aria-hidden="true"><use href="#ico-note"/></svg>
+          <div class="stat-num" id="stat-pontos">—</div>
+          <div class="stat-label">Pontos</div>
+        </div>
+        <div class="stat-card">
+          <svg class="stat-icon-svg" aria-hidden="true"><use href="#ico-calendar"/></svg>
+          <div class="stat-num" id="stat-eventos">—</div>
+          <div class="stat-label">Eventos</div>
+        </div>
+        <div class="stat-card">
+          <svg class="stat-icon-svg" aria-hidden="true"><use href="#ico-broom"/></svg>
+          <div class="stat-num" id="stat-limpeza">—</div>
+          <div class="stat-label">Limpezas</div>
+        </div>
+        <div class="stat-card">
+          <svg class="stat-icon-svg" aria-hidden="true"><use href="#ico-book"/></svg>
+          <div class="stat-num" id="stat-ensinamentos">—</div>
+          <div class="stat-label">Ensinamentos</div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card card-accent">
+          <div class="card-title">🕯️ Próximos Eventos &amp; Giras</div>
+          <div id="proximos-eventos" aria-live="polite">
+            <p style="color:var(--muted); font-size:0.85rem;">Carregando...</p>
+          </div>
+        </div>
+        <div class="card card-accent">
+          <div class="card-title">🧹 Minhas Escalas de Limpeza</div>
+          <div id="minhas-escalas-home" aria-live="polite">
+            <p style="color:var(--muted); font-size:0.85rem;">Carregando...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORIXÁS -->
+    <section class="page" id="page-orixas" aria-labelledby="h-orixas">
+      <div class="page-header">
+        <h1 id="h-orixas">Orixás</h1>
+        <div class="page-header-actions">
+          <button class="btn btn-primary" id="btn-novo-orixa">+ Novo Orixá</button>
+        </div>
+      </div>
+      <!-- abas de seleção -->
+      <div class="orixa-tabs-bar" id="orixa-tabs-bar" role="tablist" aria-label="Selecionar Orixá">
+        <p style="color:var(--muted); font-size:0.85rem;">Carregando...</p>
+      </div>
+      <!-- detalhe do orixá selecionado -->
+      <div class="orixa-detalhe-panel" id="orixa-detalhe-panel" hidden>
+        <div class="orixa-detalhe-header">
+          <div class="orixa-detalhe-banner" id="orixa-det-banner" aria-hidden="true"></div>
+          <div class="orixa-detalhe-titulo-row">
+            <div>
+              <h2 class="orixa-detalhe-nome" id="orixa-det-nome"></h2>
+              <p class="orixa-detalhe-saudacao" id="orixa-det-saudacao"></p>
+            </div>
+            <div class="orixa-detalhe-acoes" id="orixa-det-acoes">
+              <button class="btn btn-secondary btn-sm" id="btn-editar-orixa-detalhe">Editar</button>
+              <button class="btn btn-danger btn-sm" id="btn-deletar-orixa-detalhe">Excluir</button>
+            </div>
+          </div>
+        </div>
+        <div class="orixa-info-grid" id="orixa-det-grid"></div>
+        <div class="orixa-detalhe-secao">
+          <p class="orixa-detalhe-label">Domínios</p>
+          <p id="orixa-det-dominios"></p>
+        </div>
+        <div class="orixa-detalhe-secao">
+          <p class="orixa-detalhe-label">Ensinamentos</p>
+          <p id="orixa-det-desc" style="white-space:pre-wrap;"></p>
+        </div>
+
+        <!-- Relações inteligentes: Ervas e Pontos do Orixá -->
+        <div class="orixa-detalhe-secao" id="orixa-rel-ervas-sec">
+          <p class="orixa-detalhe-label">🌿 Ervas &amp; Banhos Associados</p>
+          <div id="orixa-det-ervas-list" class="grid-2" style="margin-top:0.6rem;"></div>
+        </div>
+
+        <div class="orixa-detalhe-secao" id="orixa-rel-pontos-sec">
+          <p class="orixa-detalhe-label">🎵 Pontos Cantados deste Orixá</p>
+          <div id="orixa-det-pontos-list" class="grid-2" style="margin-top:0.6rem;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DATAS SAGRADAS -->
+    <section class="page" id="page-datas" aria-labelledby="h-datas">
+      <div class="page-header">
+        <h1 id="h-datas">Datas Sagradas</h1>
+        <button class="btn btn-primary" id="btn-nova-data">+ Nova Data</button>
+      </div>
+      <div id="lista-datas" aria-live="polite">
+        <p style="color:var(--muted);">Carregando...</p>
+      </div>
+    </section>
+
+    <!-- PONTOS CANTADOS -->
+    <section class="page" id="page-pontos" aria-labelledby="h-pontos">
+      <div class="page-header">
+        <h1 id="h-pontos">Pontos Cantados</h1>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary btn-sm" id="btn-filtro-fav-pontos">★ Favoritos</button>
+          <input class="search-bar" id="search-pontos" placeholder="Buscar ponto por letra ou título..." aria-label="Buscar ponto" />
+          <button class="btn btn-primary" id="btn-novo-ponto">+ Novo Ponto</button>
+        </div>
+      </div>
+      
+      <!-- Categorias / Linhas de Pontos -->
+      <div class="filter-pill-bar-wrap">
+      <div class="filter-pill-bar" id="pontos-linhas-bar" role="tablist" aria-label="Filtrar por Linha ou Orixá">
+        <button class="filter-pill active" data-linha="">Todos</button>
+        <button class="filter-pill" data-linha="Abertura / Defumação">Abertura / Defumação</button>
+        <button class="filter-pill" data-linha="Exu &amp; Pomba Gira">Exu &amp; Pomba Gira</button>
+        <button class="filter-pill" data-linha="Ogum">Ogum</button>
+        <button class="filter-pill" data-linha="Oxóssi &amp; Caboclos">Oxóssi &amp; Caboclos</button>
+        <button class="filter-pill" data-linha="Xangô &amp; Iansã">Xangô &amp; Iansã</button>
+        <button class="filter-pill" data-linha="Iemanjá &amp; Oxum">Iemanjá &amp; Oxum</button>
+        <button class="filter-pill" data-linha="Pretos Velhos">Pretos Velhos</button>
+        <button class="filter-pill" data-linha="Baianos &amp; Boiadeiros">Baianos &amp; Boiadeiros</button>
+        <button class="filter-pill" data-linha="Marinheiros">Marinheiros</button>
+        <button class="filter-pill" data-linha="Oxalá">Oxalá</button>
+        <button class="filter-pill" data-linha="Encerramento">Encerramento</button>
+      </div>
+      </div><!-- /.filter-pill-bar-wrap -->
+
+      <div class="grid-2" id="lista-pontos" aria-live="polite">
+        <p style="color:var(--muted);">Carregando...</p>
+      </div>
+    </section>
+
+    <!-- CALENDÁRIO UNIFICADO -->
+    <section class="page" id="page-calendario" aria-labelledby="h-calendario">
+      <div class="page-header">
+        <h1 id="h-calendario">Calendário do Terreiro</h1>
+        <div class="page-header-actions">
+          <button class="btn btn-primary" id="btn-novo-evento">+ Novo Evento</button>
+        </div>
+      </div>
+
+      <!-- Filtros do Calendário -->
+      <div class="filter-pill-bar-wrap">
+      <div class="filter-pill-bar" id="calendario-filtros-bar" role="tablist" aria-label="Filtrar eventos">
+        <button class="filter-pill active" data-cal-tipo="">Todos os Eventos</button>
+        <button class="filter-pill" data-cal-tipo="gira">🥁 Giras &amp; Festas</button>
+        <button class="filter-pill" data-cal-tipo="orixa">🌊 Dias dos Orixás</button>
+        <button class="filter-pill" data-cal-tipo="limpeza">🧹 Escalas de Limpeza</button>
+        <button class="filter-pill" data-cal-tipo="aniversario">🎂 Aniversários</button>
+      </div>
+      </div><!-- /.filter-pill-bar-wrap -->
+
+      <div id="lista-eventos" aria-live="polite">
+        <p style="color:var(--muted);">Carregando...</p>
+      </div>
+    </section>
+
+    <!-- LIMPEZA -->
+    <section class="page" id="page-limpeza" aria-labelledby="h-limpeza">
+      <div class="page-header">
+        <h1 id="h-limpeza">Limpeza da Casa</h1>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary btn-sm" id="btn-filtro-minhas-tarefas">Minhas Escalas</button>
+          <button class="btn btn-primary" id="btn-nova-limpeza">+ Nova Tarefa</button>
+        </div>
+      </div>
+      <div id="lista-limpeza" aria-live="polite">
+        <p style="color:var(--muted);">Carregando...</p>
+      </div>
+    </section>
+
+    <!-- ENSINAMENTOS COM SUBCATEGORIAS -->
+    <section class="page" id="page-ensinamentos" aria-labelledby="h-ensinamentos">
+      <div class="page-header">
+        <h1 id="h-ensinamentos">Ensinamentos Sagrados</h1>
+        <div class="page-header-actions">
+          <input class="search-bar" id="search-ensinamentos" placeholder="Buscar ensinamento..." aria-label="Buscar ensinamento" />
+          <button class="btn btn-primary" id="btn-novo-ensinamento">+ Novo</button>
+        </div>
+      </div>
+
+      <!-- Subcategorias de Ensinamentos -->
+      <div class="filter-pill-bar-wrap">
+      <div class="filter-pill-bar" id="ensinamentos-subcats-bar" role="tablist" aria-label="Filtrar por subcategoria">
+        <button class="filter-pill active" data-subcat="">Todos</button>
+        <button class="filter-pill" data-subcat="Teologia">📜 Teologia &amp; Fundamentos</button>
+        <button class="filter-pill" data-subcat="Reflexões">💭 Reflexões &amp; Mensagens</button>
+        <button class="filter-pill" data-subcat="Orixás">✨ Orixás &amp; Guias</button>
+        <button class="filter-pill" data-subcat="Mediunidade">🔮 Mediunidade</button>
+        <button class="filter-pill" data-subcat="Glossário">📖 Glossário &amp; Termos</button>
+        <button class="filter-pill" data-subcat="Práticas">🕯️ Práticas &amp; Rituais</button>
+        <button class="filter-pill" data-subcat="Banhos">🌿 Banhos &amp; Ervas</button>
+        <button class="filter-pill" data-subcat="Velas">🕯️ Velas &amp; Oferendas</button>
+      </div>
+      </div><!-- /.filter-pill-bar-wrap -->
+
+      <div class="grid-2" id="lista-ensinamentos" aria-live="polite">
+        <p style="color:var(--muted);">Carregando...</p>
+      </div>
+    </section>
+
+    <!-- ERVAS & BANHOS -->
+    <section class="page" id="page-ervas" aria-labelledby="h-ervas">
+      <div class="page-header">
+        <h1 id="h-ervas">Ervas &amp; Banhos</h1>
+        <div class="page-header-actions">
+          <select id="filtro-ervas" class="search-bar" style="max-width:170px;" aria-label="Filtrar por categoria">
+            <option value="">Todas categorias</option>
+            <option>Limpeza e Defumação</option><option>Abertura de Caminhos</option>
+            <option>Amor e Atração</option><option>Saúde e Cura</option>
+            <option>Proteção</option><option>Prosperidade</option>
+            <option>Orixá específico</option><option>Outro</option>
+          </select>
+          <input class="search-bar" id="search-ervas" placeholder="Buscar erva ou banho..." aria-label="Buscar erva" />
+          <button class="btn btn-secondary btn-sm" id="btn-abrir-calc-banhos">🌿 Montador de Banhos</button>
+          <button class="btn btn-primary" id="btn-nova-erva">+ Novo</button>
+        </div>
+      </div>
+      <div class="grid-2" id="lista-ervas" aria-live="polite">
+        <p style="color:var(--muted);">Carregando...</p>
+      </div>
+    </section>
+
+    <!-- REZAS & ORAÇÕES -->
+    <section class="page" id="page-rezas" aria-labelledby="h-rezas">
+      <div class="page-header">
+        <h1 id="h-rezas">Rezas &amp; Orações</h1>
+        <div class="page-header-actions">
+          <select id="filtro-rezas" class="search-bar" style="max-width:170px;" aria-label="Filtrar por categoria">
+            <option value="">Todas categorias</option>
+            <option>Abertura de Gira</option><option>Encerramento</option>
+            <option>Orixá específico</option><option>Proteção</option>
+            <option>Cura</option><option>Gratidão</option><option>Outro</option>
+          </select>
+          <input class="search-bar" id="search-rezas" placeholder="Buscar reza ou oração..." aria-label="Buscar reza" />
+          <button class="btn btn-primary" id="btn-nova-reza">+ Nova</button>
+        </div>
+      </div>
+      <div id="lista-rezas" aria-live="polite">
+        <p style="color:var(--muted);">Carregando...</p>
+      </div>
+    </section>
+
+    <!-- GRUPOS -->
+    <section class="page" id="page-grupos" aria-labelledby="h-grupos">
+      <div class="page-header">
+        <h1 id="h-grupos">Grupos</h1>
+        <button class="btn btn-primary" id="btn-novo-grupo">+ Novo Grupo</button>
+      </div>
+      <div class="grid-2" id="lista-grupos" aria-live="polite">
+        <p style="color:var(--muted);">Carregando...</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<!-- Modal: Ponto -->
+<div class="modal-overlay" id="modal-ponto" role="dialog" aria-modal="true" aria-labelledby="modal-ponto-title">
+  <div class="modal">
+    <h2 id="modal-ponto-title">Novo Ponto Cantado</h2>
+    <input type="hidden" id="ponto-id" />
+    <div class="form-group"><label for="ponto-titulo">Título do Ponto</label>
+      <input type="text" id="ponto-titulo" placeholder="Ex: Ponto de Ogum Rompe Mato" /></div>
+    <div class="form-group"><label for="ponto-orixa">Orixá / Entidade</label>
+      <select id="ponto-orixa">
+        <option value="">— Selecionar —</option>
+        <option>Exu</option><option>Pomba Gira</option><option>Ogum</option><option>Oxóssi</option>
+        <option>Xangô</option><option>Oxumaré</option><option>Iemanjá</option><option>Oxum</option>
+        <option>Iansã</option><option>Nanã</option><option>Omulu / Obaluaê</option><option>Oxalá</option>
+        <option>Caboclo</option><option>Preto Velho</option><option>Boiadeiro</option>
+        <option>Baiano</option><option>Marinheiro</option><option>Outro</option>
+      </select></div>
+    <div class="form-group"><label for="ponto-linha">Linha</label>
+      <input type="text" id="ponto-linha" placeholder="Ex: Linha da Mata, Linha do Mar..." /></div>
+    <div class="form-group"><label for="ponto-letra">Letra do Ponto</label>
+      <textarea id="ponto-letra" placeholder="Cole ou digite a letra aqui..." rows="6"></textarea></div>
+    <div class="form-group"><label for="ponto-obs">Observações</label>
+      <textarea id="ponto-obs" placeholder="Quando cantar, ocasião, etc..." rows="2"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-cancelar-ponto">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-ponto">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Ver Ponto -->
+<div class="modal-overlay" id="modal-ver-ponto" role="dialog" aria-modal="true" aria-labelledby="ver-ponto-titulo">
+  <div class="modal">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.5rem; margin-bottom:0.5rem;">
+      <div>
+        <h2 id="ver-ponto-titulo" style="margin-bottom:0.2rem;"></h2>
+        <p id="ver-ponto-orixa" style="color:var(--gold); margin-bottom:0.2rem; font-size:0.9rem; font-weight:600;"></p>
+        <p id="ver-ponto-linha" style="color:var(--muted); font-size:0.82rem;"></p>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <button class="btn-fav" id="btn-fav-ponto" aria-label="Favoritar ponto" title="Favoritar">★</button>
+        <div class="font-size-controls" title="Ajustar tamanho da letra">
+          <button class="font-ctrl-btn" id="btn-fonte-menor" aria-label="Diminuir fonte">A-</button>
+          <button class="font-ctrl-btn" id="btn-fonte-maior" aria-label="Aumentar fonte">A+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de Ferramentas de Gira (Wake Lock, Auto-Scroll, WhatsApp) -->
+    <div class="curimba-toolbar" style="margin:0.75rem 0 0.5rem;">
+      <button class="tool-btn" id="btn-wake-lock" title="Evita que o celular bloqueie durante a cantoria">
+        <span>💡</span> <span id="label-wake-lock">Manter Tela Acesa</span>
+      </button>
+      <button class="tool-btn" id="btn-auto-scroll" title="Rola a letra suavemente">
+        <span>📜</span> <span id="label-auto-scroll">Auto-Scroll</span>
+      </button>
+      <button class="tool-btn" id="btn-share-whatsapp" title="Compartilhar no WhatsApp da corrente">
+        <span>💬</span> <span>WhatsApp</span>
+      </button>
+    </div>
+    
+    <div class="ponto-letra-modal" id="ver-ponto-letra"></div>
+    <p id="ver-ponto-obs" style="color:var(--muted); margin-top:1rem; font-size:0.82rem;"></p>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-fechar-ver-ponto">Fechar</button>
+      <button class="btn btn-secondary" id="btn-editar-ponto-modal">Editar</button>
+      <button class="btn btn-danger" id="btn-deletar-ponto-modal">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Evento -->
+<div class="modal-overlay" id="modal-evento" role="dialog" aria-modal="true" aria-labelledby="modal-evento-title">
+  <div class="modal">
+    <h2 id="modal-evento-title">Novo Evento</h2>
+    <input type="hidden" id="evento-id" />
+    <div class="form-group"><label for="evento-nome">Nome do Evento</label>
+      <input type="text" id="evento-nome" placeholder="Ex: Festa de Iemanjá" /></div>
+    <div class="form-group"><label for="evento-data">Data</label>
+      <input type="date" id="evento-data" /></div>
+    <div class="form-group"><label for="evento-tipo">Tipo de Evento</label>
+      <select id="evento-tipo">
+        <option value="">— Selecionar —</option>
+        <option value="Gira">🥁 Gira de Terreiro</option>
+        <option value="Festa">🎉 Festa de Orixá / Entidade</option>
+        <option value="Dia de Orixá">🌊 Dia Sagrado de Orixá</option>
+        <option value="Limpeza">🧹 Mutirão / Limpeza</option>
+        <option value="Aniversário">🎂 Aniversário</option>
+        <option value="Outro">Outro</option>
+      </select></div>
+    <div class="form-group"><label for="evento-desc">Descrição</label>
+      <textarea id="evento-desc" placeholder="Detalhes do evento..." rows="3"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-cancelar-evento">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-evento">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Limpeza -->
+<div class="modal-overlay" id="modal-limpeza" role="dialog" aria-modal="true" aria-labelledby="modal-limpeza-title">
+  <div class="modal">
+    <h2 id="modal-limpeza-title">Nova Tarefa de Limpeza</h2>
+    <input type="hidden" id="limpeza-id" />
+    <div class="form-group"><label for="limpeza-tarefa">Tarefa</label>
+      <input type="text" id="limpeza-tarefa" placeholder="Ex: Limpeza do congá, varrer a gira..." /></div>
+    <div class="form-group"><label for="limpeza-resp">Responsável (e-mail do membro)</label>
+      <input type="email" id="limpeza-resp" placeholder="email@exemplo.com" /></div>
+    <div class="form-group"><label for="limpeza-data">Data</label>
+      <input type="date" id="limpeza-data" /></div>
+    <div class="form-group"><label for="limpeza-freq">Frequência</label>
+      <select id="limpeza-freq">
+        <option value="">— Selecionar —</option>
+        <option>Única</option><option>Semanal</option><option>Quinzenal</option>
+        <option>Mensal</option><option>Antes de cada gira</option>
+      </select></div>
+    <div class="form-group"><label for="limpeza-obs">Observações</label>
+      <textarea id="limpeza-obs" placeholder="Detalhes, produtos específicos, etc..." rows="2"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-cancelar-limpeza">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-limpeza">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Ensinamento / História da Mainha -->
+<div class="modal-overlay" id="modal-ensinamento" role="dialog" aria-modal="true" aria-labelledby="modal-ensinamento-title">
+  <div class="modal">
+    <h2 id="modal-ensinamento-title">Novo Ensinamento &amp; História da Casa</h2>
+    <input type="hidden" id="ensinamento-id" />
+    <div class="form-group">
+      <label for="ensinamento-titulo">Título da História ou Ensinamento</label>
+      <input type="text" id="ensinamento-titulo" placeholder="Ex: A força de Oxóssi nas matas, Memórias do Terreiro..." />
+    </div>
+    <div class="form-group">
+      <label for="ensinamento-cat">Categoria / Tipo</label>
+      <select id="ensinamento-cat">
+        <option value="">— Selecionar Categoria —</option>
+        <option value="Histórias e Lendas">📖 Histórias, Memórias &amp; Itans</option>
+        <option value="Fundamentos">📜 Fundamentos &amp; Doutrina</option>
+        <option value="Orixás">✨ Orixás &amp; Guias</option>
+        <option value="Mediunidade">🔮 Mediunidade &amp; Desenvolvimento</option>
+        <option value="Rituais">🕯️ Rituais &amp; Obrigações</option>
+        <option value="Ervas e Banhos">🌿 Ervas &amp; Banhos</option>
+        <option value="Pai Yolando">🕯️ Sabedoria de Pai Yolando</option>
+        <option value="Outro">Outro</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="ensinamento-foto">Foto / Imagem Ilustrativa (Link da foto - Opcional)</label>
+      <input type="url" id="ensinamento-foto" placeholder="https://exemplo.com/foto-do-terreiro.jpg" />
+      <p style="font-size:0.75rem; color:var(--muted); margin-top:0.25rem;">Pode colar um link de imagem ou foto sagrada.</p>
+    </div>
+    <div class="form-group">
+      <label for="ensinamento-conteudo">Texto / Relato / Ensinamento Completo</label>
+      <textarea id="ensinamento-conteudo" placeholder="Conte a história, os ensinamentos, detalhes do ritual ou memórias com carinho..." rows="9"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-cancelar-ensinamento">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-ensinamento">Publicar Ensinamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Ver Ensinamento -->
+<div class="modal-overlay" id="modal-ver-ensinamento" role="dialog" aria-modal="true" aria-labelledby="ver-ensinamento-titulo">
+  <div class="modal">
+    <img id="ver-ensinamento-foto" class="modal-foto-preview" style="display:none;" alt="Foto ilustrativa" />
+    <h2 id="ver-ensinamento-titulo"></h2>
+    <p id="ver-ensinamento-autor" class="badge-pai-yolando-modal" style="display:none;">🕯️ Pai Yolando</p>
+    <p id="ver-ensinamento-cat" style="color:var(--gold); margin-bottom:1rem; font-size:0.85rem; font-weight:600;"></p>
+    <div style="white-space:pre-wrap; font-size:0.92rem; line-height:1.85;" id="ver-ensinamento-conteudo"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-fechar-ver-ensinamento">Fechar</button>
+      <button class="btn btn-secondary" id="btn-editar-ensinamento-modal">Editar</button>
+      <button class="btn btn-danger" id="btn-deletar-ensinamento-modal">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Orixá -->
+<div class="modal-overlay" id="modal-orixa" role="dialog" aria-modal="true" aria-labelledby="modal-orixa-title">
+  <div class="modal">
+    <h2 id="modal-orixa-title">Novo Orixá</h2>
+    <input type="hidden" id="orixa-id" />
+    <div class="form-group"><label for="orixa-nome">Nome do Orixá</label>
+      <input type="text" id="orixa-nome" placeholder="Ex: Ogum, Iemanjá, Xangô..." /></div>
+    <div class="form-group"><label for="orixa-saudacao">Saudação</label>
+      <input type="text" id="orixa-saudacao" placeholder="Ex: Ogum Yê!, Odô Iá!..." /></div>
+    <div class="form-group"><label for="orixa-trono">Trono</label>
+      <input type="text" id="orixa-trono" placeholder="Ex: Trono da Fé (polo positivo)..." /></div>
+    <div class="form-group"><label for="orixa-cores">Cores</label>
+      <input type="text" id="orixa-cores" placeholder="Ex: Azul escuro, prateado, vermelho..." /></div>
+    <div class="form-group"><label for="orixa-dia">Dia da Semana</label>
+      <select id="orixa-dia">
+        <option value="">— Selecionar —</option>
+        <option>Segunda-feira</option><option>Terça-feira</option><option>Quarta-feira</option>
+        <option>Quinta-feira</option><option>Sexta-feira</option><option>Sábado</option><option>Domingo</option>
+      </select></div>
+    <div class="form-group"><label for="orixa-elemento">Elemento da Natureza</label>
+      <input type="text" id="orixa-elemento" placeholder="Ex: Mar, Ferro, Trovão, Matas..." /></div>
+    <div class="form-group"><label for="orixa-oferendas">Oferendas</label>
+      <input type="text" id="orixa-oferendas" placeholder="Ex: Rosas brancas, Mel, Dendê..." /></div>
+    <div class="form-group"><label for="orixa-data-festiva">Data Festiva</label>
+      <input type="text" id="orixa-data-festiva" placeholder="Ex: 2 de fevereiro, 20 de janeiro..." /></div>
+    <div class="form-group"><label for="orixa-santo">Santo Católico correspondente</label>
+      <input type="text" id="orixa-santo" placeholder="Ex: São Jorge, Nossa Senhora..." /></div>
+    <div class="form-group"><label for="orixa-dominios">Domínios / Regências</label>
+      <textarea id="orixa-dominios" placeholder="O que este Orixá rege, protege, representa..." rows="3"></textarea></div>
+    <div class="form-group"><label for="orixa-desc">Descrição / Ensinamentos</label>
+      <textarea id="orixa-desc" placeholder="Histórias, fundamentos, características..." rows="5"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-cancelar-orixa">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-orixa">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Ver Orixá -->
+<div class="modal-overlay" id="modal-ver-orixa" role="dialog" aria-modal="true" aria-labelledby="ver-orixa-nome">
+  <div class="modal">
+    <div id="orixa-coroa-banner" class="orixa-banner" aria-hidden="true"></div>
+    <h2 id="ver-orixa-nome"></h2>
+    <p id="ver-orixa-saudacao" style="color:var(--gold); font-size:1rem; margin-bottom:1rem; font-style:italic;"></p>
+    <div class="orixa-info-grid" id="ver-orixa-grid"></div>
+    <div style="margin-top:1rem;">
+      <p style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;">Domínios</p>
+      <p id="ver-orixa-dominios" style="font-size:0.9rem; line-height:1.7;"></p>
+    </div>
+    <div style="margin-top:1rem;">
+      <p style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;">Ensinamentos</p>
+      <p id="ver-orixa-desc" style="font-size:0.9rem; line-height:1.7; white-space:pre-wrap;"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-fechar-ver-orixa">Fechar</button>
+      <button class="btn btn-secondary" id="btn-editar-orixa-modal">Editar</button>
+      <button class="btn btn-danger" id="btn-deletar-orixa-modal">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Data Sagrada -->
+<div class="modal-overlay" id="modal-data" role="dialog" aria-modal="true" aria-labelledby="modal-data-title">
+  <div class="modal">
+    <h2 id="modal-data-title">Nova Data Sagrada</h2>
+    <input type="hidden" id="data-id" />
+    <div class="form-group"><label for="data-nome">Nome da Data</label>
+      <input type="text" id="data-nome" placeholder="Ex: Dia de Iemanjá, Ano Novo de Umbanda..." /></div>
+    <div class="form-group">
+      <label for="data-data">Data (dia/mês)</label>
+      <input type="text" id="data-data" placeholder="Ex: 02/02, 20/01..."
+             pattern="^(0?[1-9]|[12]\d|3[01])\/(0?[1-9]|1[0-2])$"
+             title="Formato: DD/MM — ex: 02/02 ou 20/01"
+             inputmode="numeric" />
+      <p style="font-size:0.73rem; color:var(--muted); margin-top:0.25rem;">Formato: DD/MM — ex: <code>02/02</code></p>
+    </div>
+    <div class="form-group"><label for="data-orixa">Orixá relacionado</label>
+      <select id="data-orixa">
+        <option value="">— Selecionar —</option>
+        <option>Exu</option><option>Ogum</option><option>Oxóssi</option><option>Xangô</option>
+        <option>Oxumaré</option><option>Iemanjá</option><option>Oxum</option><option>Iansã</option>
+        <option>Nanã</option><option>Omulu / Obaluaê</option><option>Oxalá</option>
+        <option>Caboclo</option><option>Preto Velho</option><option>Umbanda (Geral)</option><option>Outro</option>
+      </select></div>
+    <div class="form-group"><label for="data-santo">Santo Católico correspondente</label>
+      <input type="text" id="data-santo" placeholder="Ex: São Jorge, Nossa Senhora..." /></div>
+    <div class="form-group"><label for="data-tipo">Tipo</label>
+      <select id="data-tipo">
+        <option value="">— Selecionar —</option>
+        <option>Dia de Orixá</option><option>Festa</option><option>Data da Umbanda</option>
+        <option>Data Católica</option><option>Outro</option>
+      </select></div>
+    <div class="form-group"><label for="data-desc">Descrição / Observações</label>
+      <textarea id="data-desc" placeholder="Como é celebrado, rituais, oferendas..." rows="4"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-cancelar-data">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-data">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Erva -->
+<div class="modal-overlay" id="modal-erva" role="dialog" aria-modal="true" aria-labelledby="modal-erva-title">
+  <div class="modal">
+    <h2 id="modal-erva-title">Nova Erva / Banho</h2>
+    <input type="hidden" id="erva-id" />
+    <div class="form-group"><label for="erva-nome">Nome</label>
+      <input type="text" id="erva-nome" placeholder="Ex: Banho de Arruda, Defumação de Alecrim..." /></div>
+    <div class="form-group"><label for="erva-cat">Categoria / Finalidade</label>
+      <select id="erva-cat">
+        <option value="">— Selecionar —</option>
+        <option>Limpeza e Defumação</option><option>Abertura de Caminhos</option>
+        <option>Amor e Atração</option><option>Saúde e Cura</option><option>Proteção</option>
+        <option>Prosperidade</option><option>Orixá específico</option><option>Outro</option>
+      </select></div>
+    <div class="form-group"><label for="erva-orixa">Orixá relacionado</label>
+      <select id="erva-orixa">
+        <option value="">— Selecionar —</option>
+        <option>Exu</option><option>Ogum</option><option>Oxóssi</option><option>Xangô</option>
+        <option>Oxumaré</option><option>Iemanjá</option><option>Oxum</option><option>Iansã</option>
+        <option>Nanã</option><option>Omulu / Obaluaê</option><option>Oxalá</option>
+        <option>Caboclo</option><option>Preto Velho</option><option>Todos</option>
+      </select></div>
+    <div class="form-group"><label for="erva-ingredientes">Ingredientes / Ervas</label>
+      <textarea id="erva-ingredientes" placeholder="Liste as ervas, folhas, flores, raízes..." rows="4"></textarea></div>
+    <div class="form-group"><label for="erva-modo">Modo de preparo / Como usar</label>
+      <textarea id="erva-modo" placeholder="Como preparar o banho, defumação, chá..." rows="4"></textarea></div>
+    <div class="form-group"><label for="erva-obs">Observações e cuidados</label>
+      <textarea id="erva-obs" placeholder="Horário recomendado, dias, contraindicações..." rows="3"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-cancelar-erva">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-erva">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Ver Erva -->
+<div class="modal-overlay" id="modal-ver-erva" role="dialog" aria-modal="true" aria-labelledby="ver-erva-nome">
+  <div class="modal">
+    <h2 id="ver-erva-nome"></h2>
+    <p id="ver-erva-meta" style="color:var(--gold); font-size:0.85rem; margin-bottom:1rem;"></p>
+    <div style="margin-bottom:1rem;">
+      <p style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;">Ingredientes / Ervas</p>
+      <p id="ver-erva-ingredientes" style="white-space:pre-wrap; font-size:0.9rem; line-height:1.7;"></p>
+    </div>
+    <div style="margin-bottom:1rem;">
+      <p style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;">Modo de Preparo</p>
+      <p id="ver-erva-modo" style="white-space:pre-wrap; font-size:0.9rem; line-height:1.7;"></p>
+    </div>
+    <div>
+      <p style="font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;">Observações</p>
+      <p id="ver-erva-obs" style="white-space:pre-wrap; font-size:0.85rem; color:var(--muted);"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-fechar-ver-erva">Fechar</button>
+      <button class="btn btn-secondary" id="btn-editar-erva-modal">Editar</button>
+      <button class="btn btn-danger" id="btn-deletar-erva-modal">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Reza -->
+<div class="modal-overlay" id="modal-reza" role="dialog" aria-modal="true" aria-labelledby="modal-reza-title">
+  <div class="modal">
+    <h2 id="modal-reza-title">Nova Reza / Oração</h2>
+    <input type="hidden" id="reza-id" />
+    <div class="form-group"><label for="reza-titulo">Título</label>
+      <input type="text" id="reza-titulo" placeholder="Ex: Oração de Abertura, Ponto de Força..." /></div>
+    <div class="form-group"><label for="reza-cat">Categoria</label>
+      <select id="reza-cat">
+        <option value="">— Selecionar —</option>
+        <option>Abertura de Gira</option><option>Encerramento</option>
+        <option>Orixá específico</option><option>Proteção</option>
+        <option>Cura</option><option>Gratidão</option><option>Outro</option>
+      </select></div>
+    <div class="form-group"><label for="reza-orixa">Orixá / Entidade</label>
+      <select id="reza-orixa">
+        <option value="">— Selecionar —</option>
+        <option>Exu</option><option>Ogum</option><option>Oxóssi</option><option>Xangô</option>
+        <option>Oxumaré</option><option>Iemanjá</option><option>Oxum</option><option>Iansã</option>
+        <option>Nanã</option><option>Omulu / Obaluaê</option><option>Oxalá</option>
+        <option>Caboclo</option><option>Preto Velho</option><option>Todos / Geral</option>
+      </select></div>
+    <div class="form-group"><label for="reza-texto">Texto da Reza / Oração</label>
+      <textarea id="reza-texto" placeholder="Digite o texto completo..." rows="9"></textarea></div>
+    <div class="form-group"><label for="reza-ocasiao">Quando usar / Ocasião</label>
+      <textarea id="reza-ocasiao" placeholder="Momento certo de usar, quantas vezes rezar, etc..." rows="2"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-cancelar-reza">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-reza">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Ver Reza -->
+<div class="modal-overlay" id="modal-ver-reza" role="dialog" aria-modal="true" aria-labelledby="ver-reza-titulo">
+  <div class="modal">
+    <h2 id="ver-reza-titulo"></h2>
+    <p id="ver-reza-meta" style="color:var(--gold); font-size:0.85rem; margin-bottom:1rem;"></p>
+    <div style="white-space:pre-wrap; font-size:0.9rem; line-height:1.9; font-style:italic; font-family:Georgia,serif;" id="ver-reza-texto"></div>
+    <p id="ver-reza-ocasiao" style="color:var(--muted); font-size:0.82rem; margin-top:1rem;"></p>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-fechar-ver-reza">Fechar</button>
+      <button class="btn btn-secondary" id="btn-editar-reza-modal">Editar</button>
+      <button class="btn btn-danger" id="btn-deletar-reza-modal">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Grupo -->
+<div class="modal-overlay" id="modal-grupo" role="dialog" aria-modal="true" aria-labelledby="modal-grupo-title">
+  <div class="modal">
+    <h2 id="modal-grupo-title">Novo Grupo</h2>
+    <input type="hidden" id="grupo-id" />
+    <div class="form-group"><label for="grupo-nome">Nome do Grupo</label>
+      <input type="text" id="grupo-nome" placeholder="Ex: Filhos de Oxum, Iniciantes..." /></div>
+    <div class="form-group"><label for="grupo-desc">Descrição</label>
+      <textarea id="grupo-desc" placeholder="Finalidade, quem participa..." rows="3"></textarea></div>
+    <div class="form-group">
+      <label for="grupo-email-add">Adicionar membro por e-mail</label>
+      <div style="display:flex; gap:0.5rem;">
+        <input type="email" id="grupo-email-add" placeholder="email@exemplo.com" style="flex:1;" />
+        <button class="btn btn-secondary" id="btn-grupo-add-membro" type="button">Adicionar</button>
+      </div>
+      <ul id="grupo-membros-lista" style="margin-top:0.75rem; list-style:none; padding:0;"></ul>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-cancelar-grupo">Cancelar</button>
+      <button class="btn btn-primary" id="btn-salvar-grupo">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Busca Global (Cmd+K) -->
+<div class="modal-overlay" id="modal-global-search" role="dialog" aria-modal="true" aria-labelledby="global-search-label">
+  <div class="modal global-search-modal">
+    <div class="global-search-input-wrap">
+      <span class="global-search-ico" aria-hidden="true">🔍</span>
+      <label for="global-search-input" id="global-search-label" class="sr-only">Buscar no Grimório</label>
+      <input type="text" class="global-search-input" id="global-search-input" placeholder="Buscar pontos, orixás, ervas, rezas, giras..." />
+    </div>
+    <div class="global-search-results" id="global-search-results">
+      <p style="color:var(--muted); font-size:0.85rem; text-align:center; padding:1.5rem 0;">Digite ao menos 2 letras para pesquisar no Grimório...</p>
+    </div>
+    <div class="modal-footer" style="margin-top:1rem; padding-top:0.75rem;">
+      <button class="btn btn-secondary" id="btn-fechar-global-search">Fechar (Esc)</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Calculadora / Montador de Banhos -->
+<div class="modal-overlay" id="modal-calc-banhos" role="dialog" aria-modal="true" aria-labelledby="modal-calc-banhos-title">
+  <div class="modal" style="max-width:650px;">
+    <h2 id="modal-calc-banhos-title">🌿 Montador Interativo de Banhos de Ervas</h2>
+    <p style="font-size:0.85rem; color:var(--text-dim); margin-bottom:1.2rem;">
+      Escolha a intenção do seu banho ritualístico para obter a harmonia exata de ervas (quentes, mornas e frias) e instruções seguras de preparo.
+    </p>
+
+    <div class="banho-calc-container">
+      <div>
+        <label style="font-size:0.78rem; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:0.5rem; display:block;">
+          1. Qual é a sua necessidade ou intenção espiritual?
+        </label>
+        <div class="banho-intentions-grid" id="banho-intentions-grid">
+          <button class="banho-intent-btn active" data-intent="descarrego">
+            <span class="emoji">⚡</span>
+            <span class="name">Descarrego Pesado</span>
+          </button>
+          <button class="banho-intent-btn" data-intent="abertura">
+            <span class="emoji">🗝️</span>
+            <span class="name">Abrir Caminhos</span>
+          </button>
+          <button class="banho-intent-btn" data-intent="calmaria">
+            <span class="emoji">🕊️</span>
+            <span class="name">Paz &amp; Calmaria</span>
+          </button>
+          <button class="banho-intent-btn" data-intent="protecao">
+            <span class="emoji">🛡️</span>
+            <span class="name">Proteção Espiritual</span>
+          </button>
+          <button class="banho-intent-btn" data-intent="prosperidade">
+            <span class="emoji">🌻</span>
+            <span class="name">Prosperidade &amp; Fartura</span>
+          </button>
+          <button class="banho-intent-btn" data-intent="amor">
+            <span class="emoji">💖</span>
+            <span class="name">Autoestima &amp; Amor</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Receita Gerada -->
+      <div class="banho-recipe-card" id="banho-recipe-card">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="btn-fechar-calc-banhos">Fechar</button>
+      <button class="btn btn-primary" id="btn-share-banho-wa">
+        <span>💬</span> <span>Enviar Receita no WhatsApp</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Barra de navegação inferior Mobile -->
+<nav class="bottom-nav" aria-label="Navegação móvel">
+  <div class="bottom-nav-inner">
+    <button class="bottom-nav-item active" data-bpage="dashboard">
+      <svg aria-hidden="true"><use href="#ico-home"/></svg>
+      <span>Início</span>
+    </button>
+    <button class="bottom-nav-item" data-bpage="pontos">
+      <svg aria-hidden="true"><use href="#ico-note"/></svg>
+      <span>Pontos</span>
+    </button>
+    <button class="bottom-nav-item" data-bpage="calendario">
+      <svg aria-hidden="true"><use href="#ico-calendar"/></svg>
+      <span>Giras</span>
+    </button>
+    <button class="bottom-nav-item" data-bpage="orixas">
+      <svg aria-hidden="true"><use href="#ico-wave"/></svg>
+      <span>Orixás</span>
+    </button>
+    <button class="bottom-nav-item" data-bpage="ervas">
+      <svg aria-hidden="true"><use href="#ico-leaf"/></svg>
+      <span>Ervas</span>
+    </button>
+    <button class="bottom-nav-item" id="btn-bottom-mais" aria-haspopup="true" aria-expanded="false" aria-controls="bottom-mais-menu">
+      <svg aria-hidden="true" viewBox="0 0 18 18" fill="none"><circle cx="4" cy="9" r="1.3" fill="currentColor"/><circle cx="9" cy="9" r="1.3" fill="currentColor"/><circle cx="14" cy="9" r="1.3" fill="currentColor"/></svg>
+      <span>Mais</span>
+    </button>
+  </div>
+  <!-- Menu popup do "Mais" -->
+  <div id="bottom-mais-menu" class="bottom-mais-popup" hidden role="menu" aria-label="Mais opções">
+    <button class="bottom-mais-item" data-bpage="limpeza" role="menuitem">
+      <svg class="nav-icon" aria-hidden="true"><use href="#ico-broom"/></svg> Limpeza
+    </button>
+    <button class="bottom-mais-item" data-bpage="ensinamentos" role="menuitem">
+      <svg class="nav-icon" aria-hidden="true"><use href="#ico-book"/></svg> Ensinamentos
+    </button>
+    <button class="bottom-mais-item" data-bpage="rezas" role="menuitem">
+      <svg class="nav-icon" aria-hidden="true"><use href="#ico-prayer"/></svg> Rezas
+    </button>
+    <button class="bottom-mais-item" data-bpage="grupos" role="menuitem">
+      <svg class="nav-icon" aria-hidden="true"><use href="#ico-group"/></svg> Grupos
+    </button>
+    <button class="bottom-mais-item" data-bpage="datas" role="menuitem">
+      <svg class="nav-icon" aria-hidden="true"><use href="#ico-calendar"/></svg> Datas
+    </button>
+  </div>
+</nav>
+
+<script type="module" src="js/app.js"></script>
+
+<script>
+  // ── Bottom Nav: botão "Mais" popup ──
+  (function () {
+    const btnMais = document.getElementById("btn-bottom-mais");
+    const menu    = document.getElementById("bottom-mais-menu");
+    if (!btnMais || !menu) return;
+
+    btnMais.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = !menu.hidden;
+      menu.hidden = isOpen;
+      btnMais.setAttribute("aria-expanded", String(!isOpen));
+    });
+
+    // Fechar ao clicar fora
+    document.addEventListener("click", () => {
+      menu.hidden = true;
+      btnMais.setAttribute("aria-expanded", "false");
+    });
+
+    // Fechar ao pressionar Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !menu.hidden) {
+        menu.hidden = true;
+        btnMais.setAttribute("aria-expanded", "false");
+        btnMais.focus();
+      }
+    });
+
+    // Itens do popup navegam para a página e fecham o menu
+    menu.querySelectorAll(".bottom-mais-item[data-bpage]").forEach(item => {
+      item.addEventListener("click", (e) => {
+        e.stopPropagation();
+        menu.hidden = true;
+        btnMais.setAttribute("aria-expanded", "false");
+        // Delegar ao sistema de navegação existente
+        const bpage = item.dataset.bpage;
+        const equiv = document.querySelector(`.bottom-nav-item[data-bpage="${bpage}"]`);
+        if (equiv) { equiv.click(); return; }
+        const navBtn = document.querySelector(`.nav-item[data-page="${bpage}"]`);
+        if (navBtn) navBtn.click();
+      });
+    });
+  })();
+</script>
+</body>
+</html>
